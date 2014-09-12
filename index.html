@@ -25,7 +25,7 @@
     <script type="text/javascript">
         $.backstretch("images/Rotsidan.jpg");
 
-        var lastActiveMenuDiv = "welcome";    // zuerst gewähltes Div
+        var lastActiveMenuDiv = "start";    // zuerst gewähltes Div
 
         function menu_call(menu_entry, complete_function){
             var url = menu_entry+'.html';  // Aufgerufene Seite für Darstellung
@@ -92,7 +92,7 @@
     </style>
 
 </head>
-<body onload="menu_call('welcome');" style="padding-left: 10px; padding-right: 10px; position: relative;">
+<body onload="menu_call('start');" style="padding-left: 10px; padding-right: 10px; position: relative;">
 <table width="100%" style="z-index: 0;">
     <tr>
         <td colspan="2">
@@ -112,7 +112,7 @@
         <td valign="top" style="width: 190px; min-width: 190px;">
             <table id="navigator_table" cellspacing="20px" cellpadding="0px" style="color: yellow; ">
                 <tbody>
-                <tr><td class="menu_entry" onclick="menu_call('welcome');"      >Willkommen</td></tr>
+                <tr><td class="menu_entry" onclick="menu_call('start');"      >Willkommen</td></tr>
                 <tr><td class="menu_entry" onclick="menu_call('haus_milan');"   >Haus Milan</td></tr>
                 <tr><td class="menu_entry" onclick="menu_call('haus_pinguin');" >Haus Pinguin</td></tr>
                 <tr><td class="menu_entry" onclick="menu_call('umgebung');"     >Umgebung</td></tr>
