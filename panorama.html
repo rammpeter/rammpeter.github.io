@@ -3,8 +3,33 @@
 <div style="position: relative;" xmlns="http://www.w3.org/1999/html">
     <div class="shadow opaque" style="width:100%; height: 100%; background-color: #99CC99; position:absolute; top:0px; left:0px; z-index:1;">
     </div>
-    <div style="position: relative; z-index: 2;">
+    <div style="position: relative; z-index: 2; padding: 10px;">
         <h2>Panorama for Oracle</h2>
+        Panorama is my tool for monitoring and analysis of performance issues of Oracle databases.<br>
+        <ul>
+            <li>it focuses on usage by DBAs and also by software developers</li>
+            <li>provides easy access to several internal information</li>
+            <li>Offers support for:
+                <ul>
+                    <li>Performance-optimization of applications</li>
+                    <li>Analysis of runtimes and wait events</li>
+                    <li>Preparation of Oracle database's internal information for easy usage</li>
+
+                </ul>
+            </li>
+            <li>aims to issues that are inadequately analyzed and presented by other existing tools such as Enterprise Manager</li>
+            <li>immmediately startable as Java war-File with built-in Jetty application Server. ( java -jar Panorama.war )</li>
+            <li>may be deployed as web application to every JEE or web container (Glassfish, JBoss, Tomcat ...)</li>
+            <li>some functions of panorama requires licensing of "Diagnostic Pack" for connected Oracle-DB !</li>
+            <li>Oracle-User used for login with Panorama requires the right "SELECT ANY DICTIONARY"</li>
+            <li>Panorama only reads via SELECT SQLs from database. No write access, structure change, compile etc.</li>
+        </ul>
+        Panorama is an Ruby on Rails application<br>
+        Source code is available at <a href="http://github.com/rammpeter/Panorama">http://github.com/rammpeter/Panorama</a><br><br>
+        You can download Panorama as an immediately startable web archive (<a href="https://www.dropbox.com/s/fw2xazbpq8fpgb2/Panorama.war">Panorama.war</a>).
+
+
+
     </div>
 </div>
 </body>
