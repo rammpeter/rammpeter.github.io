@@ -25,6 +25,7 @@
         <script src="String.js?body=1"></script>
 
         <script type="text/javascript">
+            "use strict";
             var current_demo;
 
             function prepare_div(){
@@ -42,7 +43,6 @@
                 jQuery('#demo').show();
                 prepare_div();
                 demo_name();
-                //eval(demo_name.replace(/<br>/g, ""));
                 jQuery('#demo_footer').html('<a href="" onclick="print_demo(current_demo); return false;">Show source</a>');
             }
 
@@ -144,10 +144,10 @@
 }
 
             var demo3 = function(){
-    var columns = [{ id: 'col0', name: 'Time',          toolTip: 'Date/Time',               sort_type: 'date' , plot_master_time: 'true' },             
-                   { id: 'col1', name: 'Value 1',       toolTip: 'Value 1',                 sort_type: 'float',     style: 'text-align: right;'},                
-                   { id: 'col2', name: 'Value 2',       toolTip: 'Value 2',                 sort_type: 'float',     style: 'text-align: right;'},                
-                   { id: 'col3', name: 'Value 3',       toolTip: 'Value 3',                 sort_type: 'float',     style: 'text-align: right;'},                
+    var columns = [{ id: 'col0', name: 'Time',      toolTip: 'Date/Time',   sort_type: 'date' , plot_master_time: 'true' },
+                   { id: 'col1', name: 'Value 1',   toolTip: 'Value 1',     sort_type: 'float',     style: 'text-align: right;'},
+                   { id: 'col2', name: 'Value 2',   toolTip: 'Value 2',     sort_type: 'float',     style: 'text-align: right;'},
+                   { id: 'col3', name: 'Value 3',   toolTip: 'Value 3',     sort_type: 'float',     style: 'text-align: right;'},
     ];                                                                                                                      
                                                                                                                             
     var options = { caption:            '<span style=\"font-weight: bold;\">Time line with diagram</span>',                 
@@ -173,16 +173,16 @@
 }
 
             var demo4 = function(){
-    var columns = [{ id: 'col0', name: 'Time',          toolTip: 'Date/Time',               sort_type: 'date' , plot_master_time: 'true' },
-                   { id: 'col1', name: 'Value 1',       toolTip: 'Value 1',                 sort_type: 'float',     style: 'text-align: right;'},
-                   { id: 'col2', name: 'Value 2',       toolTip: 'Value 2',                 sort_type: 'float',     style: 'text-align: right;'},
-                   { id: 'col3', name: 'Value 3',       toolTip: 'Value 3',                 sort_type: 'float',     style: 'text-align: right;'},
-                   { id: 'col4', name: 'Value 4',       toolTip: 'Value 4',                 sort_type: 'float',     style: 'text-align: right;'},
-                   { id: 'col5', name: 'Value 5',       toolTip: 'Value 5',                 sort_type: 'float',     style: 'text-align: right;'},
-                   { id: 'col6', name: 'Value 6',       toolTip: 'Value 6',                 sort_type: 'float',     style: 'text-align: right;'},
-                   { id: 'col7', name: 'Value 7',       toolTip: 'Value 7',                 sort_type: 'float',     style: 'text-align: right;'},
-                   { id: 'col8', name: 'Value 8',       toolTip: 'Value 8',                 sort_type: 'float',     style: 'text-align: right;'},
-                   { id: 'col9', name: 'Value 9',       toolTip: 'Value 9',                 sort_type: 'float',     style: 'text-align: right;'},
+    var columns = [{ id: 'col0', name: 'Time',          toolTip: 'Date/Time',   sort_type: 'date' , plot_master_time: 'true' },
+                   { id: 'col1', name: 'Value 1',       toolTip: 'Value 1',     sort_type: 'float',     style: 'text-align: right;'},
+                   { id: 'col2', name: 'Value 2',       toolTip: 'Value 2',     sort_type: 'float',     style: 'text-align: right;'},
+                   { id: 'col3', name: 'Value 3',       toolTip: 'Value 3',     sort_type: 'float',     style: 'text-align: right;'},
+                   { id: 'col4', name: 'Value 4',       toolTip: 'Value 4',     sort_type: 'float',     style: 'text-align: right;'},
+                   { id: 'col5', name: 'Value 5',       toolTip: 'Value 5',     sort_type: 'float',     style: 'text-align: right;'},
+                   { id: 'col6', name: 'Value 6',       toolTip: 'Value 6',     sort_type: 'float',     style: 'text-align: right;'},
+                   { id: 'col7', name: 'Value 7',       toolTip: 'Value 7',     sort_type: 'float',     style: 'text-align: right;'},
+                   { id: 'col8', name: 'Value 8',       toolTip: 'Value 8',     sort_type: 'float',     style: 'text-align: right;'},
+                   { id: 'col9', name: 'Value 9',       toolTip: 'Value 9',     sort_type: 'float',     style: 'text-align: right;'},
     ];
 
     var options = { caption:            '<span style=\"font-weight: bold;\">Large table with 20000 rows</span>',
@@ -253,6 +253,12 @@
                 <li>Show sum, count and distinct values for numeric columns</li>
 
             </ul>
+            SlickGrid Extended consists of tree files: <a href="https://rawgithub.com/rammpeter/Panorama/master/app/assets/javascripts/slickgrid_extended.js">slickgrid_extended.js</a>,
+            <a href="https://rawgithub.com/rammpeter/Panorama/master/app/assets/javascripts/plot_diagram.js">plot_diagram.js</a>
+            and <a href="https://rawgithub.com/rammpeter/Panorama/master/app/assets/stylesheets/slickgrid_extended.css">slickgrid_extended.css</a>.<br>
+            It depends from the following products, that need to be included with Javascript and CSS before (see source code of this demo page also):<br>
+            jQuery, jQuery-ui, SlickGrid, jQuery.flot, jQuery.contextmenu<br><br>
+
             SlickGrid Extended is used by calling javascript function:<br>
             &gt; createSlickGridExtended(HTML-DIV-ID, Data-Aarray, Columns-Array, options, Additional menu entries);
 
