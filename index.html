@@ -25,11 +25,6 @@
     <script type="text/javascript">
         $.backstretch("images/Rotsidan.jpg");
 
-        var startWith
-
-        if (!startWith)
-            startWith = "start";                                    // mit diesem starten
-
         function menu_call(menu_entry, complete_function){
             var url = menu_entry+'.html';  // Aufgerufene Seite für Darstellung
             //$("*").css("cursor", "progress");
@@ -95,7 +90,7 @@
     </style>
 
 </head>
-<body onload="menu_call(startWith);" style="padding-left: 10px; padding-right: 10px; position: relative;">
+<body onload="menu_call('start');" style="padding-left: 10px; padding-right: 10px; position: relative;">
 <table width="100%" style="z-index: 0;">
     <tr>
         <td colspan="2">
