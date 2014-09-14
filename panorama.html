@@ -24,11 +24,24 @@
             <li>Oracle-User used for login with Panorama requires the right "SELECT ANY DICTIONARY"</li>
             <li>Panorama only reads via SELECT SQLs from database. No write access, structure change, compile etc.</li>
         </ul>
+        Please feel free to use Panorama for your purposes under the terms and conditions of <a href="http://www.gnu.org/licenses/gpl-3.0" target="_blank">GNU General Public License</a>.<br><br>
         Panorama is an Ruby on Rails application<br>
         Source code is available at <a href="http://github.com/rammpeter/Panorama" target="_blank">http://github.com/rammpeter/Panorama</a><br><br>
         You can download Panorama as an immediately startable web archive (<a href="https://www.dropbox.com/s/fw2xazbpq8fpgb2/Panorama.war" target="_blank">Panorama.war</a>).<br><br>
 
-        Please feel free to use Panorama for your purposes under the terms and conditions of <a href="http://www.gnu.org/licenses/gpl-3.0" target="_blank">GNU General Public License</a>.
+        Panorama.war can be run as web archive in any appication server or web container like Tomcat, Glassfish etc. .<br>
+        For immediate usage Panorama.war contains the embedded apllication server "Jetty".<br>
+        To run Panorama.war with Jetty simply type "java -jar Panorama.war". This starts the embedded application server within one or two minutes.<br>
+        You can reach than Panorama's login screen in your browser via "http://localhost:8080/Panorama".<br><br>
+
+        With Jetty you can specify the following additional options executing "java ..options.. -jar Panorama.war":
+        <ul>
+            <li>"-Xmx1024m" :maximum allowed memory allocation for JVM, minimum value of 1024 MB suggested for processing of large results</li>
+            <li>"XX:MaxPermSize=512M" : object space for java classes, suggested value 512MB</li>
+            <li>"-Djetty.port=8090" : define port other than 8080 für Panorama's URL</li>
+            <li>"-Djava.io.tmpdir=mydir" : define working directory for exraction of jar file, default is system's temp dir</li>
+            <li>"-Djruby.compile.invokedynamic=true" : Fix problems with some JREs resulting in "java.lang.ClassNotFoundException: org.jruby.ext.krypt.asn1.RubyAsn1"</li>
+        </ul>
     </div>
 </div>
 </body>
