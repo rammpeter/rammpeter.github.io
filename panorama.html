@@ -22,15 +22,18 @@
             <li>may be deployed as web application to every JEE or web container (Glassfish, JBoss, Tomcat ...)</li>
             <li>some functions of panorama requires licensing of "Diagnostic Pack" for connected Oracle-DB !</li>
             <li>Oracle-User used for login with Panorama requires the right "SELECT ANY DICTIONARY"</li>
+            <li>if using tnsnames.ora it's directory should be targeted by ORACLE_HOME/network/admin or TNS_ADMIN environment variable</li>
             <li>Panorama only reads via SELECT SQLs from database. No write access, structure change, compile etc.</li>
         </ul>
         Please feel free to use Panorama for your purposes under the terms and conditions of <a href="http://www.gnu.org/licenses/gpl-3.0" target="_blank">GNU General Public License</a>.<br><br>
-        Panorama is an Ruby on Rails application<br>
-        Source code is available at <a href="http://github.com/rammpeter/Panorama" target="_blank">http://github.com/rammpeter/Panorama</a><br><br>
+
+        Panorama is an Ruby on Rails application that runs with JRuby, source code is available at <a href="http://github.com/rammpeter/Panorama" target="_blank">http://github.com/rammpeter/Panorama</a><br>
+        <br><br>
+
         You can download Panorama as an immediately startable web archive (<a href="https://www.dropbox.com/s/fw2xazbpq8fpgb2/Panorama.war" target="_blank">Panorama.war</a>).<br><br>
 
-        Panorama.war can be run as web archive in any appication server or web container like Tomcat, Glassfish etc. .<br>
-        For immediate usage Panorama.war contains the embedded apllication server "Jetty".<br>
+        Panorama.war can be run as web archive in any application server or web container like Tomcat, Glassfish etc. .<br>
+        For immediate usage Panorama.war contains the embedded application server "Jetty".<br>
         To run Panorama.war with Jetty simply type "java -jar Panorama.war". This starts the embedded application server within one or two minutes.<br>
         You can reach than Panorama's login screen in your browser via "http://localhost:8080/Panorama".<br><br>
 
