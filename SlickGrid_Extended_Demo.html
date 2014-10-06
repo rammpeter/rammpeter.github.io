@@ -265,16 +265,17 @@
             <h3>Structure of column array entry</h3>
             <pre>
 {
-    id:                 'col0',                 // Column-ID, mandatory
-    name:               'ColName',              // Column Name for display in header row, mandatory
-    toolTip:            'Col-Hint',             // Tooltip for mouse over hint, optional
-    sort_type:          'string',               // Defines sort function for column (supported values: 'string', 'float', 'date'), optional (default=string)
-    cssClass:           'myClass',              // set class value for displayed rows of this column, optional
-    style:              'text-align: right',    // set css style value for displayed rows of this column, optional
-    no_wrap:            true,                   // suppress wrapping of column content if table exceeds page width, optional
-    plot_master:        true,                   // Use this column as x-axis in diagram, optional
-    plot_master_time:   true,                   // Use this column as x-axis with time line in diagram, optional
-    field:              'col0',                 // Field reference in data row, for most cases defaults to id, optional
+    id:                     'col0',                 // Column-ID, mandatory
+    name:                   'ColName',              // Column Name for display in header row, mandatory
+    toolTip:                'Col-Hint',             // Tooltip for mouse over hint, optional
+    sort_type:              'string',               // Defines sort function for column (supported values: 'string', 'float', 'date'), optional (default=string)
+    cssClass:               'myClass',              // set class value for displayed rows of this column, optional
+    style:                  'text-align: right',    // set css style value for displayed rows of this column, optional
+    no_wrap:                true,                   // suppress wrapping of column content if table exceeds page width, optional
+    max_wrap_width_allowed: 200,                    // maximum allowed witdh in pixel of column in wrapped mode, optional
+    plot_master:            true,                   // Use this column as x-axis in diagram, optional
+    plot_master_time:       true,                   // Use this column as x-axis with time line in diagram, optional
+    field:                  'col0',                 // Field reference in data row, for most cases defaults to id, optional
 }
             </pre>
             <h3>Structure of row in data array</h3>
