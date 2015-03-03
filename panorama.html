@@ -18,7 +18,7 @@
                 </ul>
             </li>
             <li>aims to issues that are inadequately analyzed and presented by other existing tools such as Enterprise Manager</li>
-            <li>immmediately startable as Java war-File with built-in Jetty application Server. ( java -jar Panorama.war )</li>
+            <li>immmediately startable as Java war-File with built-in Winstone application Server. ( java -jar Panorama.war )</li>
             <li>may be deployed as web application to every JEE or web container (Glassfish, JBoss, Tomcat ...)</li>
             <li>some functions of panorama requires licensing of "Diagnostic Pack" for connected Oracle-DB !</li>
             <li>Oracle-User used for login with Panorama requires the right "SELECT ANY DICTIONARY"</li>
@@ -33,18 +33,25 @@
         You can download Panorama as an immediately startable web archive (<a href="https://www.dropbox.com/s/fw2xazbpq8fpgb2/Panorama.war" target="_blank">Panorama.war</a>).<br><br>
 
         Panorama.war can be run as web archive in any application server or web container like Tomcat, Glassfish etc. .<br>
-        For immediate usage Panorama.war contains the embedded application server "Jetty".<br>
-        To run Panorama.war with Jetty simply type "java -jar Panorama.war". This starts the embedded application server within one or two minutes.<br>
+        For immediate usage Panorama.war contains the embedded application server "Winstone".<br>
+        To run Panorama.war with Winstone simply type "java -jar Panorama.war". This starts the embedded application server within one or two minutes.<br>
         You can reach than Panorama's login screen in your browser via "http://localhost:8080/Panorama".<br><br>
 
-        With Jetty you can specify the following additional options executing "java ..options.. -jar Panorama.war":
+        You can specify the following additional Java-options executing "java &lt;options&gt; -jar Panorama.war":
         <ul>
             <li>"-Xmx1024m" :maximum allowed memory allocation for JVM, minimum value of 1024 MB suggested for processing of large results</li>
             <li>"XX:MaxPermSize=512M" : object space for java classes, suggested value 512MB</li>
-            <li>"-Djetty.port=8090" : define port other than 8080 für Panorama's URL</li>
             <li>"-Djava.io.tmpdir=mydir" : define working directory for exraction of jar file, default is system's temp dir</li>
             <li>"-Djruby.compile.invokedynamic=true" : Fix possible problems with some JREs resulting in "java.lang.ClassNotFoundException:"</li>
         </ul>
+        <br>
+        You can specify additional Winstone-options executing "java -jar Panorama.war &lt;options&gt;":
+        <ul>
+            <li>Allow only SSL encrypted https-connections with disabled http-port:<br>
+                java -jar Panorama.war --httpPort=-1 --httpsPort=8443 --httpsKeyStore=&lt;keystore file&gt; --httpsKeyStorePassword=&lt;keystore password&gt;
+            </li>
+        </ul>
+
     </div>
 </div>
 </body>
