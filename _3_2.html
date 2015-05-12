@@ -1,0 +1,18 @@
+<h3>Mehrfach offene Cursoren: Mehrfach in Session geöffnete SQL</h3>
+Je Session sollte für ein SQL-Statement i.d.R. auch nur ein Cursor aktiv sein.<br/>
+Mehrfach geöffnete Cursor auf identischen SQL fluten Session_Cached_Cursor und PGA.<pre style='background-color: #FFFFCC;'>SELECT /* SQLs mehrfach als Cursor geoeffnet je Session */
+                             sq.*, cu.SID, s.UserName, cu.Anz_Open_Cursor "Anzahl Open Cursor", cu.Anz_Sql "Anzahl SQL",
+                             s.Client_Info, s.Machine, s.Program, s.Module, s.Action, cu.SQL_Text
+                      FROM   (
+                              SELECT oc.Inst_ID, oc.SID, oc.SQL_ID, COUNT(*) Anz_Open_Cursor, COUNT(DISTINCT oc.SQL_ID) Anz_Sql, MIN(oc.SQL_Text) SQL_Text
+                              FROM   gv$Open_Cursor oc
+                              GROUP BY oc.Inst_ID, oc.SID, oc.SQL_ID
+                              HAVING count(*) > COUNT(DISTINCT oc.SQL_ID)
+                             ) cu
+                      JOIN   gv$Session s ON s.Inst_ID=cu.Inst_ID AND s.SID=cu.SID
+                      JOIN   (SELECT Inst_ID, SQL_ID, COUNT(*) Child_Anzahl, MIN(Parsing_schema_name) Parsing_schema_Name
+                              FROM gv$SQL
+                              GROUP BY Inst_ID, SQL_ID
+                             )sq ON sq.Inst_ID = cu.Inst_ID AND sq.SQL_ID = cu.SQL_ID
+                      WHERE sq.Parsing_Schema_Name NOT IN ('SYS')
+                      ORDER BY cu.Anz_Open_Cursor-cu.Anz_Sql DESC NULLS LAST</pre>

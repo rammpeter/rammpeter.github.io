@@ -1,0 +1,20 @@
+<h3>Schreibende Zugriffe nach Executions (AWR-Historie)</h3>
+Verzögerungen beim Wegschreiben des Logbuffers durch Logwriter führen zu „log file sync“-Wait-Events, z.B. bei Commit.<br/>
+Schreibende Operationen (Insert/Update/Delete), die während „log file sync“ nicht in Logbuffer schreiben können, führen zu „log buffer space“-Wait-Events.<br/>
+Anforderungen auf Blocktransfer im RAC-Verbund führen zu „gc buffer busy“-Wait-Events, wenn die betreffenden Blöcke in der liefernden Instanz gerade von „log buffer space“ bzw. „log file sync“ betroffen sind.<br/>
+Die Wahrscheinlichkeit eines „log buffer space“-Events ist von der Häufigkeit schreibender Operationen abhängig. Die folgenden Selektionen ermitteln häufig ausgeführte schreibende Statements als Kandidaten.<br/>
+Lösung besteht in der Zusammenfassung mehrerer Records (Bulk-Berarbeitung) bei Schreibzugriffen-<pre style='background-color: #FFFFCC;'>SELECT /* DB-Tools Ramm: Schreibende Zugriffe nach Executes */
+                         s.Instance_Number, s.SQL_ID, s.Executions, s.Rows_Processed,
+                         ROUND(s.Rows_Processed/s.Executions,2) "Rows per Exec", t.SQL_Text, TO_CHAR(SUBSTR(t.SQL_Text,1,100))
+                  FROM   (
+                          SELECT s.DBID, s.Instance_Number, s.SQL_ID, SUM(s.Executions_Delta) Executions, SUM(s.Rows_Processed_Delta) Rows_Processed
+                          FROM   DBA_Hist_SQLStat s
+                          JOIN   DBA_Hist_Snapshot ss ON ss.DBID = s.DBID AND ss.Instance_Number = s.Instance_Number AND ss.Snap_ID = s.Snap_ID
+                          WHERE  ss.Begin_Interval_Time > SYSDATE - :P1
+                          GROUP BY s.DBID, s.Instance_Number, s.SQL_ID
+                          HAVING  SUM(s.Executions_Delta) > 0
+                         ) s
+                  JOIN   DBA_Hist_SQLText t ON t.DBID = s.DBID AND t.SQL_ID = s.SQL_ID
+                  WHERE  t.Command_Type IN (2,6,7)
+                  AND    s.Rows_Processed > :P2
+                  ORDER BY Executions DESC NULLS LAST</pre><div>Parameter :P1: Number of days in history backward from now for consideration</div><div>Parameter :P2: Minimale anzahl geschriebene Rows für Aufnahme in Selektion</div>

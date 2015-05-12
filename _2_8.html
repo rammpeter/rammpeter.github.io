@@ -1,0 +1,20 @@
+<h3>Konkurrenz bzgl. Speicher, Latches: Überblick über Sequence-Nutzung</h3>
+Wenn in Applikation gecacht werden kann, müssen Sequences nicht einzeln von DB gelesen werden.<br/>
+    Dies reduziert DB-Roundtrips der Applikation und wird hier bewertet.<pre style='background-color: #FFFFCC;'>SELECT /* DB-Tools Ramm  Ueberblick Sequence-Nutzung */ *
+                      FROM   (
+                              SELECT ROUND(Executions/CASE WHEN (Last_Active_Time - First_Load_Time) < 1 THEN 1 ELSE Last_Active_Time - First_Load_Time END) Executions_per_Day,
+                                     ROUND(Rows_Processed/CASE WHEN (Last_Active_Time - First_Load_Time) < 1 THEN 1 ELSE Last_Active_Time - First_Load_Time END) Rows_Processed_per_Day,
+                                     x.*
+                              FROM   (
+                                      SELECT /*+ ORDERED USE_HASH(p a s) */
+                                             p.Inst_ID, a.Executions, a.Rows_Processed,
+                                             ROUND(a.Rows_Processed/a.Executions,2) Rows_Per_Exec,
+                                             TO_DATE(a.First_Load_Time, 'YYYY-MM_DD/HH24:MI:SS') First_Load_Time, a.Last_Active_Time,
+                                             p.Object_Owner, p.Object_Name, s.Cache_Size,
+                                             a.SQL_ID, a.SQL_Text
+                                      FROM   (SELECT /*+ NO_MERGE */ * FROM gv$SQL_Plan WHERE Operation = 'SEQUENCE') p
+                                      JOIN   (SELECT /*+ NO_MERGE */ * FROM gV$SQL WHERE Executions > 0) a ON a.Inst_ID = p.Inst_ID AND a.SQL_ID = p.SQL_ID AND a.Child_Number = p.Child_Number
+                                      JOIN   (SELECT /*+ NO_MERGE */ * FROM DBA_Sequences) s ON s.Sequence_Owner = p.Object_Owner AND s.Sequence_Name = p.Object_Name
+                                     ) x
+                             )
+                      ORDER BY Executions_per_Day DESC NULLS LAST</pre>

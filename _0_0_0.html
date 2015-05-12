@@ -1,0 +1,17 @@
+<h3>Ensure PCTFree >= 10</h3>
+Ensure that indexes are used with PCTFree >= 10 (minimum from my experience).<br/>
+With PCTFree < 10 (especially = 0) problems with automatic balancing are expected, especially during insert of sorted data<pre style='background-color: #FFFFCC;'>SELECT /* DB-Tools Ramm Index-PCTFree */* FROM (
+                        SELECT Owner, Table_Name, Index_Name, NULL Partition_Name, PCT_Free, Num_Rows
+                        FROM DBA_Indexes
+                        WHERE PCT_FREE < :P1
+                        UNION ALL
+                        SELECT Index_Owner Owner,
+                               (SELECT Table_Name FROM DBA_Indexes i WHERE i.Owner=p.Index_Owner AND i.Index_Name=p.Index_Name
+                               ) Table_Name,
+                               Index_Name, Partition_Name, PCT_Free, Num_Rows
+                        FROM   DBA_Ind_Partitions p
+                        WHERE  PCT_FREE < :P2
+                        )
+                    WHERE Num_Rows > :P3
+                    AND   Owner NOT IN ('SYS', 'SYSTEM', 'SYSMAN')
+                    ORDER BY Num_Rows DESC NULLS LAST</pre><div>Parameter :P1: Selection of indexes underrunning this value for PctFree</div><div>Parameter :P2: Selection of index partitions underrunning this value for PctFree</div><div>Parameter :P3: Minimum number of rows for index</div>

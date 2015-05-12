@@ -1,0 +1,31 @@
+<h3>Possibly useful compression of tables</h3>
+Table compression (COMPRESS FOR xxx) reduces I/O-effort by improvement of cache hit ratio.<br/>
+                Decrease in size by 1/3 to 1/2 is possible.<br/>
+                Min. 20% decrease of size and relevant I/O should exist to compensate CPU overhead of compression/decompression.<pre style='background-color: #FFFFCC;'>SELECT /* Panorama-Tool Ramm */
+                           Owner, Object_Name, Object_Type, SUM(Samples) "Anzahl ASH-Samples", Compression, Compress_For
+                    FROM   (SELECT o.Owner, o.Object_Name, o.Object_Type, h.Samples,
+                                   CASE WHEN o.Object_Type='TABLE' THEN (SELECT Compression FROM DBA_Tables t WHERE t.Owner=o.Owner AND t.Table_Name=o.Object_Name)
+                                        WHEN o.Object_Type='TABLE PARTITION' THEN (SELECT Compression FROM DBA_Tab_Partitions t WHERE t.Table_Owner=o.Owner AND t.Table_Name=o.Object_Name AND t.Partition_Name = o.SubObject_Name)
+                                        WHEN o.Object_Type='TABLE SUBPARTITION' THEN (SELECT Compression FROM DBA_Tab_SubPartitions t WHERE t.Table_Owner=o.Owner AND t.Table_Name=o.Object_Name AND t.SubPartition_Name = o.SubObject_Name)
+                                        WHEN o.Object_Type='INDEX' THEN (SELECT Compression FROM DBA_Indexes i WHERE i.Owner=o.Owner AND i.Index_Name=o.Object_Name)
+                                        WHEN o.Object_Type='INDEX PARTITION' THEN (SELECT Compression FROM DBA_Ind_Partitions i WHERE i.Index_Owner=o.Owner AND i.Index_Name=o.Object_Name AND i.Partition_Name = o.SubObject_Name)
+                                        WHEN o.Object_Type='INDEX SUBPARTITION' THEN (SELECT Compression FROM DBA_Ind_SubPartitions i WHERE i.Index_Owner=o.Owner AND i.Index_Name=o.Object_Name AND i.SubPartition_Name = o.SubObject_Name)
+                                   ELSE 'UNKNOWN'
+                                   END Compression,
+                                   CASE WHEN o.Object_Type='TABLE' THEN (SELECT Compress_For FROM DBA_Tables t WHERE t.Owner=o.Owner AND t.Table_Name=o.Object_Name)
+                                        WHEN o.Object_Type='TABLE PARTITION' THEN (SELECT Compress_For FROM DBA_Tab_Partitions t WHERE t.Table_Owner=o.Owner AND t.Table_Name=o.Object_Name AND t.Partition_Name = o.SubObject_Name)
+                                        WHEN o.Object_Type='TABLE SUBPARTITION' THEN (SELECT Compress_For FROM DBA_Tab_SubPartitions t WHERE t.Table_Owner=o.Owner AND t.Table_Name=o.Object_Name AND t.SubPartition_Name = o.SubObject_Name)
+                                   ELSE 'UNKNOWN'
+                                   END Compress_For
+                            FROM   (SELECT /*+ PARALLEL(h,2) */ Current_Obj#, COUNT(*) Samples
+                                    FROM   DBA_Hist_Active_Sess_History h
+                                    WHERE  Sample_Time > SYSDATE-:P1
+                                    AND    Event = 'db file sequential read'
+                                    GROUP BY Current_Obj#
+                                    HAVING COUNT(*) > :P2
+                                   ) h
+                            LEFT OUTER JOIN DBA_Objects o ON o.Object_ID = h.Current_Obj#
+                           ) x
+                    GROUP BY Owner, Object_Name, Object_Type, Compression, Compress_For
+                    ORDER BY SUM(Samples) DESC
+            </pre><div>Parameter :P1: Number of days in history to consider in active session history</div><div>Parameter :P2: Minimum number of samples in active session history</div>

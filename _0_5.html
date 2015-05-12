@@ -1,0 +1,21 @@
+<h3>Coverage of foreign-key relations by indexes (detection of potentially missing indexes)</h3>
+Protection of colums with foreign key references by index can be necessary for:<br/>
+- Ensure delete performance of referenced table (suppress FullTable-Scan)<br/>
+- Supress lock propagation (shared lock on index instead of table)<pre style='background-color: #FFFFCC;'>SELECT /* DB-Tools Ramm  Index fehlt fuer Foreign Key*/
+                           Ref.Owner, Ref.Table_Name, refcol.Column_Name, refcol.Position, reft.Num_Rows Rows_Org,
+                           Ref.R_Owner, target.Table_Name Target_Table, Ref.R_Constraint_Name, targett.Num_rows Rows_Target
+                    FROM   DBA_Constraints Ref
+                    JOIN   DBA_Cons_Columns refcol  ON refcol.Owner = Ref.Owner AND refcol.Constraint_Name = ref.Constraint_Name
+                    JOIN   DBA_Constraints target   ON target.Owner = ref.R_Owner AND target.Constraint_Name = ref.R_Constraint_Name
+                    JOIN   DBA_Tables reft          ON reft.Owner = ref.Owner AND reft.Table_Name = ref.Table_Name
+                    JOIN   DBA_Tables targett       ON targett.Owner = target.Owner AND targett.Table_Name = target.Table_Name
+                    WHERE  Ref.Constraint_Type='R'
+                    AND    NOT EXISTS (SELECT 1 FROM DBA_Ind_Columns i
+                                       WHERE  i.Table_Owner     = ref.Owner
+                                       AND    i.Table_Name      = ref.Table_Name
+                                       AND    i.Column_Name     = refcol.Column_Name
+                                       AND    i.Column_Position = refcol.Position
+                                       )
+                    AND Ref.Owner NOT IN ('SYS', 'SYSTEM', 'PERFSTAT', 'MDSYS', 'SYSMAN', 'OLAPSYS')
+                    AND targett.Num_rows > :P1
+                    ORDER BY targett.Num_rows DESC NULLS LAST, refcol.Position</pre><div>Parameter :P1: Minimum number of rows of referenced table</div>
