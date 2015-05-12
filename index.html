@@ -26,7 +26,7 @@
         $.backstretch("images/Rotsidan.jpg");
 
         function menu_call(menu_entry, complete_function){
-            var querystring = window.location.querystring;
+            var querystring = window.location.search.substring(1).split("&");
             console.log(querystring);
 
 
