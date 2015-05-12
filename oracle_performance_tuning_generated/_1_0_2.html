@@ -1,0 +1,33 @@
+<h3>Optimizable full table scans operations by executions and rows processed</h3>
+Access by full table scan is critical if only small parts of table are relevant for selection, otherwise are adequate for processing of whole table data.<br/>
+They are out of place for OLTP-like access (small access time, many executions).<br/>
+<pre style='background-color: #FFFFCC;'>SELECT /* DB-Tools Ramm FullTableScans */ * FROM (
+                            SELECT i.SQL_ID, i.Object_Owner, i.Object_Name, ROUND(i.Rows_Processed/i.Executions,2) Rows_per_Exec,
+                                   i.Num_Rows, i.Elapsed_Time_Secs, i.Executions, i.Disk_Reads, i.Buffer_Gets, i.Rows_Processed,
+                                   (SELECT SQL_Text FROM DBA_Hist_SQLText t WHERE t.DBID=i.DBID AND t.SQL_ID=i.SQL_ID) SQL_Text
+                            FROM
+                                   (
+                                    SELECT /*+ PARALLEL(p,4) PARALLEL(s,4) PARALLEL(ss.4) */
+                                           s.DBID, s.SQL_ID, p.Object_Owner, p.Object_Name,
+                                           SUM(Executions_Delta)     Executions,
+                                           SUM(Disk_Reads_Delta)     Disk_Reads,
+                                           SUM(Buffer_Gets_Delta)    Buffer_Gets,
+                                           SUM(Rows_Processed_Delta) Rows_Processed,
+                                           MIN(t.Num_Rows) Num_Rows,
+                                           ROUND(SUM(s.Elapsed_Time_Delta)/1000000,2) Elapsed_Time_Secs
+                                    FROM   DBA_Hist_SQL_Plan p
+                                    JOIN   DBA_Hist_SQLStat s   ON s.DBID=p.DBID AND s.SQL_ID=p.SQL_ID AND s.Plan_Hash_Value=p.Plan_Hash_Value
+                                    JOIN   DBA_Hist_Snapshot ss ON ss.DBID=s.DBID AND ss.Instance_Number=s.Instance_Number AND ss.Snap_ID=s.Snap_ID
+                                    JOIN   DBA_Tables t         ON t.Owner=p.Object_Owner AND t.Table_Name=p.Object_Name
+                                    WHERE  p.Operation = 'TABLE ACCESS'
+                                    AND    p.Options LIKE '%FULL'           /* Auch STORAGE FULL der Exadata mit inkludieren */
+                                    AND    ss.Begin_Interval_Time > SYSDATE - :P1
+                                    AND    p.Object_Owner NOT IN ('SYS')
+                                    AND    t.Num_Rows > :P2
+                                    GROUP BY s.DBID, s.SQL_ID, p.Object_Owner, p.Object_Name
+                                   ) i
+                            WHERE  Rows_Processed > 0
+                            AND    Executions > :P3
+                     )
+                     WHERE  SQL_Text NOT LIKE '%dbms_stats%'
+                     ORDER BY Rows_per_Exec/Num_Rows/Executions</pre><div>Parameter :P1: Number of days in history backward from now for consideration</div><div>Parameter :P2: Minimum number of rows in table for consideration in selection</div><div>Parameter :P3: Minimum number of executions within time range for consideration in result</div>

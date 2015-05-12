@@ -1,0 +1,50 @@
+<h3>Long running transactions from AWH-history (DBA_Hist_Active_Sess_History)</h3>
+Long running transactions contains the risk of lock escalations in OLTP-systems.<br/>
+Writing access should be suspended to the end of process transactions to keep lock time until commit as short as possible.<br/>
+Transaktions in OLTP-systems should be short enough to keep potential lock wait time below user's cognition limits.<br/>
+           <pre style='background-color: #FFFFCC;'>
+              SELECT s.*,
+                     (SELECT UserName FROM DBA_Users u WHERE u.User_ID = s.User_ID) UserName
+              FROM   (
+                      SELECT RAWTOHEX(XID)                  "Transaction-ID",
+                             MIN(Min_Sample_Time)           "Start Tx.",
+                             MAX(Max_Sample_Time)           "End Tx.",
+                             SUM(Samples)                   "No. of Samples",
+                             ROUND(24*60*60*(CAST(MAX(Max_Sample_Time) AS DATE)-CAST(MIN(Min_Sample_Time) AS DATE))) "Duration (Secs.)",
+                             MIN(Min_SQL_ID) KEEP (DENSE_RANK FIRST ORDER BY Min_Sample_Time)       "First SQL-ID",
+                             MAX(Max_SQL_ID) KEEP (DENSE_RANK LAST  ORDER BY Max_Sample_Time)       "Last SQL-ID",
+                             MIN(Inst_ID)                   "Instance",
+                             MIN(TO_CHAR(Session_ID))       "SID",
+                             MIN(TO_CHAR(Session_Serial#))  "Serial number",
+                             MIN(Session_Type)              "Session-Type",
+                             MIN(User_ID)                   User_ID,
+                             MIN(Program)                   "Program",
+                             MIN(Module)                    "Module",
+                             MIN(Action)                    "Action",
+                             MIN(Client_ID)                 "Client-ID",
+                             MAX(Event) KEEP (DENSE_RANK LAST ORDER BY Samples) "Main Event"
+                      FROM   (SELECT /*+ PARALLEL(s,2) */ XID, NVL(Event, Session_State) Event,
+                                     MIN(Sample_Time)               Min_Sample_Time,
+                                     MAX(Sample_Time)               Max_Sample_Time,
+                                     COUNT(*)                       Samples,
+                                     MIN(SQL_ID) KEEP (DENSE_RANK FIRST ORDER BY Sample_Time)       Min_SQL_ID,
+                                     MAX(SQL_ID) KEEP (DENSE_RANK FIRST ORDER BY Sample_Time)       Max_SQL_ID,
+                                     MIN(Instance_Number)                   Inst_ID,
+                                     MIN(Session_ID)                Session_ID,
+                                     MIN(Session_Serial#)           Session_Serial#,
+                                     MIN(Session_Type)              Session_Type,
+                                     MIN(User_ID)                   User_ID,
+                                     MIN(User_ID)                   Program,
+                                     MIN(Module)                    Module,
+                                     MIN(Action)                    Action,
+                                     MIN(Client_ID)                 Client_ID
+                              FROM   DBA_Hist_Active_Sess_History s
+                              WHERE  XID IS NOT NULL
+                              AND    Sample_Time > SYSDATE-:P1
+                              GROUP BY XID, NVL(Event, Session_State)
+                             )
+                      GROUP BY XID
+                     ) s
+              WHERE  "Duration (Secs.)" > :P2
+              ORDER BY "Duration (Secs.)" DESC
+           </pre><div>Parameter :P1: Number of days in history backward from now for consideration</div><div>Parameter :P2: Minimale Dauer der Transaktion in Sekunden für Aufnahme in Selektion</div>

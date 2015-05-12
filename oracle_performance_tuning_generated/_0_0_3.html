@@ -1,0 +1,32 @@
+<h3>Avoid data redundancy in primary key index (move to index-organized tables)</h3>
+IOT-structure for tables is recommended if following criterias outbalance to positive side:<br/>
+Positive: Saving of disk space and buffer cache space due to omission of table itself<br/>
+Positive: Omission of 'table-access by row-id' while accessing data by index, because PKey-index already contains all table data<br/>
+Negative: Enlargement of secondary indexes because of redundant saving of PKey-values in every secondary index<br/>
+Negative: Enlargement of primary key because it contains whole table data<pre style='background-color: #FFFFCC;'>SELECT /* DB-Tools Ramm IOT-Empfehlung */ *
+                    FROM   (
+                            SELECT
+                                   (SELECT Count(*) FROM DBA_Tab_Columns c WHERE c.Owner=t.Owner AND c.Table_Name=t.Table_Name) Anzahl_Columns,
+                                   (SELECT Count(*) FROM DBA_Indexes i WHERE i.Owner=t.Owner AND i.Table_Name=t.Table_Name) Anzahl_Indizes,
+                                   (SELECT Count(*) FROM DBA_Indexes i WHERE i.Owner=t.Owner AND i.Table_Name=t.Table_Name AND i.Uniqueness='UNIQUE') Anzahl_Unique_Indizes,
+                                   (SELECT Count(*)
+                                    FROM DBA_Constraints ac, DBA_Ind_Columns aic
+                                    WHERE ac.Owner = t.Owner
+                                    AND   ac.Table_Name = t.Table_Name
+                                    AND   Constraint_Type='P'
+                                    AND   aic.Index_Owner = ac.Owner
+                                    AND   aic.Index_Name = ac.Index_Name
+                                   ) Anzahl_PKey_Columns,
+                                   t.Owner, t.Table_Name,
+                                   t.Num_Rows,
+                                   t.Avg_Row_Len
+                            FROM   DBA_Tables t
+                            WHERE  t.IOT_Type Is NULL
+                            AND    t.Num_Rows Is NOT NULL AND t.Num_Rows>0 /* nur analysierte Tabellen betrachten */
+                            AND    (SELECT Count(*) FROM DBA_Tab_Columns c WHERE c.Owner=t.Owner AND c.Table_Name=t.Table_Name)<6
+                           )
+                    WHERE Anzahl_Unique_Indizes > 0
+                    AND   Num_Rows > :P1
+                    AND   Owner NOT IN ('SYS')
+                    --AND   Anzahl_PKey_Columns>0 /* Wenn Fehlen des PKeys nicht in Frage gestellt werden darf */
+                    ORDER BY 1/Num_Rows*(Anzahl_Columns-Anzahl_PKey_Columns+1)*Anzahl_Indizes</pre><div>Parameter :P1: Minimum number of rows of index</div>

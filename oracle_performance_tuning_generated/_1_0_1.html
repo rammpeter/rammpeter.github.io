@@ -1,0 +1,34 @@
+<h3>Optimizable full table scan operations by executions</h3>
+Access by full table scan is critical if only small parts of table are relevant for selection, otherwise are adequate for processing of whole table data.<br/>
+They are out of place for OLTP-like access (small access time, many executions).<br/>
+<pre style='background-color: #FFFFCC;'>WITH Backward AS (SELECT :P1 Days FROM Dual)
+                     SELECT /* DB-Tools Ramm FullTableScan */ p.SQL_ID, p.Object_Owner, p.Object_Name,
+                              (SELECT Num_Rows FROM DBA_Tables t WHERE t.Owner = p.Object_Owner AND t.Table_Name = p.Object_Name) Num_Rows,
+                              s.Elapsed_Secs, s.Executions, s.Disk_Reads, s.Buffer_Gets, s.Rows_Processed,
+                             (SELECT SQL_Text FROM DBA_Hist_SQLText t WHERE t.DBID=p.DBID AND t.SQL_ID=p.SQL_ID) SQLText
+                      FROM  (
+                              SELECT /*+ NO_MERGE */ DISTINCT p.DBID, p.Plan_Hash_Value, p.SQL_ID, p.Object_Owner, p.Object_Name /*, p.Access_Predicates, p.Filter_Predicates */
+                              FROM  DBA_Hist_SQL_Plan p
+                              WHERE Operation = 'TABLE ACCESS'
+                              AND   Options LIKE '%FULL'            /* Auch STORAGE FULL der Exadata mit inkludieren */
+                              AND   Object_Owner NOT IN ('SYS')
+                              AND   Timestamp > SYSDATE-(SELECT Days FROM Backward)
+                            ) p
+                      JOIN  (SELECT s.DBID, s.SQL_ID, s.Plan_Hash_Value,
+                                    ROUND(SUM(Elapsed_Time_Delta)/1000000,2) Elapsed_Secs,
+                                    SUM(Executions_Delta)           Executions,
+                                    SUM(Disk_Reads_Delta)           Disk_Reads,
+                                    SUM(Buffer_Gets_Delta)          Buffer_Gets,
+                                    SUM(Rows_Processed_Delta)       Rows_Processed
+                             FROM   DBA_Hist_SQLStat s
+                             JOIN   (SELECT /*+ NO_MERGE */ DBID, Instance_Number, MIN(Snap_ID) Snap_ID
+                                     FROM   DBA_Hist_SnapShot ss
+                                     WHERE  Begin_Interval_Time > SYSDATE-(SELECT Days FROM Backward)
+                                     GROUP BY DBID, Instance_Number
+                                    ) MaxSnap ON MaxSnap.DBID            = s.DBID
+                                             AND   MaxSnap.Instance_Number = s.Instance_Number
+                                             AND   s.Snap_ID               > MaxSnap.Snap_ID
+                             GROUP BY s.DBID, s.SQL_ID, s.Plan_Hash_Value
+                             HAVING SUM(Executions_Delta) > :P2  -- Nur vielfache Ausfuehrung mit Full Scan stellt Problem dar
+                            ) s ON s.DBID=p.DBID AND s.SQL_ID=p.SQL_ID AND s.Plan_Hash_Value=p.Plan_Hash_Value
+                      ORDER BY Executions*Num_Rows DESC NULLS LAST</pre><div>Parameter :P1: Number of days in history backward from now for consideration</div><div>Parameter :P2: Minimum number of executions within time range for consideration in result</div>

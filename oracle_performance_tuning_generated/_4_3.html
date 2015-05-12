@@ -1,0 +1,10 @@
+<h3>Einstellung Recovery-Verhalten</h3>
+Die Vorgaben von Recovery-Zeiten (fast_start_mttr_target) beeinflussen im Extrem drastisch das I/O-Verhalten der DB.<br/>
+Durch Erhöhung der Aggressivität des DB-Writers zur Einhaltung kurzer Vorgaben können:<br/>
+- Viele kleine asynchrone Write-Requests erzeugt werden statt weniger Requests mit mehreren Blöcken (im Normalfall bis 3000 DB-Blöcke / async.Write-Request)<br/>
+- Die max. Anzahl async. Write-Requests des OS erreicht werden und massiv Verzögerungen im I/O der DB auftreten<pre style='background-color: #FFFFCC;'>SELECT /*+ DB-Tools Ramm MTTR-Historie */ r.Instance_Number, ss.Begin_Interval_Time, target_mttr, estimated_mttr, optimal_logfile_size, CKPT_BLOCK_WRITES
+                  FROM   dba_hist_instance_recovery r
+                  JOIN   DBA_Hist_Snapshot ss ON ss.DBID = r.DBID AND ss.Instance_Number = r.Instance_Number AND ss.Snap_ID = r.Snap_ID
+                  WHERE  r.Instance_Number = :P1
+                  AND    ss.Begin_Interval_Time > SYSDATE-:P2
+                  ORDER BY ss.Begin_Interval_Time</pre><div>Parameter :P1: RAC-Instance-Number</div><div>Parameter :P2: Number of days in history backward from now for consideration</div>

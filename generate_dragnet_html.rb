@@ -76,6 +76,8 @@ class Generator
     File.open(filename, 'w') do|file|
       file.write(dragnet_jstree)
     end
+    system("git add #{filename}")
+
   rescue Exception => e
     puts("Exception beim Schreiben in #{filename}: #{e.message}")
     raise
@@ -90,10 +92,35 @@ class Generator
           entry_id = entry_id + 1
         end
       else
-        html_content = "<h3>#{entry[:name]}</h3>"
-        File.open("#{@@target_dir}/#{global_id_prefix}_#{inner_id}.html", 'w') do|file|
+        html_content = "<h3>#{entry[:name]}</h3>\n"
+        html_content << entry[:desc].gsub("\n", "<br/>\n")
+        html_content << "<pre style='background-color: #FFFFCC;'>"
+        sql = entry[:sql]
+        if entry[:parameter]                                                    # Parameter ? ersetzen
+          par = 0
+          entry[:parameter].each do |p|
+            par = par + 1
+            sql.sub!('?', ":P#{par}")
+          end
+        end
+
+        html_content << sql
+        html_content << "</pre>"
+
+        if entry[:parameter]
+          par = 0
+          entry[:parameter].each do |p|
+            par = par + 1
+            html_content << "<div>Parameter :P#{par}: #{p[:title]}</div>"
+
+          end
+        end
+
+        filename = "#{@@target_dir}/#{global_id_prefix}_#{inner_id}.html"
+        File.open(filename, 'w') do|file|
           file.write(html_content)
         end
+        system("git add #{filename}")
       end
     end
 

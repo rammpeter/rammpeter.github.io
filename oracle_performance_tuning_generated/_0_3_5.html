@@ -1,0 +1,5 @@
+<h3>Dropped tables in recycle bin</h3>
+Use 'PURGE RECYCLEBIN' to free space of dropped tables from recycle bin<pre style='background-color: #FFFFCC;'>SELECT /* Panorama-Tool Ramm */ *
+                      FROM   DBA_Tables
+                      WHERE  Dropped = 'YES'
+                      ORDER BY Num_Rows DESC NULLS LAST</pre>

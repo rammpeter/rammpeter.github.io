@@ -1,0 +1,22 @@
+<h3>Local-partitioning for NonUnique-indexes</h3>
+Indexes of partitioned tables may be equal partitioned (LOCAL), especially if partitioning physically isolates different data content of table.<br/>
+Partitioning of indexes may also reduce BLevel of index.<br/>
+For unique indexes this is only true if partition key is equal with first column(s) of index.<br/>
+Negative aspect is multiple access on every partition of index if partition key is not the same like indexed column(s) and partition key is not part of WHERE-filter.<pre style='background-color: #FFFFCC;'>SELECT /* DB-Tools Local-Partitionierung*/
+                             i.Owner, i.Table_Name, i.Index_Name,
+                             i.Num_Rows , i.Distinct_Keys
+                      FROM   DBA_Indexes i,
+                             DBA_Tables t
+                      WHERE  t.Owner      = i.Table_Owner
+                      AND    t.Table_Name = i.Table_Name
+                      AND    i.Partitioned = 'NO'
+                      AND    t.Partitioned = 'YES'
+                      AND    i.UniqueNess  = 'NONUNIQUE'
+                      AND NOT EXISTS (
+                             SELECT '!' FROM DBA_Constraints r
+                             WHERE  r.Owner       = t.Owner
+                             AND    r.Table_Name  = t.Table_Name
+                             AND    r.Constraint_Type = 'U'
+                             AND    r.Index_Name  = i.Index_Name
+                             )
+                      ORDER BY i.Num_Rows DESC NULLS LAST</pre>
