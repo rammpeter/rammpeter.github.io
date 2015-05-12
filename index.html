@@ -26,8 +26,29 @@
         $.backstretch("images/Rotsidan.jpg");
 
         function menu_call(menu_entry, complete_function){
-            var querystring = window.location.search.substring(1).split("&");
-            console.log(querystring);
+            if (!menu_entry){                                                   // kein Parameter  gesetzt
+                // Aufrufparameter der URL zerlegen
+                var GET = {};
+                var query = window.location.search.substring(1).split("&");
+                for (var i = 0, max = query.length; i < max; i++)
+                {
+                    if (query[i] === "") // check for trailing & with no param
+                        continue;
+
+                    var param = query[i].split("=");
+                    GET[decodeURIComponent(param[0])] = decodeURIComponent(param[1] || "");
+                }
+
+
+                if (GET('target')
+                    menu_entry = GET('target');                                 // Ziel aus URL entnehmen
+                else
+                    menu_entry = 'start';                                       // Default
+
+
+            }
+
+
 
 
             var url = menu_entry+'.html';  // Aufgerufene Seite für Darstellung
@@ -94,7 +115,7 @@
     </style>
 
 </head>
-<body onload="menu_call('start');" style="padding-left: 10px; padding-right: 10px; position: relative;">
+<body onload="menu_call();" style="padding-left: 10px; padding-right: 10px; position: relative;">
 <table width="100%" style="z-index: 0;">
     <tr>
         <td colspan="2">
