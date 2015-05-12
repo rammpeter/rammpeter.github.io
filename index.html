@@ -14,18 +14,22 @@
 
     <title>Peter Ramm at GitHub</title>
 
-    <script type="text/javascript" src="jquery-1.7.1.min.js"></script>
+    <script type="text/javascript" src="jquery-1.10.2.js"></script>
 
     <script type="text/javascript" src="jquery.backstretch.min.js"></script>
     <script type="text/javascript" src="jquery-ui-1.8.18.custom.min.js"></script>
     <link rel="stylesheet" href="jquery-ui-1.8.18.custom.css" type="text/css" media="all" />
+
+    <link rel="stylesheet" href="jstree.css" type="text/css" media="all" />
+    <script type="text/javascript" src="jstree.js"></script>
+
 
     <link rel="stylesheet" href="default.css" type="text/css" media="all" />
 
     <script type="text/javascript">
         $.backstretch("images/Rotsidan.jpg");
 
-        function menu_call(menu_entry, complete_function){
+        function menu_call(menu_entry){
             if (!menu_entry){                                                   // kein Parameter  gesetzt
                 // Aufrufparameter der URL zerlegen
                 var GET = {};
@@ -44,11 +48,16 @@
                     menu_entry = GET.target;                                 // Ziel aus URL entnehmen
                 else
                     menu_entry = 'start';                                       // Default
-
-
             }
 
-
+            var complete_function
+            switch(menu_entry) {
+                case 'oracle_performance_tuning':
+                    complete_function = function(){init_opt();}
+                    break;
+                default:
+                    complete_function = null;
+            }
 
 
             var url = menu_entry+'.html';  // Aufgerufene Seite für Darstellung
@@ -135,10 +144,11 @@
         <td valign="top" style="width: 190px; min-width: 190px;">
             <table id="navigator_table" cellspacing="20px" cellpadding="0px" style="color: yellow; ">
                 <tbody>
-                <tr><td class="menu_entry" onclick="menu_call('start');"                >Start</td></tr>
-                <tr><td class="menu_entry" onclick="menu_call('panorama');"             >Panorama</td></tr>
-                <tr><td class="menu_entry" onclick="menu_call('slickgrid_extended');"   >Slickgrid Extended</td></tr>
-                <tr><td class="menu_entry" onclick="menu_call('impressum');"            >Impressum</td></tr>
+                <tr><td class="menu_entry" onclick="menu_call('start');"                    >Start</td></tr>
+                <tr><td class="menu_entry" onclick="menu_call('panorama');"                 >Panorama</td></tr>
+                <tr><td class="menu_entry" onclick="menu_call('oracle_performance_tuning');">Oracle Performance Tuning</td></tr>
+                <tr><td class="menu_entry" onclick="menu_call('slickgrid_extended');"       >Slickgrid Extended</td></tr>
+                <tr><td class="menu_entry" onclick="menu_call('impressum');"                >Impressum</td></tr>
                 </tbody>
             </table>
         </td>

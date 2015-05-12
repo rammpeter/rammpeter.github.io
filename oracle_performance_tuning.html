@@ -1,0 +1,68 @@
+<html>
+<head>
+    <meta content="text/html; charset=UTF-8" http-equiv="content-type">
+    <script type="text/javascript" src="oracle_performance_tuning_generated/dragnet_jstree.js"></script>
+</head>
+<!--<body onload="window.location = 'http://rammpeter.github.io/index.html?target=oracle_performance_tuning';">
+-->
+<body onload="window.location = 'file:///Users/ramm/Documents/Projekte/rammpeter.github/rammpeter.github.io/index.html?target=oracle_performance_tuning';">
+<script type="text/javascript">
+    function init_opt(){
+        console.log('init_opt');
+        init_oracle_performance_tuning();
+
+    }
+
+    function show_dragnet_html(id){
+        $('#dragnet_html').fadeOut('fast', function() {    // Ajax-Aufruf nach FadeOut
+            // Animation complete
+            $.ajax({url: 'oracle_performance_tuning_generated/'+id+'.html',
+                dataType: 'html',
+                success: function(data){
+                    $('#dragnet_html').
+                            html(data).
+                            hide().
+                            fadeIn('fast', function() {
+                                // Animation complete
+                            })
+                    ;
+                },
+                error: function(){
+                    var errmsg = 'Fehler beim Zugriff auf '+url;
+                    console.log(errmsg);
+                },
+                complete: function(){
+                     //$("*").css("cursor", "auto");
+                }
+            });
+        });
+
+    }
+</script>
+
+    <div style="position: relative;" xmlns="http://www.w3.org/1999/html">
+    <div class="shadow opaque" style="width:100%; height: 100%; background-color: #99CC99; position:absolute; top:0px; left:0px; z-index:1;">
+    </div>
+    <div style="position: relative; z-index: 2; padding: 10px;">
+        <h2>Oracle performance tuning</h2>
+        <h3>Dragnet investigation for performance anti-pattern</h3>
+        Here I'll provide you a set of more than 100 SQL-statements.<br/>
+        Each SQL considers a special aspect of performance anti-pattern or pitfalls.
+        It selects for you a list of occurrences and gives you recommendations to possibly fix this issue.<br/>
+        All lists are sorted by relevance so you can start your consideration at top.<br/>
+        Be aware of your own brain. All these findings are recommendations for your personal consideration only.
+        May be they are dramatically worth to develop activities for fixing.<b/>
+        May also be you consider them as: Exactly this way my application should work.<br/><br>
+        If you plan to execute this SQL against your database:<br/>
+        Try my application "Panorama", available at this site.
+        Panorama contains all these SQLs inside and it's much more convenient to execute them in Panorama and instantly drill down more from result into deep.
+
+        <div id="jstree_div" style="background-color: #ffffff;">
+        </div>
+
+        <div id="dragnet_html">
+        </div>
+    </div>
+</div>
+</body>
+</html>
