@@ -26,6 +26,10 @@
         $.backstretch("images/Rotsidan.jpg");
 
         function menu_call(menu_entry, complete_function){
+            var querystring = window.location.querystring;
+            console.log(querystring);
+
+
             var url = menu_entry+'.html';  // Aufgerufene Seite für Darstellung
             //$("*").css("cursor", "progress");
             $('#content').fadeOut('fast', function() {    // Ajax-Aufruf nach FadeOut
