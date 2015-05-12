@@ -1,7 +1,7 @@
 <html>
 <head>
     <meta content="text/html; charset=UTF-8" http-equiv="content-type">
-    <script type="text/javascript" src="oracle_performance_tuning_generated/dragnet_jstree.js"></script>
+    <script type="text/javascript" src="dragnet_jstree.js"></script>
 </head>
 <body onload="window.location = 'http://rammpeter.github.io/index.html?target=oracle_performance_tuning';">
 
@@ -18,7 +18,7 @@
     function show_dragnet_html(id){
         $('#dragnet_html').fadeOut('fast', function() {    // Ajax-Aufruf nach FadeOut
             // Animation complete
-            $.ajax({url: 'oracle_performance_tuning_generated/'+id+'.html',
+            $.ajax({url: id+'.html',
                 dataType: 'html',
                 success: function(data){
                     $('#dragnet_html').

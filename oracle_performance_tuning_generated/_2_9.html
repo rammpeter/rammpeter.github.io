@@ -1,9 +1,0 @@
-<h3>Aktive Sessions (AWR-Historie)</h3>
-Die Anzahl der zu einem Zeitpunkt aktiven Sessions lässt Rückschlüsse auf Systemlast zu<br/>
-    Die Peaks der gleichzeitig aktiven Sessions sollte Grundlage für die Bemessung von Session-Pools (z.B. von Application-Servern) darstellen.<pre style='background-color: #FFFFCC;'>SELECT /*+ PARALLEL(s,4) DB-Tools Ramm: aktive Sessions */
-                             Sample_Time, count(*) "Active Sessions"
-                      FROM   DBA_hist_Active_Sess_History s
-                      WHERE  Sample_Time >SYSDATE - :P1
-                      AND    Instance_Number = :P2
-                      GROUP BY Sample_Time
-                      ORDER BY 1</pre><div>Parameter :P1: Number of days in history backward from now for consideration</div><div>Parameter :P2: RAC-Instance</div>

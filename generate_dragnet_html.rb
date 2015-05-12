@@ -7,8 +7,6 @@ require 'dragnet_helper.rb'
 class Generator
   include DragnetHelper
 
-  @@target_dir = 'oracle_performance_tuning_generated'
-
   # Fake-Implementierungen für Voraussetzungen dragnet_helper
   def t(a, args)
     args[:default]
@@ -72,7 +70,7 @@ class Generator
     }
     "
 
-    filename = "#{@@target_dir}/dragnet_jstree.js"
+    filename = "dragnet_jstree.js"
     File.open(filename, 'w') do|file|
       file.write(dragnet_jstree)
     end
@@ -116,7 +114,7 @@ class Generator
           end
         end
 
-        filename = "#{@@target_dir}/#{global_id_prefix}_#{inner_id}.html"
+        filename = "#{global_id_prefix}_#{inner_id}.html"
         File.open(filename, 'w') do|file|
           file.write(html_content)
         end
