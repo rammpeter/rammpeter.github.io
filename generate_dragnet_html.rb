@@ -7,6 +7,8 @@ require 'dragnet_helper.rb'
 class Generator
   include DragnetHelper
 
+  @@target_dir = 'oracle_performance_tuning_generated'
+
   # Fake-Implementierungen für Voraussetzungen dragnet_helper
   def t(a, args)
     args[:default]
@@ -18,9 +20,15 @@ class Generator
 
   def render_jstree_json
     def render_entry_json(global_id_prefix, inner_id, entry)
+      if global_id_prefix
+        my_id = "#{global_id_prefix}_#{inner_id}"
+      else
+        my_id = inner_id
+      end
+
       result =
           "{
-  \"id\": \"#{"#{global_id_prefix}_#{inner_id}"}\",
+  \"id\": \"#{my_id}\",
   \"text\": \"#{inner_id+1}. #{entry[:name]}\",
   \"state\": { \"opened\": false }
 "
@@ -28,7 +36,7 @@ class Generator
         result << ", \"children\": ["
         entry_id = 0
         entry[:entries].each do |e|
-          result << render_entry_json("#{global_id_prefix}_#{inner_id}", entry_id, e)
+          result << render_entry_json(my_id, entry_id, e)
           entry_id = entry_id + 1
         end
         result[result.length-1] = ' '                                           # letztes Komma entfernen
@@ -43,7 +51,7 @@ class Generator
     jstree_json = '['                                                              # JSON-Buffer
     entry_id = 0
     dragnet_sql_list.each do |s|
-      jstree_json << render_entry_json('', entry_id, s)
+      jstree_json << render_entry_json(nil, entry_id, s)
       entry_id = entry_id + 1
     end
     jstree_json[jstree_json.length-1] = ' '                                           # letztes Komma entfernen
@@ -70,7 +78,7 @@ class Generator
     }
     "
 
-    filename = "dragnet_jstree.js"
+    filename = "#{@@target_dir}/dragnet_jstree.js"
     File.open(filename, 'w') do|file|
       file.write(dragnet_jstree)
     end
@@ -83,10 +91,16 @@ class Generator
 
   def create_htmls
     def process_entry(global_id_prefix, inner_id, entry)
+      if global_id_prefix
+        my_id = "#{global_id_prefix}_#{inner_id}"
+      else
+        my_id = inner_id
+      end
+
       if entry[:entries]                                                        # Menu-Knoten
         entry_id = 0
         entry[:entries].each do |e|
-          process_entry("#{global_id_prefix}_#{inner_id}", entry_id, e)
+          process_entry(my_id, entry_id, e)
           entry_id = entry_id + 1
         end
       else
@@ -114,7 +128,7 @@ class Generator
           end
         end
 
-        filename = "#{global_id_prefix}_#{inner_id}.html"
+        filename = "#{@@target_dir}/#{my_id}.html"
         File.open(filename, 'w') do|file|
           file.write(html_content)
         end
@@ -124,7 +138,7 @@ class Generator
 
     entry_id = 0
     dragnet_sql_list.each do |s|
-      process_entry('', entry_id, s)
+      process_entry(nil, entry_id, s)
       entry_id = entry_id + 1
     end
   end # create_htmls
