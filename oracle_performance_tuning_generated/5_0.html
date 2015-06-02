@@ -1,6 +1,6 @@
-<h3>Erheblich größere Laufzeit je Module gegenüber Durchschnitt über längere Zeit</h3>
-Auf Basis der Active Session History lassen sich Ausreiser der DB-Laufzeit je Modul ausweisen.<br/>
-Die Betrachtungseinheit wird über date format picture der TRUNC-Funktion festgelegt (DD=Tag, HH24=Stunde etc.)<pre style='background-color: #FFFFCC;'>WITH Modules AS (
+<h3>Substantial larger runtime per module compared to average over longer time range</h3>
+Based on active session history are shown outlier on databaase runtime per module je Module.<br/>
+Units for time consideration are defined by date format picture of TRUNC-function (DD=day, HH24=hour etc.)<pre style='background-color: #FFFFCC;'>WITH Modules AS (
                SELECT /*+ PARALLEL(h,2) */
                       TRUNC(Sample_Time, picture)  Time_Range_Start,
                       Module,

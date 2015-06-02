@@ -1,24 +1,38 @@
-<h3>Langlaufende Statements ohne Nutzung Parallel Query (Auswertung AWR-Historie)</h3>
-Für langlaufende Statements kann unter Umständen die Nutzung des Features Parallel Query die Laufzeit drastisch reduzieren.<pre style='background-color: #FFFFCC;'>SELECT /*+ ORDERED USE_HASH(s) "DB-Tools Ramm ohne Parallel Query aus Historie"*/
-                             s.*,
-                             ROUND(s.Elapsed_Time_Sec/DECODE(s.Executions, 0, 1, s.Executions),2) "Elapsed time per exec (secs)",
-                             (SELECT SQL_Text FROM DBA_Hist_SQLText t WHERE t.DBID = s.DBID AND t.SQL_ID = s.SQL_ID) Statement
-                      FROM   (SELECT
-                                     s.DBID, s.Instance_Number, s.SQL_ID,
-                                     ROUND(SUM(s.Elapsed_Time_Delta)/10000)/100 Elapsed_Time_Sec,
-                                     SUM(s.Executions_Delta) Executions,
-                                     MIN(ss.Begin_Interval_time) First_Occurrence,
-                                     MAX(ss.Begin_Interval_Time) Last_Occurrence
-                              FROM   (
-                                      SELECT /*+ NO_MERGE */ DBID, SQL_ID, Plan_Hash_Value
-                                      FROM   DBA_Hist_SQL_Plan p
-                                      GROUP BY DBID, SQL_ID, Plan_Hash_Value
-                                      HAVING SUM(CASE WHEN Other_Tag LIKE 'PARALLEL%' THEN 1 ELSE 0 END) = 0
-                                     ) p
-                              JOIN   DBA_Hist_SQLStat s ON s.DBID = p.DBID AND s.SQL_ID = p.SQL_ID AND s.Plan_Hash_Value = p.Plan_Hash_Value
-                              JOIN   DBA_Hist_Snapshot ss ON ss.DBID = s.DBID AND ss.Instance_Number = s.Instance_Number AND ss.Snap_ID = s.Snap_ID
-                              WHERE  ss.Begin_Interval_Time > SYSDATE - :P1
-                              GROUP BY s.DBID, s.Instance_Number, s.SQL_ID
-                             ) s
-                      WHERE  s.Elapsed_Time_Sec/DECODE(s.Executions, 0, 1, s.Executions) > :P2 /* > 50 Sekunden */
-                      ORDER BY s.Elapsed_Time_Sec/DECODE(s.Executions, 0, 1, s.Executions) DESC NULLS LAST</pre><div>Parameter :P1: Number of days in history backward from now for consideration</div><div>Parameter :P2: Minimale elapsed time per execution für Aufnahme in Selektion</div>
+<h3>Iteration im Nested-Loop-Join gegen Full-Scan-Operation</h3>
+Vielfache Ausführung von Full-Scan Operationen per Iteration in Nested Loop Join kann zu exorbitanten Blockzugriffen führen und damit  massiv CPU und I/O-Ressourcen beanspruchen sowie Cache Buffers Chains Latch-Waits provozieren.<br/>
+Legitim ist ein solcher Zugriff allerdings, wenn steuerndes Result des Nested Loop einen oder wenige Records liefert.<br/>
+Statement muss für jede RAC-Instanz separat angewandt werden, da wegen akzeptabler akzeptabler Laufzeit nur die aktuell angemeldete Instanz geprüft wird.<pre style='background-color: #FFFFCC;'>SELECT p.Inst_ID, p.SQL_ID, s.Executions, s.Elapsed_Time/1000000 Elapsed_time_Secs, p.Child_Number, p.Plan_Hash_Value,
+                             p.Operation, p.Options, p.Object_Owner, Object_Name, p.ID, s.SQL_FullText
+                      FROM   (
+                              WITH Plan AS (SELECT /*+ MATERIALIZE  */
+                                                   p.Inst_ID, p.SQL_ID, p.Child_Number, p.Plan_Hash_Value,
+                                                   p.Inst_ID||'|'||p.SQL_ID||'|'||p.Child_Number||'|'||p.Plan_Hash_Value SQL_Ident,
+                                                   p.Operation, p.Options, p.Object_Type, p.Object_Owner, p.Object_Name, p.ID, p.Parent_ID
+                                            FROM   gV$SQL_Plan p
+                                           )
+                              SELECT pnl2.*    -- Daten der zweiten Zeile unter Nested Loop (ueber die iteriert wird)
+                              FROM   Plan pnl -- Nested Loop-Zeile
+                              JOIN   Plan pnl1 ON  pnl1.SQL_Ident      = pnl.SQL_Ident      -- erste Zeile unter Nested Loop (Datenherkunft)
+                                               AND pnl1.Parent_ID      = pnl.ID
+                              JOIN   Plan pnl2 ON  pnl2.SQL_Ident      = pnl1.SQL_Ident       -- zweite Zeile unter Nested Loop (iterativer Zugriff)
+                                               AND pnl2.Parent_ID      = pnl.ID
+                                               AND pnl1.ID             < pnl2.ID             -- 1. ID ist Herkunft, 2. ID ist Iteration des NL
+                              LEFT OUTER JOIN   Plan sub1 ON sub1.SQL_Ident = pnl2.SQL_Ident AND sub1.Parent_ID = pnl2.ID
+                              LEFT OUTER JOIN   Plan sub2 ON sub2.SQL_Ident = pnl2.SQL_Ident AND sub2.Parent_ID = sub1.ID
+                              LEFT OUTER JOIN   Plan sub3 ON sub3.SQL_Ident = pnl2.SQL_Ident AND sub3.Parent_ID = sub2.ID
+                              LEFT OUTER JOIN   Plan sub4 ON sub4.SQL_Ident = pnl2.SQL_Ident AND sub4.Parent_ID = sub3.ID
+                              LEFT OUTER JOIN   Plan sub5 ON sub5.SQL_Ident = pnl2.SQL_Ident AND sub5.Parent_ID = sub4.ID
+                              WHERE  pnl.Operation = 'NESTED LOOPS'
+                              AND  (    pnl2.Options LIKE '%FULL%'
+                                     OR sub1.Options LIKE '%FULL%'
+                                     OR sub2.Options LIKE '%FULL%'
+                                     OR sub3.Options LIKE '%FULL%'
+                                     OR sub4.Options LIKE '%FULL%'
+                                     OR sub5.Options LIKE '%FULL%'
+                                   )
+                             ) p
+                      JOIN   gv$SQL s ON  s.Inst_ID         = p.Inst_ID
+                                      AND s.SQL_ID          = p.SQL_ID
+                                      AND s.Child_Number    = p.Child_Number
+                                      AND s.Plan_Hash_Value = p.Plan_Hash_Value
+                      ORDER BY Elapsed_Time DESC NULLS LAST</pre>

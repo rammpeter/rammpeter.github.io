@@ -1,19 +1,23 @@
-<h3>Statements mit unnötig hoher Ausführungszahl: Unnötig hohe Execute-Anzahl wegen fehlender Array-Verarbeitung</h3>
-Bei geringer Anzahl Rows je Execution und hoher Execution-Zahl lohnt sich die Bündelung von Schreibzugriffen in Array-Operationen bzw. PL/SQL-FORALL-Operationen wenn sie in selber Transaktion stattfinden.<br/>
-Damit moderate Reduktion von CPU-Belastung und Laufzeit.<br/>
-<pre style='background-color: #FFFFCC;'>SELECT /* DB-Tools Ramm: Buendelbare Einzeilsatz-Executes */ s.SQL_ID, s.Instance_Number Instance, Parsing_Schema_Name,
-                             SUM(s.Executions_Delta) Executions,
-                             ROUND(SUM(s.Elapsed_Time_Delta)/1000000) Elapsed_Time_Secs,
-                             SUM(s.Rows_Processed_Delta) Rows_Processed,
-                             ROUND(SUM(s.Rows_Processed_Delta)/SUM(s.Executions_Delta),2) Rows_per_Exec,
-                             ROUND(SUM(s.Executions_Delta)/SUM(s.Rows_Processed_Delta),2) Execs_Per_Row,
-                             MIN(TO_CHAR(SUBSTR(t.SQL_Text,1,4000))) SQL
-                      FROM   DBA_Hist_SQLStat s
-                      JOIN   DBA_Hist_SnapShot ss ON ss.DBID=s.DBID AND ss.Instance_Number=s.Instance_Number AND ss.Snap_ID=s.Snap_ID
-                      JOIN   DBA_Hist_SQLText t ON t.DBID=s.DBID AND t.SQL_ID=s.SQL_ID AND t.Command_Type IN (2,6,7) /* Insert, Update, Delete */
-                      WHERE  ss.Begin_Interval_Time > SYSDATE - :P1
-                      AND    Parsing_Schema_Name NOT IN ('SYS')
-                      GROUP BY s.SQL_ID, s.Instance_Number, Parsing_Schema_Name
-                      HAVING SUM(s.Executions_Delta) > :P2
-                      AND    SUM(s.Rows_Processed_Delta) > 0
-                      ORDER BY SUM(Executions_Delta)*SUM(Executions_Delta)/SUM(Rows_Processed_Delta) DESC NULLS LAST</pre><div>Parameter :P1: Number of days in history backward from now for consideration</div><div>Parameter :P2: Minimum number of executions for consideration in result</div>
+<h3>Unnötig hohe Fetch-Anzahl wegen fehlender Array-Nutzung: Auswertung SGA</h3>
+Bei größeren Results je Execution lohnt sich der Array-Zugriff auf mehrere Records  je Fetch statt Einzelzugriff.<br/>
+Damit moderate Reduktion von CPU-Belastung und Laufzeit<br/>
+<pre style='background-color: #FFFFCC;'>SELECT * FROM (
+                              SELECT Inst_ID, Parsing_Schema_Name "Parsing schema name",
+                                     Module,
+                                     SQL_ID, Executions, Fetches "Number of fetches",
+                                     End_Of_Fetch_Count "Number of fetches until end",
+                                     Rows_Processed "Rows processed",
+                                     ROUND(Rows_Processed/Executions,2) "Rows per exec",
+                                     ROUND(Fetches/Executions,2) "Fetches per exec",
+                                     ROUND(Rows_Processed/Fetches,2) "Rows per fetch",
+                                     ROUND(Elapsed_Time/1000000,2) "Elapsed time (secs)",
+                                     ROUND(Executions * (MOD(Rows_Processed/Executions, 1000) / (Rows_Processed/Fetches) -1)) "Additional Fetches",
+                                     SQL_FullText
+                              FROM   GV$SQLArea s
+                              WHERE  Fetches > Executions
+                              AND    Fetches > 1
+                              AND    Executions > 0
+                              AND    Rows_Processed > 0
+                              )
+                              WHERE "Fetches per exec" > :P1
+                              ORDER BY "Additional Fetches" DESC NULLS LAST</pre><div>Parameter :P1: Minimum number of fetches per execution for consideration in result</div>

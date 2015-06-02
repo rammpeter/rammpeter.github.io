@@ -1,13 +1,13 @@
-<h3>Schreibende Zugriffe nach Executions (Aktuelle SGA)</h3>
-Verzögerungen beim Wegschreiben des Logbuffers durch Logwriter führen zu „log file sync“-Wait-Events, z.B. bei Commit.<br/>
-Schreibende Operationen (Insert/Update/Delete), die während „log file sync“ nicht in Logbuffer schreiben können, führen zu „log buffer space“-Wait-Events.<br/>
-Anforderungen auf Blocktransfer im RAC-Verbund führen zu „gc buffer busy“-Wait-Events, wenn die betreffenden Blöcke in der liefernden Instanz gerade von „log buffer space“ bzw. „log file sync“ betroffen sind.<br/>
-Die Wahrscheinlichkeit eines „log buffer space“-Events ist von der Häufigkeit schreibender Operationen abhängig. Die folgenden Selektionen ermitteln häufig ausgeführte schreibende Statements als Kandidaten.<br/>
-Lösung besteht in der Zusammenfassung mehrerer Records (Bulk-Berarbeitung) bei Schreibzugriffen-<pre style='background-color: #FFFFCC;'>SELECT /* DB-Tools Ramm: Schreibende Zugriffe nach Executes */
+<h3>Write access by executions (current SGA)</h3>
+Delays during log buffer write by log writer lead to „log file sync“ wait events, especially during commit.<br/>
+Writing operations (Insert/Update/Delete) which cannot write into log buffer during „log file sync“ lead to „log buffer space“ wait events.<br/>
+Requests for block transfer in RAC environment lead to „gc buffer busy“ wait events, if requested blocks in delivering RAC-instance are affected by simultaneous „log buffer space“ or „log file sync“ events.<br/>
+The likelihood of „log buffer space“ events depends from frequency of writing operations. This selection determines heavy frequented write SQLs as candidates for deeper consideration.<br/>
+Solution can be the aggregation of multiple writes (bulk-processing).<pre style='background-color: #FFFFCC;'>SELECT /* DB-Tools Ramm: Schreibende Zugriffe nach Executes */
                          Inst_ID, SQL_ID, Parsing_Schema_Name, Executions, Rows_Processed, ROUND(Rows_Processed/Executions,2) "Rows per Exec",
                          ROUND(Elapsed_Time/1000000) Elapsed_Time_Secs, SQL_Text
                   FROM   GV$SQLArea
                   WHERE  Command_Type IN (2,6,7)
                   AND    Executions > 0
                   AND    Rows_Processed > :P1
-                  ORDER BY Executions DESC NULLS LAST</pre><div>Parameter :P1: Minimale anzahl geschriebene Rows für Aufnahme in Selektion</div>
+                  ORDER BY Executions DESC NULLS LAST</pre><div>Parameter :P1: Minimum number of written rows for consideration in result</div>

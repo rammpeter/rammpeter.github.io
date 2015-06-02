@@ -1,0 +1,36 @@
+<h3>Possibly unnecessary SQL executions if selects/updates/deletes never hit a record</h3>
+Select- / update- or delete-statements, which due to their filter conditions never hit records, may be candidates for elimination.<br/>
+Otherwise they can be treated as check statements that never expect hits in normal way.<br/>
+<pre style='background-color: #FFFFCC;'>SELECT /*+ USE_NL(t)  “DB-Tools Ramm Ohne Result */ s.*, t.SQL_Text "SQL-Text"
+                      FROM  (
+                               SELECT /*+ NO_MERGE ORDERED */ s.DBID, s.SQL_ID, s.Instance_number "Instance",
+                                      NVL(MIN(Parsing_Schema_Name), '[UNKNOWN]') "UserName", /* sollte immer gleich sein in Gruppe */
+                                      MAX(Buffer_Gets_Delta)                                         "max. BufferGets betw.snapshots",
+                                      SUM(Executions_Delta)                                          "Executions",
+                                      ROUND(SUM(Elapsed_Time_Delta)/1000000)                         "Elapsed Time (Sec)",
+                                      ROUND(SUM(ELAPSED_TIME_Delta/1000) / DECODE(SUM(EXECUTIONS_Delta),
+                                          0, 1, SUM(EXECUTIONS_Delta)),2)                            "Elapsed Time per Execute (ms)",
+                                      ROUND(SUM(CPU_Time_Delta)/1000000)                             "CPU-Time (Secs)",
+                                      SUM(Disk_Reads_Delta)                                          "Disk Reads",
+                                      ROUND(SUM(DISK_READS_delta) / DECODE(SUM(EXECUTIONS_Delta),
+                                          0, 1, SUM(EXECUTIONS_Delta)),4)                            "Disk Reads per Execute",
+                                      ROUND(SUM(Executions_Delta) / DECODE(SUM(Disk_Reads_Delta),
+                                          0, 1, SUM(Disk_Reads_Delta)),2)                            "Executions per Disk Read",
+                                      SUM(Buffer_Gets_Delta)                                         "Buffer Gets",
+                                      ROUND(SUM(BUFFER_GETS_delta) / DECODE(SUM(EXECUTIONS_Delta),
+                                          0, 1, SUM(EXECUTIONS_delta)),2)                            "Buffer Gets per Execution"
+                               FROM   dba_hist_snapshot snap
+                               JOIN   DBA_Hist_SQLStat s ON (s.Snap_ID=snap.Snap_ID AND s.DBID=snap.DBID AND s.instance_number=snap.Instance_Number)
+                               WHERE  snap.Begin_Interval_time > SYSDATE - :P1
+                               GROUP BY s.DBID, s.SQL_ID, s.Instance_number
+                               HAVING SUM(Executions_Delta) > :P2
+                                      AND SUM(Rows_Processed_Delta) = 0
+                               ) s
+                            JOIN   DBA_Hist_SQLText t  ON (t.DBID=s.DBID AND t.SQL_ID=s.SQL_ID)
+                      WHERE (   UPPER(t.SQL_Text) LIKE 'UPDATE%'
+                             OR UPPER(t.SQL_Text) LIKE 'DELETE%'
+                             OR UPPER(t.SQL_Text) LIKE 'MERGE%'
+                             OR UPPER(t.SQL_Text) LIKE 'SELECT%'
+                             OR UPPER(t.SQL_Text) LIKE 'WITH%'
+                             )
+                      ORDER BY s."Elapsed Time (Sec)" DESC NULLS LAST</pre><div>Parameter :P1: Number of days in history backward from now for consideration</div><div>Parameter :P2: Minimum number of executions within time range for consideration in selection</div>

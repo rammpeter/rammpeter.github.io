@@ -149,93 +149,105 @@
   "id": "1_0_3",
   "text": "4. Optimizable full table scan operations at long running foreign key checks by deletes",
   "state": { "opened": false }
+, "icon":"images/application-monitor.png"},{
+  "id": "1_0_4",
+  "text": "5. Long running full table scans caused by IS NULL selection (from 11g)",
+  "state": { "opened": false }
 , "icon":"images/application-monitor.png"} ]},{
   "id": "1_1",
-  "text": "2. Übermäßige Anzahl Zugriffe auf Cache-Buffer",
+  "text": "2. Potential problems with parallel query",
+  "state": { "opened": false }
+, "children": [{
+  "id": "1_1_0",
+  "text": "1. Long running queries without usage of parallel query (Evaluation of SGA)",
   "state": { "opened": false }
 , "icon":"images/application-monitor.png"},{
+  "id": "1_1_1",
+  "text": "2. Long running queries without usage of parallel query (Evaluation of AWR history)",
+  "state": { "opened": false }
+, "icon":"images/application-monitor.png"},{
+  "id": "1_1_2",
+  "text": "3. Statements with parallel query but with not parallelized contents (evaluation of SGA)",
+  "state": { "opened": false }
+, "icon":"images/application-monitor.png"},{
+  "id": "1_1_3",
+  "text": "4. Statements with parallel query but with not parallelized contents (evaluation of AWR history)",
+  "state": { "opened": false }
+, "icon":"images/application-monitor.png"},{
+  "id": "1_1_4",
+  "text": "5. SQLs executed in parallel but with usage of stored functions without PARALLEL_ENABLE",
+  "state": { "opened": false }
+, "icon":"images/application-monitor.png"},{
+  "id": "1_1_5",
+  "text": "6. Statements with parallel query and serial processing of process parts",
+  "state": { "opened": false }
+, "icon":"images/application-monitor.png"},{
+  "id": "1_1_6",
+  "text": "7. Parallel Query: Degree of parallelism (number of attached PQ servers) higher than limit for single SQL execution",
+  "state": { "opened": false }
+, "icon":"images/application-monitor.png"} ]},{
   "id": "1_2",
-  "text": "3. Statements mit unnötig hoher Ausführungszahl: Zugriff auf kleine Objekte",
+  "text": "3. Potentially unnecessary execution of SQL statements",
+  "state": { "opened": false }
+, "children": [{
+  "id": "1_2_0",
+  "text": "1. Possibly unnecessary SQL executions if selects/updates/deletes never hit a record",
   "state": { "opened": false }
 , "icon":"images/application-monitor.png"},{
+  "id": "1_2_1",
+  "text": "2. Possibly unnecessary execution of statements if updates have unnecessary filter in WHERE-condition (examination of SGA)",
+  "state": { "opened": false }
+, "icon":"images/application-monitor.png"},{
+  "id": "1_2_2",
+  "text": "3. Possibly unnecessary execution of statements if updates have unnecessary filter in WHERE-condition (examination of AWH history)",
+  "state": { "opened": false }
+, "icon":"images/application-monitor.png"} ]},{
   "id": "1_3",
-  "text": "4. Unnötig hohe Fetch-Anzahl wegen fehlender Array-Nutzung: Auswertung SGA",
+  "text": "4. Potentially unnecessary high execution/fetch-frequency of SQL statements",
   "state": { "opened": false }
-, "icon":"images/application-monitor.png"},{
+, "children": [{
+  "id": "1_3_0",
+  "text": "1. Excessive number of cache buffer accesses",
+  "state": { "opened": false }
+, "icon":"images/application-monitor.png"} ]},{
   "id": "1_4",
-  "text": "5. Unnötig hohe Fetch-Anzahl wegen fehlender Array-Nutzung: Auswertung AWR-Historie",
+  "text": "5. Statements mit unnötig hoher Ausführungszahl: Zugriff auf kleine Objekte",
   "state": { "opened": false }
 , "icon":"images/application-monitor.png"},{
   "id": "1_5",
-  "text": "6. Statements mit unnötig hoher Ausführungszahl: Unnötig hohe Execute-Anzahl wegen fehlender Array-Verarbeitung",
+  "text": "6. Unnötig hohe Fetch-Anzahl wegen fehlender Array-Nutzung: Auswertung SGA",
   "state": { "opened": false }
 , "icon":"images/application-monitor.png"},{
   "id": "1_6",
-  "text": "7. Unnötige Ausführung von Statements: Selects/Updates/Deletes ohne Treffer",
+  "text": "7. Unnötig hohe Fetch-Anzahl wegen fehlender Array-Nutzung: Auswertung AWR-Historie",
   "state": { "opened": false }
 , "icon":"images/application-monitor.png"},{
   "id": "1_7",
-  "text": "8. Unnötige Ausführung von Statements: Updates mit unnötigem Filter in WHERE-Bedingung (Auswertung SGA)",
+  "text": "8. Statements mit unnötig hoher Ausführungszahl: Unnötig hohe Execute-Anzahl wegen fehlender Array-Verarbeitung",
   "state": { "opened": false }
 , "icon":"images/application-monitor.png"},{
   "id": "1_8",
-  "text": "9. Unnötige Ausführung von Statements: Updates mit unnötigem Filter in WHERE-Bedingung (Auswertung AWR-Historie)",
+  "text": "9. Identifikation von Statements mit wechselndem Ausführungsplan aus Historie",
   "state": { "opened": false }
 , "icon":"images/application-monitor.png"},{
   "id": "1_9",
-  "text": "10. Langlaufende Statements ohne Nutzung Parallel Query (Auswertung SGA)",
+  "text": "10. Nested-Loop-Join auf große Tabellen mit großem Result des SQL (Test per SGA-Statement-Cache)",
   "state": { "opened": false }
 , "icon":"images/application-monitor.png"},{
   "id": "1_10",
-  "text": "11. Langlaufende Statements ohne Nutzung Parallel Query (Auswertung AWR-Historie)",
+  "text": "11. Iteration im Nested-Loop-Join gegen Full-Scan-Operation",
   "state": { "opened": false }
 , "icon":"images/application-monitor.png"},{
   "id": "1_11",
-  "text": "12. Probleme bei Nutzung Parallel Query: Parallelisierte Statements mit nicht parallelisierten Anteilen (Auswertung SGA)",
+  "text": "12. Implizite Konvertierungen per INTERNAL_FUNCTION",
   "state": { "opened": false }
 , "icon":"images/application-monitor.png"},{
   "id": "1_12",
-  "text": "13. Probleme bei Nutzung Parallel Query: Parallelisierte Statements mit nicht parallelisierten Anteilen (Auswertung AWR-Historie)",
+  "text": "13. Problematic usage of cartesian joins (from current SGA)",
   "state": { "opened": false }
 , "icon":"images/application-monitor.png"},{
   "id": "1_13",
-  "text": "14. Probleme bei Nutzung Parallel Query: Parallel ausgeführte SQL mit Nutzung Stored Functions ohne PARALLEL_ENABLE",
-  "state": { "opened": false }
-, "icon":"images/application-monitor.png"},{
-  "id": "1_14",
-  "text": "15. Probleme bei Nutzung Parallel Query: Parallele Statements mit serieller Abarbeitung von Teilprozessen",
-  "state": { "opened": false }
-, "icon":"images/application-monitor.png"},{
-  "id": "1_15",
-  "text": "16. Parallel Query: Degree of parallelism (number of attached PQ servers) higher than limit for single SQL execution",
-  "state": { "opened": false }
-, "icon":"images/application-monitor.png"},{
-  "id": "1_16",
-  "text": "17. Identifikation von Statements mit wechselndem Ausführungsplan aus Historie",
-  "state": { "opened": false }
-, "icon":"images/application-monitor.png"},{
-  "id": "1_17",
-  "text": "18. Nested-Loop-Join auf große Tabellen mit großem Result des SQL (Test per SGA-Statement-Cache)",
-  "state": { "opened": false }
-, "icon":"images/application-monitor.png"},{
-  "id": "1_18",
-  "text": "19. Iteration im Nested-Loop-Join gegen Full-Scan-Operation",
-  "state": { "opened": false }
-, "icon":"images/application-monitor.png"},{
-  "id": "1_19",
-  "text": "20. Implizite Konvertierungen per INTERNAL_FUNCTION",
-  "state": { "opened": false }
-, "icon":"images/application-monitor.png"},{
-  "id": "1_20",
-  "text": "21. Lang laufende Full Table Scans durch IS NULL-Abfrage (ab 11g)",
-  "state": { "opened": false }
-, "icon":"images/application-monitor.png"},{
-  "id": "1_21",
-  "text": "22. Problematic usage of cartesian joins (from current SGA)",
-  "state": { "opened": false }
-, "icon":"images/application-monitor.png"},{
-  "id": "1_22",
-  "text": "23. Problematic usage of cartesian joins (from AWR history)",
+  "text": "14. Problematic usage of cartesian joins (from AWR history)",
   "state": { "opened": false }
 , "icon":"images/application-monitor.png"} ]},{
   "id": "2",
@@ -323,11 +335,11 @@
   "state": { "opened": false }
 , "children": [{
   "id": "4_0",
-  "text": "1. Schreibende Zugriffe nach Executions (Aktuelle SGA)",
+  "text": "1. Write access by executions (current SGA)",
   "state": { "opened": false }
 , "icon":"images/application-monitor.png"},{
   "id": "4_1",
-  "text": "2. Schreibende Zugriffe nach Executions (AWR-Historie)",
+  "text": "2. Write access by executions (AWR history)",
   "state": { "opened": false }
 , "icon":"images/application-monitor.png"},{
   "id": "4_2",
@@ -343,7 +355,7 @@
   "state": { "opened": false }
 , "children": [{
   "id": "5_0",
-  "text": "1. Erheblich größere Laufzeit je Module gegenüber Durchschnitt über längere Zeit",
+  "text": "1. Substantial larger runtime per module compared to average over longer time range",
   "state": { "opened": false }
 , "icon":"images/application-monitor.png"},{
   "id": "5_1",
