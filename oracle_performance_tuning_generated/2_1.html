@@ -1,8 +1,10 @@
-<h3>Identifikation von HotBlocks im DB-Cache: Suboptimale Indizes</h3>
-Indizes mit hoher Datenfluktuation und Schieflage (z.B. fortlaufende Nummern) scannen nach Record-Löschungen sukzessive mehr DB-Blöcke beim Zugriff.<br/>
-Problematisch ist insbesondere Zugriff auf erste Records solcher moving windows.<br/>
-Evtl. notwendige Reorganisation kann z.B. per ALTER INDEX COALESCE erfolgen.<pre style='background-color: #FFFFCC;'>SELECT * FROM (
+<h3>Identification of hot blocks in DB-cache: suboptimal indexes</h3>
+Indexes with high fluctuation of data and consecutive content are successive scanning more DB-blocks per access if rows have been deleted.<br/>
+Especially problematic is access to first records in index order of such moving windows.<br/>
+This indexes may need cyclic reorganisation e.g. by ALTER INDEX SHRINK SPACE COMPACT or ALTER INDEX COALESCE for running OLTP-systems or ALTER INDEX REBUILD in appliction downtimes.<br/>
+This selection scans for SQL statements in current SGA with access on indexes which possibly need reorganisation.<pre style='background-color: #FFFFCC;'>SELECT * FROM (
                       SELECT /*+ NO_MERGE MATERIALIZE */ p.Inst_ID "Inst", p.SQL_ID, p.Child_Number "Child Number", s.Executions "Executions",
+                             ROUND(s.Elapsed_Time/1000000) "Elapsed Time (Secs)",
                              s.Buffer_Gets "Buffer gets", s.Rows_Processed "Rows processed",
                              ROUND(s.Rows_Processed/s.Executions,2) "Rows per Exec.",
                              ROUND(s.Buffer_Gets/s.Rows_Processed)  "Buffer Gets per Row",
@@ -35,4 +37,4 @@ Evtl. notwendige Reorganisation kann z.B. per ALTER INDEX COALESCE erfolgen.<pre
                       )
                       WHERE LENGTH(REGEXP_REPLACE(SQL_Text, '[^:]','')) < :P4  -- Anzahl Bindevariablen < x
                       AND    "Buffer Gets per Row" > :P5                         -- nur problematische anzeigen
-                      ORDER BY "Buffer Gets per Row" * "Rows processed" DESC NULLS LAST</pre><div>Parameter :P1: Maximale Anzahl Operationen im Execution Plan des SQL</div><div>Parameter :P2: Minimale Anzahl Executions für Aufnahme in Selektion</div><div>Parameter :P3: Maximale Anzahl Bindevariablen im Statement</div><div>Parameter :P4: Minimale Anzahl Rows processed / Execution</div><div>Parameter :P5: Minimale Anzahl Buffer gets per Row</div>
+                      ORDER BY "Buffer Gets per Row" * "Rows processed" DESC NULLS LAST</pre><div>Parameter :P1: Maximum number of operations in execution plan of SQL</div><div>Parameter :P2: Minimum number of executions for consideration in selection</div><div>Parameter :P3: Maximum number of bind variables in statement</div><div>Parameter :P4: Minimum number of rows processed / execution</div><div>Parameter :P5: Minimum number of buffer gets / row</div>

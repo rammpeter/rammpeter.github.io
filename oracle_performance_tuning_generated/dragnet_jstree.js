@@ -43,7 +43,7 @@
   "state": { "opened": false }
 , "icon":"images/application-monitor.png"},{
   "id": "0_1_1",
-  "text": "2. Detection of indexes with only one ore little key values in index",
+  "text": "2. Detection of indexes with only one or little key values in index",
   "state": { "opened": false }
 , "icon":"images/application-monitor.png"},{
   "id": "0_1_2",
@@ -209,45 +209,49 @@
   "id": "1_3_0",
   "text": "1. Excessive number of cache buffer accesses",
   "state": { "opened": false }
+, "icon":"images/application-monitor.png"},{
+  "id": "1_3_1",
+  "text": "2. Frequent access on small objects",
+  "state": { "opened": false }
+, "icon":"images/application-monitor.png"},{
+  "id": "1_3_2",
+  "text": "3. Unnecessary high fetch count because of missing usage of array-fetch: evaluation of SGA",
+  "state": { "opened": false }
+, "icon":"images/application-monitor.png"},{
+  "id": "1_3_3",
+  "text": "4. Unnecessary high fetch count because of missing usage of array-fetch: evaluation of AWH history",
+  "state": { "opened": false }
+, "icon":"images/application-monitor.png"},{
+  "id": "1_3_4",
+  "text": "5. Writing statements with unnecessary high execution count due to missing array processing",
+  "state": { "opened": false }
 , "icon":"images/application-monitor.png"} ]},{
   "id": "1_4",
-  "text": "5. Statements mit unnötig hoher Ausführungszahl: Zugriff auf kleine Objekte",
+  "text": "5. Identification of statements with alternating execution plans in history",
   "state": { "opened": false }
 , "icon":"images/application-monitor.png"},{
   "id": "1_5",
-  "text": "6. Unnötig hohe Fetch-Anzahl wegen fehlender Array-Nutzung: Auswertung SGA",
+  "text": "6. Nested loop join on large tables with large result of SQL (consideration of current SGA)",
   "state": { "opened": false }
 , "icon":"images/application-monitor.png"},{
   "id": "1_6",
-  "text": "7. Unnötig hohe Fetch-Anzahl wegen fehlender Array-Nutzung: Auswertung AWR-Historie",
+  "text": "7. Iteration in nested-loop join against full scan operation",
   "state": { "opened": false }
 , "icon":"images/application-monitor.png"},{
   "id": "1_7",
-  "text": "8. Statements mit unnötig hoher Ausführungszahl: Unnötig hohe Execute-Anzahl wegen fehlender Array-Verarbeitung",
+  "text": "8. Implicit conversion by INTERNAL_FUNCTION",
   "state": { "opened": false }
 , "icon":"images/application-monitor.png"},{
   "id": "1_8",
-  "text": "9. Identifikation von Statements mit wechselndem Ausführungsplan aus Historie",
+  "text": "9. Problematic usage of cartesian joins (from current SGA)",
   "state": { "opened": false }
 , "icon":"images/application-monitor.png"},{
   "id": "1_9",
-  "text": "10. Nested-Loop-Join auf große Tabellen mit großem Result des SQL (Test per SGA-Statement-Cache)",
+  "text": "10. Problematic usage of cartesian joins (from AWR history)",
   "state": { "opened": false }
 , "icon":"images/application-monitor.png"},{
   "id": "1_10",
-  "text": "11. Iteration im Nested-Loop-Join gegen Full-Scan-Operation",
-  "state": { "opened": false }
-, "icon":"images/application-monitor.png"},{
-  "id": "1_11",
-  "text": "12. Implizite Konvertierungen per INTERNAL_FUNCTION",
-  "state": { "opened": false }
-, "icon":"images/application-monitor.png"},{
-  "id": "1_12",
-  "text": "13. Problematic usage of cartesian joins (from current SGA)",
-  "state": { "opened": false }
-, "icon":"images/application-monitor.png"},{
-  "id": "1_13",
-  "text": "14. Problematic usage of cartesian joins (from AWR history)",
+  "text": "11. DELETE-operations replaceable by TRUNCATE",
   "state": { "opened": false }
 , "icon":"images/application-monitor.png"} ]},{
   "id": "2",
@@ -255,19 +259,19 @@
   "state": { "opened": false }
 , "children": [{
   "id": "2_0",
-  "text": "1. Identifikation von HotBlocks im DB-Cache: Viele Zugriffe auf kleine Objekte",
+  "text": "1. Identification of hot blocks in DB-cache: frequent access on small objects",
   "state": { "opened": false }
 , "icon":"images/application-monitor.png"},{
   "id": "2_1",
-  "text": "2. Identifikation von HotBlocks im DB-Cache: Suboptimale Indizes",
+  "text": "2. Identification of hot blocks in DB-cache: suboptimal indexes",
   "state": { "opened": false }
 , "icon":"images/application-monitor.png"},{
   "id": "2_2",
-  "text": "3. Prüfung der Notwendigkeit des Updates indizierter Spalten",
+  "text": "3. Check necessity of update for indexed columns",
   "state": { "opened": false }
 , "icon":"images/application-monitor.png"},{
   "id": "2_3",
-  "text": "4. System- Statistiken: Prüfung auf aktuelle Analyze-Info",
+  "text": "4. System-statistics: Check for up-to-date system analyze info",
   "state": { "opened": false }
 , "icon":"images/application-monitor.png"},{
   "id": "2_4",
@@ -355,31 +359,47 @@
   "state": { "opened": false }
 , "children": [{
   "id": "5_0",
-  "text": "1. Substantial larger runtime per module compared to average over longer time range",
+  "text": "1. Views with cascading dependiencies (multiple hierarchy)",
+  "state": { "opened": false }
+, "children": [{
+  "id": "5_0_0",
+  "text": "1. Cascading views (views with dependency from other views)",
   "state": { "opened": false }
 , "icon":"images/application-monitor.png"},{
+  "id": "5_0_1",
+  "text": "2. SQLs using Cascading views (views with dependency from other views), evaluation of current SGA",
+  "state": { "opened": false }
+, "icon":"images/application-monitor.png"},{
+  "id": "5_0_2",
+  "text": "3. SQLs using Cascading views (views with dependency from other views), evaluation of AWH History",
+  "state": { "opened": false }
+, "icon":"images/application-monitor.png"} ]},{
   "id": "5_1",
-  "text": "2. Usage of multi-column primary keys as reference target (business keys instead of technical keys)",
+  "text": "2. Substantial larger runtime per module compared to average over longer time range",
   "state": { "opened": false }
 , "icon":"images/application-monitor.png"},{
   "id": "5_2",
-  "text": "3. Missing suggested AUDIT-options",
+  "text": "3. Usage of multi-column primary keys as reference target (business keys instead of technical keys)",
   "state": { "opened": false }
 , "icon":"images/application-monitor.png"},{
   "id": "5_3",
-  "text": "4. Long running transactions from SGA (gv$Active_Session_History)",
+  "text": "4. Missing suggested AUDIT-options",
   "state": { "opened": false }
 , "icon":"images/application-monitor.png"},{
   "id": "5_4",
-  "text": "5. Long running transactions from AWH-history (DBA_Hist_Active_Sess_History)",
+  "text": "5. Long running transactions from SGA (gv$Active_Session_History)",
   "state": { "opened": false }
 , "icon":"images/application-monitor.png"},{
   "id": "5_5",
-  "text": "6. Possibly unnecessary update of primary key columns",
+  "text": "6. Long running transactions from AWH-history (DBA_Hist_Active_Sess_History)",
   "state": { "opened": false }
 , "icon":"images/application-monitor.png"},{
   "id": "5_6",
-  "text": "7. Longer inactive sessions with continued active transactions",
+  "text": "7. Possibly unnecessary update of primary key columns",
+  "state": { "opened": false }
+, "icon":"images/application-monitor.png"},{
+  "id": "5_7",
+  "text": "8. Longer inactive sessions with continued active transactions",
   "state": { "opened": false }
 , "icon":"images/application-monitor.png"} ]},{
   "id": "6",

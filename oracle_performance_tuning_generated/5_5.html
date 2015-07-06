@@ -1,23 +1,50 @@
-<h3>Possibly unnecessary update of primary key columns</h3>
-Primary key columns should normally be immutable, especially if they are referenced from foreign keys.<br/>
-Setting primary key columns with identical values causes unnecessary effort for index maintenance.<br/>
-Therefore primary key columns should not occur in SET-clause of UPDATE statements.<br/>
+<h3>Long running transactions from AWH-history (DBA_Hist_Active_Sess_History)</h3>
+Long running transactions contains the risk of lock escalations in OLTP-systems.<br/>
+Writing access should be suspended to the end of process transactions to keep lock time until commit as short as possible.<br/>
+Transaktions in OLTP-systems should be short enough to keep potential lock wait time below user's cognition limits.<br/>
            <pre style='background-color: #FFFFCC;'>
-              SELECT SQL_ID, Object_Owner, Object_Name, Column_Name, Executions, Elapsed_Time_Secs, SUBSTR(SQL_FullText, 1, 200)
-              FROM   (SELECT x.*, UPPER(SUBSTR(SQL_FullText, Set_Position, Where_Position - Set_Position)) Set_Klausel
-                      FROM   (
-                              SELECT p.Object_Owner, p.Object_Name, p.SQL_ID, cc.Column_Name, t.SQL_FullText, INSTR(UPPER(SQL_FullText), 'SET') Set_Position, INSTR(UPPER(SQL_FullText), 'WHERE') Where_Position,
-                                     t.Executions, t.Elapsed_Time/(100000) Elapsed_Time_Secs
-                              FROM   (SELECT Inst_ID, Object_Owner, Object_Name, SQL_ID
-                                      FROM   gv$SQL_PLan
-                                      WHERE  Operation = 'UPDATE'
-                                      GROUP BY Inst_ID, Object_Owner, Object_Name, SQL_ID -- Gruppieren ueber Children
-                                     ) p
-                              JOIN   DBA_Constraints c ON c.Owner = p.Object_Owner AND c.Table_Name = p.Object_Name AND c.Constraint_Type = 'P'
-                              JOIN   DBA_Cons_Columns cc ON cc.Owner = c.Owner AND cc.Constraint_Name = c.Constraint_Name
-                              JOIN   gv$SQLArea t ON t.Inst_ID = p.Inst_ID AND t.SQL_ID = p.SQL_ID
-                             ) x
-                     ) x
-              WHERE REGEXP_INSTR(Set_Klausel, '[ ,]'||Column_Name||'[ =]') > 0
-              ORDER BY Elapsed_Time_Secs DESC
-          </pre>
+              SELECT s.*,
+                     (SELECT UserName FROM DBA_Users u WHERE u.User_ID = s.User_ID) UserName
+              FROM   (
+                      SELECT RAWTOHEX(XID)                  "Transaction-ID",
+                             MIN(Min_Sample_Time)           "Start Tx.",
+                             MAX(Max_Sample_Time)           "End Tx.",
+                             SUM(Samples)                   "No. of Samples",
+                             ROUND(24*60*60*(CAST(MAX(Max_Sample_Time) AS DATE)-CAST(MIN(Min_Sample_Time) AS DATE))) "Duration (Secs.)",
+                             MIN(Min_SQL_ID) KEEP (DENSE_RANK FIRST ORDER BY Min_Sample_Time)       "First SQL-ID",
+                             MAX(Max_SQL_ID) KEEP (DENSE_RANK LAST  ORDER BY Max_Sample_Time)       "Last SQL-ID",
+                             MIN(Inst_ID)                   "Instance",
+                             MIN(TO_CHAR(Session_ID))       "SID",
+                             MIN(TO_CHAR(Session_Serial#))  "Serial number",
+                             MIN(Session_Type)              "Session-Type",
+                             MIN(User_ID)                   User_ID,
+                             MIN(Program)                   "Program",
+                             MIN(Module)                    "Module",
+                             MIN(Action)                    "Action",
+                             MIN(Client_ID)                 "Client-ID",
+                             MAX(Event) KEEP (DENSE_RANK LAST ORDER BY Samples) "Main Event"
+                      FROM   (SELECT /*+ PARALLEL(s,2) */ XID, NVL(Event, Session_State) Event,
+                                     MIN(Sample_Time)               Min_Sample_Time,
+                                     MAX(Sample_Time)               Max_Sample_Time,
+                                     COUNT(*)                       Samples,
+                                     MIN(SQL_ID) KEEP (DENSE_RANK FIRST ORDER BY Sample_Time)       Min_SQL_ID,
+                                     MAX(SQL_ID) KEEP (DENSE_RANK FIRST ORDER BY Sample_Time)       Max_SQL_ID,
+                                     MIN(Instance_Number)                   Inst_ID,
+                                     MIN(Session_ID)                Session_ID,
+                                     MIN(Session_Serial#)           Session_Serial#,
+                                     MIN(Session_Type)              Session_Type,
+                                     MIN(User_ID)                   User_ID,
+                                     MIN(User_ID)                   Program,
+                                     MIN(Module)                    Module,
+                                     MIN(Action)                    Action,
+                                     MIN(Client_ID)                 Client_ID
+                              FROM   DBA_Hist_Active_Sess_History s
+                              WHERE  XID IS NOT NULL
+                              AND    Sample_Time > SYSDATE-:P1
+                              GROUP BY XID, NVL(Event, Session_State)
+                             )
+                      GROUP BY XID
+                     ) s
+              WHERE  "Duration (Secs.)" > :P2
+              ORDER BY "Duration (Secs.)" DESC
+           </pre><div>Parameter :P1: Number of days in history backward from now for consideration</div><div>Parameter :P2: Minimale Dauer der Transaktion in Sekunden für Aufnahme in Selektion</div>

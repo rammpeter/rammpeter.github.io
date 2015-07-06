@@ -1,23 +1,44 @@
-<h3>Unnötig hohe Fetch-Anzahl wegen fehlender Array-Nutzung: Auswertung SGA</h3>
-Bei größeren Results je Execution lohnt sich der Array-Zugriff auf mehrere Records  je Fetch statt Einzelzugriff.<br/>
-Damit moderate Reduktion von CPU-Belastung und Laufzeit<br/>
-<pre style='background-color: #FFFFCC;'>SELECT * FROM (
-                              SELECT Inst_ID, Parsing_Schema_Name "Parsing schema name",
-                                     Module,
-                                     SQL_ID, Executions, Fetches "Number of fetches",
-                                     End_Of_Fetch_Count "Number of fetches until end",
-                                     Rows_Processed "Rows processed",
-                                     ROUND(Rows_Processed/Executions,2) "Rows per exec",
-                                     ROUND(Fetches/Executions,2) "Fetches per exec",
-                                     ROUND(Rows_Processed/Fetches,2) "Rows per fetch",
-                                     ROUND(Elapsed_Time/1000000,2) "Elapsed time (secs)",
-                                     ROUND(Executions * (MOD(Rows_Processed/Executions, 1000) / (Rows_Processed/Fetches) -1)) "Additional Fetches",
-                                     SQL_FullText
-                              FROM   GV$SQLArea s
-                              WHERE  Fetches > Executions
-                              AND    Fetches > 1
-                              AND    Executions > 0
-                              AND    Rows_Processed > 0
-                              )
-                              WHERE "Fetches per exec" > :P1
-                              ORDER BY "Additional Fetches" DESC NULLS LAST</pre><div>Parameter :P1: Minimum number of fetches per execution for consideration in result</div>
+<h3>Nested loop join on large tables with large result of SQL (consideration of current SGA)</h3>
+Frequently executed nested loop operations on large (not fitting into DB-cache) tables may cause large runtime of SQL.<br/>
+Listed statements should be checked for use of hash join instead.<br/>
+This statement executes only for current (login) RAC-instance. Please execute separate for every RAC-instance (due to extremly large runtimes accessing GV$-tables).<pre style='background-color: #FFFFCC;'>SELECT /* DB-Tools Ramm Nested Loop auf grossen Tabellen */ * FROM (
+                      SELECT /*+ PARALLEL(p,2) PARALLEL(s,2) */
+                             s.SQL_FullText, p.SQL_ID, p.Plan_Hash_Value, p.operation, p.Object_Type,  p.options, p.Object_Name,
+                             ROUND(s.Elapsed_Time/1000000) Elapsed_Secs, s.Executions, s.Rows_Processed,
+                             ROUND(s.Rows_Processed/DECODE(s.Executions,0,1,s.Executions),2) Rows_Per_Execution,
+                             CASE WHEN p.Object_Type = 'TABLE' THEN (SELECT /*+ NO_MERGE */ Num_Rows FROM DBA_Tables t WHERE t.Owner=p.Object_Owner AND t.Table_Name=p.Object_Name)
+                                  WHEN p.Object_Type LIKE 'INDEX%' THEN (SELECT /*+ NO_MERGE */ Num_Rows FROM DBA_Indexes i WHERE i.Owner=p.Object_Owner AND i.Index_Name=p.Object_Name)
+                             END Num_Rows
+                      FROM   (
+                              WITH Plan AS (SELECT /*+ MATERIALIZE  */
+                                                   p.SQL_ID, p.Plan_Hash_Value, p.Operation, p.Options, p.Object_Type, p.Object_Owner, p.Object_Name, p.ID, p.Parent_ID
+                                            FROM   V$SQL_Plan p
+                                           )
+                              SELECT /*+ NO_MERGE PARALLEL(pnl,4) PARALLEL(pt1,4) PARALLEL(pf,4) PARALLEL(pt2,4)*/ DISTINCT pnl.SQL_ID, pnl.Plan_Hash_Value,
+                                     CASE WHEN pt1.Operation IN ('TABLE ACCESS', 'INDEX') THEN pt1.Operation    ELSE pt2.Operation    END Operation,
+                                     CASE WHEN pt1.Operation IN ('TABLE ACCESS', 'INDEX') THEN pt1.Object_Type  ELSE pt2.Object_Type  END Object_Type,
+                                     CASE WHEN pt1.Operation IN ('TABLE ACCESS', 'INDEX') THEN pt1.Options      ELSE pt2.Options      END Options,
+                                     CASE WHEN pt1.Operation IN ('TABLE ACCESS', 'INDEX') THEN pt1.Object_Owner ELSE pt2.Object_Owner END Object_Owner,
+                                     CASE WHEN pt1.Operation IN ('TABLE ACCESS', 'INDEX') THEN pt1.Object_Name  ELSE pt2.Object_Name  END Object_Name
+                              FROM   Plan pnl -- Nested Loop-Zeile
+                              JOIN   Plan pt1  ON  pt1.SQL_ID          = pnl.SQL_ID       -- zweite Zeile unter Nested Loop (iterativer Zugriff)
+                                               AND pt1.Plan_Hash_Value = pnl.Plan_Hash_Value
+                                               AND pt1.Parent_ID       = pnl.ID
+                              JOIN   Plan pf  ON  pf.SQL_ID          = pt1.SQL_ID         -- erste Zeile unter Nested Loop (Datenherkunft)
+                                              AND pf.Plan_Hash_Value = pt1.Plan_Hash_Value
+                                              AND pf.Parent_ID       = pnl.ID
+                                              AND pf.ID              < pt1.ID        -- 1. ID ist Herkunft, 2. ID ist Iteration
+                              LEFT OUTER JOIN Plan pt2  ON  pt2.SQL_ID          = pnl.SQL_ID -- zweite Ebene der zweiten Zeile unter nested Loop
+                                                        AND pt2.Plan_Hash_Value = pnl.Plan_Hash_Value
+                                                        AND pt2.Parent_ID       = pt1.ID
+                              WHERE  pnl.Operation = 'NESTED LOOPS'
+                              AND    (    pt1.Operation IN ('TABLE ACCESS', 'INDEX')
+                                      OR  pt2.Operation IN ('TABLE ACCESS', 'INDEX')
+                                     )
+                              AND    pt1.Operation NOT IN ('HASH JOIN', 'NESTED LOOPS', 'VIEW', 'MERGE JOIN', 'PX BLOCK')
+                             ) p
+                      JOIN   v$SQL s         ON  s.SQL_ID             = p.SQL_ID
+                                             AND s.Plan_Hash_Value    = p.Plan_Hash_Value
+                                             AND s.Rows_Processed/DECODE(s.Executions,0,1,s.Executions) > :P1 -- Schwellwert fuer mgl. Ineffizienz NestedLoop
+                      )
+                      ORDER BY Rows_Per_Execution*Num_Rows DESC NULLS LAST</pre><div>Parameter :P1: Minimum number of rows processed / execution as threshold for possible inefficieny of nested loop</div>

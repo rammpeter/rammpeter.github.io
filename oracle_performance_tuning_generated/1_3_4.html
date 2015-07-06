@@ -1,0 +1,18 @@
+<h3>Writing statements with unnecessary high execution count due to missing array processing</h3>
+With less rows per execution and high execution count it is often worth to bundle processing with bulk operation or PL/SQL-FORALL-Operationen if they are processed in the same transaction.<br/>
+This reduces CPU-contention and runtime.<pre style='background-color: #FFFFCC;'>SELECT /* DB-Tools Ramm: Buendelbare Einzeilsatz-Executes */ s.SQL_ID, s.Instance_Number Instance, Parsing_Schema_Name,
+                             SUM(s.Executions_Delta) Executions,
+                             ROUND(SUM(s.Elapsed_Time_Delta)/1000000) Elapsed_Time_Secs,
+                             SUM(s.Rows_Processed_Delta) Rows_Processed,
+                             ROUND(SUM(s.Rows_Processed_Delta)/SUM(s.Executions_Delta),2) Rows_per_Exec,
+                             ROUND(SUM(s.Executions_Delta)/SUM(s.Rows_Processed_Delta),2) Execs_Per_Row,
+                             MIN(TO_CHAR(SUBSTR(t.SQL_Text,1,3000))) SQL
+                      FROM   DBA_Hist_SQLStat s
+                      JOIN   DBA_Hist_SnapShot ss ON ss.DBID=s.DBID AND ss.Instance_Number=s.Instance_Number AND ss.Snap_ID=s.Snap_ID
+                      JOIN   DBA_Hist_SQLText t ON t.DBID=s.DBID AND t.SQL_ID=s.SQL_ID AND t.Command_Type IN (2,6,7) /* Insert, Update, Delete */
+                      WHERE  ss.Begin_Interval_Time > SYSDATE - :P1
+                      AND    Parsing_Schema_Name NOT IN ('SYS')
+                      GROUP BY s.SQL_ID, s.Instance_Number, Parsing_Schema_Name
+                      HAVING SUM(s.Executions_Delta) > :P2
+                      AND    SUM(s.Rows_Processed_Delta) > 0
+                      ORDER BY SUM(Executions_Delta)*SUM(Executions_Delta)/SUM(Rows_Processed_Delta) DESC NULLS LAST</pre><div>Parameter :P1: Number of days in history backward from now for consideration</div><div>Parameter :P2: Minimum number of executions for consideration in result</div>

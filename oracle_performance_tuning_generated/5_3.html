@@ -1,49 +1,41 @@
-<h3>Long running transactions from SGA (gv$Active_Session_History)</h3>
-Long running transactions contains the risk of lock escalations in OLTP-systems.<br/>
-Writing access should be suspended to the end of process transactions to keep lock time until commit as short as possible.<br/>
-Transaktions in OLTP-systems should be short enough to keep potential lock wait time below user's cognition limits.<br/>
-           <pre style='background-color: #FFFFCC;'>
-              SELECT s.*,
-                     (SELECT UserName FROM DBA_Users u WHERE u.User_ID = s.User_ID) UserName
-              FROM   (
-                      SELECT RAWTOHEX(XID)                  "Transaction-ID",
-                             MIN(Min_Sample_Time)           "Start Tx.",
-                             MAX(Max_Sample_Time)           "End Tx.",
-                             SUM(Samples)                   "No. of Samples",
-                             ROUND(24*60*60*(CAST(MAX(Max_Sample_Time) AS DATE)-CAST(MIN(Min_Sample_Time) AS DATE))) "Duration (Secs.)",
-                             MIN(Min_SQL_ID) KEEP (DENSE_RANK FIRST ORDER BY Min_Sample_Time)       "First SQL-ID",
-                             MAX(Max_SQL_ID) KEEP (DENSE_RANK LAST  ORDER BY Max_Sample_Time)       "Last SQL-ID",
-                             MIN(Inst_ID)                   "Instance",
-                             MIN(TO_CHAR(Session_ID))       "SID",
-                             MIN(TO_CHAR(Session_Serial#))  "Serial number",
-                             MIN(Session_Type)              "Session-Type",
-                             MIN(User_ID)                   User_ID,
-                             MIN(Program)                   "Program",
-                             MIN(Module)                    "Module",
-                             MIN(Action)                    "Action",
-                             MIN(Client_ID)                 "Client-ID",
-                             MAX(Event) KEEP (DENSE_RANK LAST ORDER BY Samples) "Main Event"
-                      FROM   (SELECT XID, NVL(Event, Session_State) Event,
-                                     MIN(Sample_Time)               Min_Sample_Time,
-                                     MAX(Sample_Time)               Max_Sample_Time,
-                                     COUNT(*)                       Samples,
-                                     MIN(SQL_ID) KEEP (DENSE_RANK FIRST ORDER BY Sample_Time)       Min_SQL_ID,
-                                     MAX(SQL_ID) KEEP (DENSE_RANK FIRST ORDER BY Sample_Time)       Max_SQL_ID,
-                                     MIN(Inst_ID)                   Inst_ID,
-                                     MIN(Session_ID)                Session_ID,
-                                     MIN(Session_Serial#)           Session_Serial#,
-                                     MIN(Session_Type)              Session_Type,
-                                     MIN(User_ID)                   User_ID,
-                                     MIN(User_ID)                   Program,
-                                     MIN(Module)                    Module,
-                                     MIN(Action)                    Action,
-                                     MIN(Client_ID)                 Client_ID
-                              FROM   gv$active_session_history s
-                              WHERE  XID IS NOT NULL
-                              GROUP BY XID, NVL(Event, Session_State)
-                             )
-                      GROUP BY XID
-                     ) s
-              WHERE  "Duration (Secs.)" > :P1
-              ORDER BY "Duration (Secs.)" DESC
-           </pre><div>Parameter :P1: Minimale Dauer der Transaktion in Sekunden für Aufnahme in Selektion</div>
+<h3>Missing suggested AUDIT-options</h3>
+You should have some minimal audit of DDL operations for traceability of problematic DDL.<br/>
+Audit trail will usually be recorded in table sys.Aud$.<pre style='background-color: #FFFFCC;'>
+              SELECT /* Panorama-Tool Ramm: Auditing */
+                     '"AUDIT '||NVL(a.Message, a.Name)||'" suggested!'  Problem
+              FROM
+              (
+              SELECT 'CLUSTER'                Name, 'BY ACCESS' Success, 'BY ACCESS' Failure, NULL Message FROM DUAL UNION ALL
+              SELECT 'DATABASE LINK'          Name, 'BY ACCESS' Success, 'BY ACCESS' Failure, NULL Message FROM DUAL UNION ALL
+              SELECT 'DIRECTORY'              Name, 'BY ACCESS' Success, 'BY ACCESS' Failure, NULL Message FROM DUAL UNION ALL
+              SELECT 'INDEX'                  Name, 'BY ACCESS' Success, 'BY ACCESS' Failure, NULL Message FROM DUAL UNION ALL
+              SELECT 'MATERIALIZED VIEW'      Name, 'BY ACCESS' Success, 'BY ACCESS' Failure, NULL Message FROM DUAL UNION ALL
+              SELECT 'OUTLINE'                Name, 'BY ACCESS' Success, 'BY ACCESS' Failure, NULL Message FROM DUAL UNION ALL
+              SELECT 'PROCEDURE'              Name, 'BY ACCESS' Success, 'BY ACCESS' Failure, NULL Message FROM DUAL UNION ALL
+              SELECT 'PROFILE'                Name, 'BY ACCESS' Success, 'BY ACCESS' Failure, NULL Message FROM DUAL UNION ALL
+              SELECT 'PUBLIC DATABASE LINK'   Name, 'BY ACCESS' Success, 'BY ACCESS' Failure, NULL Message FROM DUAL UNION ALL
+              SELECT 'PUBLIC SYNONYM'         Name, 'BY ACCESS' Success, 'BY ACCESS' Failure, NULL Message FROM DUAL UNION ALL
+              SELECT 'ROLE'                   Name, 'BY ACCESS' Success, 'BY ACCESS' Failure, NULL Message FROM DUAL UNION ALL
+              SELECT 'ROLLBACK SEGMENT'       Name, 'BY ACCESS' Success, 'BY ACCESS' Failure, NULL Message FROM DUAL UNION ALL
+              SELECT 'SEQUENCE'               Name, 'BY ACCESS' Success, 'BY ACCESS' Failure, NULL Message FROM DUAL UNION ALL
+              SELECT 'CREATE SESSION'         Name, 'BY ACCESS' Success, 'BY ACCESS' Failure, NULL Message FROM DUAL UNION ALL
+              SELECT 'SYNONYM'                Name, 'BY ACCESS' Success, 'BY ACCESS' Failure, NULL Message FROM DUAL UNION ALL
+              SELECT 'SYSTEM AUDIT'           Name, 'BY ACCESS' Success, 'BY ACCESS' Failure, NULL Message FROM DUAL UNION ALL
+              SELECT 'SYSTEM GRANT'           Name, 'BY ACCESS' Success, 'BY ACCESS' Failure, NULL Message FROM DUAL UNION ALL
+              SELECT 'TABLE'                  Name, 'BY ACCESS' Success, 'BY ACCESS' Failure, NULL Message FROM DUAL UNION ALL
+              SELECT 'ALTER SYSTEM'           Name, 'BY ACCESS' Success, 'BY ACCESS' Failure, NULL Message FROM DUAL UNION ALL
+              SELECT 'TABLESPACE'             Name, 'BY ACCESS' Success, 'BY ACCESS' Failure, NULL Message FROM DUAL UNION ALL
+              SELECT 'TRIGGER'                Name, 'BY ACCESS' Success, 'BY ACCESS' Failure, NULL Message FROM DUAL UNION ALL
+              SELECT 'TYPE'                   Name, 'BY ACCESS' Success, 'BY ACCESS' Failure, NULL Message FROM DUAL UNION ALL
+              SELECT 'USER'                   Name, 'BY ACCESS' Success, 'BY ACCESS' Failure, NULL Message FROM DUAL UNION ALL
+              SELECT 'VIEW'                   Name, 'BY ACCESS' Success, 'BY ACCESS' Failure, NULL Message FROM DUAL UNION ALL
+              SELECT 'SELECT TABLE'           Name, 'NOT SET'   Success, 'BY ACCESS' Failure, 'SELECT TABLE BY ACCESS WHENEVER NOT SUCCESSFUL' Message FROM DUAL UNION ALL
+              SELECT 'INSERT TABLE'           Name, 'NOT SET'   Success, 'BY ACCESS' Failure, 'INSERT TABLE BY ACCESS WHENEVER NOT SUCCESSFUL' Message FROM DUAL UNION ALL
+              SELECT 'UPDATE TABLE'           Name, 'NOT SET'   Success, 'BY ACCESS' Failure, 'UPDATE TABLE BY ACCESS WHENEVER NOT SUCCESSFUL' Message FROM DUAL UNION ALL
+              SELECT 'DELETE TABLE'           Name, 'NOT SET'   Success, 'BY ACCESS' Failure, 'DELETE TABLE BY ACCESS WHENEVER NOT SUCCESSFUL' Message FROM DUAL
+              )a
+              LEFT OUTER JOIN DBA_Stmt_Audit_Opts d ON  d.Audit_Option = a.Name
+                                                    AND (d.Success = a.Success OR a.Success = 'NOT SET')
+                                                    AND d.Failure = a.Failure  OR a.Failure = 'NOT SET'
+              WHERE d.Audit_Option IS NULL
+           </pre>

@@ -1,7 +1,7 @@
-<h3>Prüfung der Notwendigkeit des Updates indizierter Spalten</h3>
-Das Update indizierter Spalten einer Tabelle kostet Aufwand für Index-Maintenance (Entfernen und Neueinstellen des Index-Eintrages) auch wenn sich der Inhalt des Feldes gar nicht geändert hat.<br/>
-Unter diesem Aspekt ist es sinnvoll, indizierte Spalten häufig upzudatender Tabellen deren Inhalte sich nie ändern sollten aus dem Update-Statement zu entfernen.<br/>
-Dies gilt insbesondere für  dynamisch generierte Statements z.B. aus OR-Mappern, die per Default alle Spalten einer Tabelle enthalten.<pre style='background-color: #FFFFCC;'>SELECT * FROM (
+<h3>Check necessity of update for indexed columns</h3>
+Update of indexed columns of a table costs effort for index maintenance (Removal of old and insertion of new index entry) even if content of column did not change.<br/>
+This way it is worth to remove indexed columns from UPDATE SQL statement if their values never change.<br/>
+Especially this is true for generated dynamic SQL statements (e.g. from OR-mappers), which by default contains all columns of a table.<pre style='background-color: #FFFFCC;'>SELECT * FROM (
                       SELECt /*+ ORDERED */ p.*, t.SQL_Text, i.Column_Name,
                             (SELECT SUM(Executions_Delta) FROM DBA_Hist_SQLStat st
                             WHERE st.DBID=p.DBID AND st.SQL_ID=p.SQL_ID
@@ -28,4 +28,4 @@ Dies gilt insbesondere für  dynamisch generierte Statements z.B. aus OR-Mapper
                                         )
                       )
                       WHERE Rows_Processed > :P2
-                      ORDER BY Rows_Processed DESC NULLS LAST</pre><div>Parameter :P1: Number of days in history backward from now for consideration</div><div>Parameter :P2: Minimale Anzah Rows processed für Aufnahme in Selektion</div>
+                      ORDER BY Rows_Processed DESC NULLS LAST</pre><div>Parameter :P1: Number of days in history backward from now for consideration</div><div>Parameter :P2: Minimum number of rows processed for consideration in selection</div>
