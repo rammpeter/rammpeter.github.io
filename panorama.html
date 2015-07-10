@@ -51,6 +51,12 @@
             <li>Allow only SSL encrypted https-connections with disabled http-port:<br>
                 java -jar Panorama.war --httpPort=-1 --httpsPort=8443 --httpsKeyStore=&lt;keystore file&gt; --httpsKeyStorePassword=&lt;keystore password&gt;
             </li>
+            <li>
+                Use another application prefix to access via "http://my_host:8080/MyPrefix": java -jar Panorama.war --prefix=/MyPrefix
+            </li>
+            <li>
+                All command line options of embedded winstone server are described here: http://winstone.sourceforge.net
+            </li>
         </ul>
         <a href="panorama_download.html" target="_blank"><img alt="Panorama" class="shadow" src="images/Panorama.jpg"></a>
     </div>
