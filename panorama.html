@@ -40,7 +40,10 @@
         Panorama.war can be run as web archive in any application server or web container like Tomcat, Glassfish etc. .<br>
         For immediate usage Panorama.war contains the embedded application server "Winstone".<br>
         To run Panorama.war with Winstone simply type "java -jar Panorama.war". This starts the embedded application server within one or two minutes.<br>
-        You can reach than Panorama's login screen in your browser via "http://localhost:8080/Panorama".<br><br>
+        You can reach than Panorama's login screen in your browser via "http://localhost:8080".<br><br>
+
+        Panorama writes some encrypted information to local filesystem.<br>
+        You can control the directory for this files by setting environment PANORAMA_VAR_HOME to your target directory.<br><br>
 
         You can specify the following additional Java-options executing "java &lt;options&gt; -jar Panorama.war":
         <ul>
@@ -62,6 +65,7 @@
                 All command line options of embedded winstone server are described here: <a href="http://winstone.sourceforge.net">http://winstone.sourceforge.net</a>
             </li>
         </ul>
+        <a href="http://rawgit.com/rammpeter/Panorama_Gem/master/start_panorama.sh" target="_blank">Here you can find a sample startup script for Unix/Linux</a>
         <a href="panorama_download.html" target="_blank"><img alt="Panorama" class="shadow" src="images/Panorama.jpg"></a>
     </div>
 </div>
