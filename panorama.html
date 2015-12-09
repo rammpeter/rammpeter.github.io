@@ -42,6 +42,9 @@
         To run Panorama.war with Winstone simply type "java -jar Panorama.war". This starts the embedded application server within one or two minutes.<br>
         You can reach than Panorama's login screen in your browser via "http://localhost:8080".<br><br>
 
+        If you use tnsnames.ora for TNS name resolution it should be located at server site in $ORACLE_HOME/network/admin or in a directory targeted by environment variable $TNS_ADMIN.<br>
+        Java runtime environment should be Java 7 or 8. Some problems may occur with IBM JVM. If so please use JVM from SUN/Oracle.<br><br>
+
         Panorama writes some encrypted information to local filesystem.<br>
         You can control the directory for this files by setting environment variable PANORAMA_VAR_HOME to your target directory.<br><br>
 
