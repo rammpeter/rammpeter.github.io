@@ -6,3 +6,23 @@ table.border{
 .opaque {
     opacity: 0.6;
 }
+
+body{
+	font-family: Verdana, 'Lucida Sans Unicode', sans-serif;      /* globaler Font der Seite */
+}
+
+/* Hinweis-Schilder des Menüs */
+.menu_entry {
+	background-repeat:no-repeat;
+	background-image: url(images/label_ground.png);
+	height:80px;
+	width: 150px;
+	padding-left:10px;
+	vertical-align:middle;
+	cursor:pointer;
+}
+.shadow {
+	box-shadow: 10px 10px 5px #888;
+	-webkit-box-shadow: 10px 10px 5px #888;
+	-moz-box-shadow: 10px 10px 5px #888;
+}

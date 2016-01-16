@@ -277,6 +277,17 @@
     plot_master:            true,                   // Use this column as x-axis in diagram, optional
     plot_master_time:       true,                   // Use this column as x-axis with time line in diagram, optional
     field:                  'col0',                 // Field reference in data row, for most cases defaults to id, optional
+    show_pct_hint:          true,                   // Show percentage of total column sum concatenated to mouse over hint, optional
+    show_pct_background:    true,                   // Show percentage of total column sum as transparent horizontal gauge in background, optional
+    hidden:                 true,                   // Supress column in grid view (use it for computations only), optional
+    // field_decorator_function: compute cell value based on parameters, optional
+    //   slickGrid:           reference to SlickGridExtended-Object
+    //   row_no,cell_no       row number and column number starting with 0
+    //   cell_value:          original raw value of cell in data array
+    //   full_cell_value:     original complete value of cell in data array (dataContext['metadata']['columns'][columnDef['field']['fulldata'])
+    //   columnDef:           column specification
+    //   dataContext:         current complete record from data array
+    field_decorator_function: function(slickGrid, row_no, cell_no, cell_value, full_cell_value, columnDef, dataContext){ return cell_value; },
 }
             </pre>
             <h3>Structure of row in data array</h3>

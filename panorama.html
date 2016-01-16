@@ -1,77 +1,127 @@
-<html><head><meta content="text/html; charset=UTF-8" http-equiv="content-type"></head>
+<html><head><meta content="text/html; charset=UTF-8" http-equiv="content-type" /></head>
 <body onload="window.location = 'http://rammpeter.github.io/index.html?target=panorama';">
 <div style="position: relative;" xmlns="http://www.w3.org/1999/html">
     <div class="shadow opaque" style="width:100%; height: 100%; background-color: #99CC99; position:absolute; top:0px; left:0px; z-index:1;">
     </div>
     <div style="position: relative; z-index: 2; padding: 10px;">
-         <h2>Panorama</h2>
-        Panorama is my tool for monitoring and analysis of performance issues of Oracle databases.<br>
-        <ul>
-            <li>it focuses on usage by DBAs and also by software developers</li>
-            <li>provides easy access to several internal information</li>
-            <li>Offers support for:
+        <div id="panorama_text" style="float:left;">
+            <h2>Panorama for Oracle</h2>
+            „Panorama” is my free tool for monitoring and performance analysis of Oracle databases.<br/>
+            <h3>What does it offer?</h3>
+            <ul>
+                <li>Support for:
+                    <ul>
+                        <li>Performance-optimization of applications using Oracle databases</li>
+                        <li>Analysis of runtimes and wait events, also back in history</li>
+                        <li>Preparation of several Oracle database's internal information for easy evaluation</li>
+
+                    </ul>
+                </li>
+                <li>it focuses on usage by DBAs and also by software developers with less Oracle knowledge</li>
+                <li>aims to many issues that are inadequately analyzed and presented by other existing tools such as Enterprise Manager</li>
+                <li>Panorama only reads via SELECT-SQLs from database. No write access, structure change, compile etc. needed.</li>
+                <li>Supports:
+                    <ul>
+                        <li>Oracle databases on standard hardware as well as RAC-systems and engineered systems (EXADATA)</li>
+                        <li>Oracle database versions beginning with Oracle 10.2</li>
+                    </ul>
+                </li>
+            </ul>
+
+            <h3>Which preconditions are required?</h3>
+            <ul>
+                <li>Java runtime environment, version 7 or above to run Panorama application.<br>(Some problems may occur with IBM JVM. If so please use JVM from SUN/Oracle.)</li>
+                <li>Parts of Oracle's "Diagnostic Pack" are used for some functions of panorama, so licensing of this option is required for connected Oracle-DB</li>
+                <li>Web browser to access Panorama-GUI</li>
+                <li>Your Oracle-User used for login with Panorama requires the grant "SELECT ANY DICTIONARY"</li>
+            </ul>
+
+            <h3>How to get it?</h3>
                 <ul>
-                    <li>Performance-optimization of applications</li>
-                    <li>Analysis of runtimes and wait events</li>
-                    <li>Preparation of Oracle database's internal information for easy usage</li>
-
+                    <li>You can use Panorama under the terms and conditions of <a href="http://www.gnu.org/licenses/gpl-3.0" target="_blank">GNU General Public License</a>.</li>
+                    <li><a href="panorama_download.html" target="_blank">Download Panorama application here (Panorama.war)</a></li>
                 </ul>
-            </li>
-            <li>aims to issues that are inadequately analyzed and presented by other existing tools such as Enterprise Manager</li>
-            <li>immmediately startable as Java war-File with built-in Winstone application Server. ( java -jar Panorama.war )</li>
-            <li>may be deployed as web application to every JEE or web container (Glassfish, JBoss, Tomcat ...)</li>
-            <li>some functions of panorama requires licensing of "Diagnostic Pack" for connected Oracle-DB !</li>
-            <li>Oracle-User used for login with Panorama requires the right "SELECT ANY DICTIONARY"</li>
-            <li>if using tnsnames.ora it's directory should be targeted by ORACLE_HOME/network/admin or TNS_ADMIN environment variable</li>
-            <li>Panorama only reads via SELECT SQLs from database. No write access, structure change, compile etc.</li>
-            <li>Supports Oracle database on standard hardware as well as RAC-systems and engineered systems (EXADATA)</li>
-        </ul>
-        Please feel free to use Panorama for your purposes under the terms and conditions of <a href="http://www.gnu.org/licenses/gpl-3.0" target="_blank">GNU General Public License</a>.<br><br>
 
-        Panorama is an Ruby on Rails application that runs with JRuby. Web resources you can find here:
-        <ul>
-            <li><a href="panorama_download.html" target="_blank">Download Panorama as an immediately startable web archive (Panorama.war)</a></li>
-            <li><a href="http://github.com/rammpeter/Panorama_Gem" target="_blank">Source code</a></li>
-            <li><a href="https://github.com/rammpeter/Panorama/wiki" target="_blank">WIKI and FAQ (still under construction)</a></li>
-            <li><a href="http://rawgit.com/rammpeter/Panorama_Gem/master/app/views/help/version_history.html" target="_blank">Version history</a></li>
-            <li><a href="https://panorama-ramm.herokuapp.com" target="_blank">Demo installation running at Heroku-cloud (requires connect to Oracle-DB from internet for usage)</a></li>
-        </ul>
+            <h3>How to run it?</h3>
+            <h4>Start running quickly</h4>
+            <ul>
+                <li><a href="panorama_download.html" target="_blank">Download file Panorama.war</a></li>
+                <li>Type "java -jar Panorama.war", no matter if your are running Windows, Linux or Mac-OS</li>
+                <li>This starts the embedded Winstone application server within one or two minutes.</li>
+                <li>Now you can reach Panorama's login screen in your browser via "http://localhost:8080/Panorama"</li>
+            </ul>
 
-        Panorama.war can be run as web archive in any application server or web container like Tomcat, Glassfish etc. .<br>
-        For immediate usage Panorama.war contains the embedded application server "Winstone".<br>
-        To run Panorama.war with Winstone simply type "java -jar Panorama.war". This starts the embedded application server within one or two minutes.<br>
-        You can reach than Panorama's login screen in your browser via "http://localhost:8080/Panorama".<br><br>
+            <h4>Customize your installation</h4>
+            <ul>
+                <li>You can specify the following additional Java-options executing "java &lt;options&gt; -jar Panorama.war":
+                    <ul>
+                        <li>"-Xmx1024m" :maximum allowed memory allocation for JVM, minimum value of 1024 MB suggested for processing of large results</li>
+                        <li>"XX:MaxPermSize=512M" : object space for java classes, suggested value 512MB</li>
+                        <li>"-Djava.io.tmpdir=mydir" : define working directory for exraction of jar file, default is system's temp dir</li>
+                        <li>"-Djruby.compile.invokedynamic=true" : Fix possible problems with some JREs resulting in "java.lang.ClassNotFoundException:"</li>
+                    </ul>
+                </li>
+                <li>You can specify additional Winstone-options executing "java -jar Panorama.war &lt;options&gt;":
+                    <ul>
+                        <li>Allow only SSL encrypted https-connections with disabled http-port:<br/>
+                            java -jar Panorama.war --httpPort=-1 --httpsPort=8443 --httpsKeyStore=&lt;keystore file&gt; --httpsKeyStorePassword=&lt;keystore password&gt;
+                        </li>
+                        <li>
+                            Use another application prefix to access via "http://my_host:8080/MyPrefix": java -jar Panorama.war --prefix=/MyPrefix
+                        </li>
+                        <li>
+                            All command line options of embedded winstone server are described here: <a href="http://winstone.sourceforge.net">http://winstone.sourceforge.net</a>
+                        </li>
+                    </ul>
+                </li>
+                <li><a href="http://github.com/rammpeter/Panorama/blob/master/start_Panorama.sh" target="_blank">Here you can find a sample shell-script to start Panorama for Unix/Linux</a></li>
+                <li>Panorama.war can also be run as web archive in any Java JEE application server or web container like Tomcat, Glassfish, JBoss etc. .</li>
+            </ul>
 
-        If you use tnsnames.ora for TNS name resolution it should be located at server site in $ORACLE_HOME/network/admin or in a directory targeted by environment variable $TNS_ADMIN.<br>
-        Java runtime environment should be Java 7 or 8. Some problems may occur with IBM JVM. If so please use JVM from SUN/Oracle.<br><br>
+            <h4>Run demo installation</h4>
+            <ul>
+                <li><a href="https://panorama-ramm.herokuapp.com" target="_blank">Run preinstalled Panorama at Heroku-cloud (requires connect to Oracle-DB from internet for usage)</a></li>
+            </ul>
 
-        Panorama writes some encrypted information to local filesystem.<br>
-        You can control the directory for this files by setting environment variable PANORAMA_VAR_HOME to your target directory.<br><br>
+            <h3>How to get help?</h3>
+            <ul>
+                <li>Look at the image slide show to to get some info about Panorama's features</li>
+                <li><a href="https://github.com/rammpeter/Panorama/wiki" target="_blank">WIKI and FAQ (unforunately still under construction)</a></li>
+                <li>Write a <a href="mailto:Peter@ramm-oberhermsdorf.de">mail</a> if nothing else helps or to report problems.</li>
+            </ul>
 
-        You can specify the following additional Java-options executing "java &lt;options&gt; -jar Panorama.war":
-        <ul>
-            <li>"-Xmx1024m" :maximum allowed memory allocation for JVM, minimum value of 1024 MB suggested for processing of large results</li>
-            <li>"XX:MaxPermSize=512M" : object space for java classes, suggested value 512MB</li>
-            <li>"-Djava.io.tmpdir=mydir" : define working directory for exraction of jar file, default is system's temp dir</li>
-            <li>"-Djruby.compile.invokedynamic=true" : Fix possible problems with some JREs resulting in "java.lang.ClassNotFoundException:"</li>
-        </ul>
-        <br>
-        You can specify additional Winstone-options executing "java -jar Panorama.war &lt;options&gt;":
-        <ul>
-            <li>Allow only SSL encrypted https-connections with disabled http-port:<br>
-                java -jar Panorama.war --httpPort=-1 --httpsPort=8443 --httpsKeyStore=&lt;keystore file&gt; --httpsKeyStorePassword=&lt;keystore password&gt;
-            </li>
-            <li>
-                Use another application prefix to access via "http://my_host:8080/MyPrefix": java -jar Panorama.war --prefix=/MyPrefix
-            </li>
-            <li>
-                All command line options of embedded winstone server are described here: <a href="http://winstone.sourceforge.net">http://winstone.sourceforge.net</a>
-            </li>
-        </ul>
-        <a href="http://github.com/rammpeter/Panorama/blob/master/start_Panorama.sh" target="_blank">Here you can find a sample shell-script to start Panorama for Unix/Linux</a><br><br>
+            <h3>Behind the scenes</h3>
+            <ul>
+                <li>Panorama is an Ruby on Rails application that runs with JRuby. Web resources you can find here:
+                    <ul>
+                        <li><a href="http://github.com/rammpeter/Panorama_Gem" target="_blank">Source code</a></li>
+                        <li><a href="http://rawgit.com/rammpeter/Panorama_Gem/master/app/views/help/version_history.html" target="_blank">Version history</a></li>
+                    </ul>
+                </li>
+                <li>If you use tnsnames.ora for TNS name resolution it should be located at server site in $ORACLE_HOME/network/admin or in a directory targeted by environment variable $TNS_ADMIN.</li>
+                <li>Panorama writes some encrypted information to local filesystem.<br/>
+                You can control the directory for this files by setting environment variable PANORAMA_VAR_HOME to your target directory.</li>
 
-        <a href="panorama_download.html" target="_blank"><img alt="Panorama" class="shadow" src="images/Panorama.jpg"></a>
+            </ul>
+
+
+
+            <a href="panorama_download.html" target="_blank"><img alt="Panorama" class="shadow" src="images/Panorama.jpg"/></a>
+        </div>
+        <div id="panorama_images"  style="float:left;">
+
+        </div>
+        <div style="clear: both;"></div>
     </div>
 </div>
+<script type="text/javascript">
+    var img_urls = [
+        [ "images/Panorama.jpg",             "Active session history" ],
+    ]
+
+    lightBox_SlideShow("panorama_images", img_urls);
+    jQuery('#panorama_text').css('max-width', '800px');
+</script>
+
 </body>
 </html>

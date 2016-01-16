@@ -1,16 +1,16 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
 <html><head>
-    <meta http-equiv="content-type" content="text/html; charset=UTF-8">
-    <meta http-equiv="Language" content="de">
-    <meta name="author" content="Peter Ramm">
-    <meta name="description" content="Peter Ramm : My personal experience in Oracle performance tuning">
-    <meta name="keywords" lang="de" content="Oracle database monitoring Panorama">
+    <meta http-equiv="content-type" content="text/html; charset=UTF-8" />
+    <meta http-equiv="Language" content="de" />
+    <meta name="author" content="Peter Ramm" />
+    <meta name="description" content="Peter Ramm : My personal experience in Oracle performance tuning" />
+    <meta name="keywords" lang="de" content="Oracle database monitoring Panorama" />
 
-    <meta name="robots" content="index,follow">
-    <meta http-equiv="imagetoolbar" content="false">
-    <meta name="audience" content="alle">
-    <meta name="page-topic" content="Peter Ramm">
-    <meta name="revisit-after" CONTENT="7 days">
+    <meta name="robots" content="index,follow" />
+    <meta http-equiv="imagetoolbar" content="false" />
+    <meta name="audience" content="alle" />
+    <meta name="page-topic" content="Peter Ramm" />
+    <meta name="revisit-after" CONTENT="7 days" />
 
     <title>Peter Ramm at GitHub</title>
 
@@ -19,6 +19,11 @@
     <script type="text/javascript" src="jquery.backstretch.min.js"></script>
     <script type="text/javascript" src="jquery-ui-1.8.18.custom.min.js"></script>
     <link rel="stylesheet" href="jquery-ui-1.8.18.custom.css" type="text/css" media="all" />
+
+    <!-- Magnific Popup core CSS file -->
+    <link rel="stylesheet" href="magnific-popup.css">
+    <!-- Magnific Popup core JS file -->
+    <script type="text/javascript" src="jquery.magnific-popup.min.js"></script>
 
     <link rel="stylesheet" href="jstree.css" type="text/css" media="all" />
     <script type="text/javascript" src="jstree.js"></script>
@@ -91,7 +96,7 @@
 
         }
 
-        // Test auf tablet order iPad
+        // Test auf tablet oder iPad
         var supportsTouch = null;
         function isTouchDevice(){
             if (supportsTouch == null){
@@ -99,31 +104,35 @@
             }
             return supportsTouch;
         }
+
+        // Ausgabe slideshow per lightBox, Parameter: Name des DIVs, Array mit URL und Text zum Bild
+        function lightBox_SlideShow(div_name, img_urls){
+            for(var i=0; i < img_urls.length; i++) {
+                img_url  = img_urls[i][0];
+                img_text = img_urls[i][1];
+                $('#'+div_name).append('<a href="'+img_url+'" title="'+img_text+'"><img alt="'+img_url+'" src="'+img_url+'" height="120" class="shadow" style="margin: 10px;" /></a>')
+                        .addClass('image-gallery');
+            }
+
+            $('.image-gallery').magnificPopup({
+                delegate: 'a',
+                type:'image',
+                gallery:{
+                    enabled:true,
+                    navigateByImgClick: true,
+                    preload: [0,1], // Will preload 1 - before current, and 1 after the current image
+                    tPrev: 'Previous image (left arrow)', // title for left button
+                    tNext: 'Next image (right arrow)', // title for right button
+                    tCounter: '<span class="mfp-counter">%curr% of %total%</span>' // markup of counter
+                }
+            });
+
+        }
+
+
     </script>
-
-    <style type="text/css">
-        body{
-            font-family: Verdana, 'Lucida Sans Unicode', sans-serif;      /* globaler Font der Seite */
-        }
-
-        /* Hinweis-Schilder des Menüs */
-        .menu_entry {
-            background-repeat:no-repeat;
-            background-image: url(images/label_ground.png);
-            height:80px;
-            width: 150px;
-            padding-left:10px;
-            vertical-align:middle;
-            cursor:pointer;
-        }
-        .shadow {
-            box-shadow: 10px 10px 5px #888;
-            -webkit-box-shadow: 10px 10px 5px #888;
-            -moz-box-shadow: 10px 10px 5px #888;
-        }
-    </style>
-
 </head>
+
 <body onload="menu_call();" style="padding-left: 10px; padding-right: 10px; position: relative;">
 <table width="100%" style="z-index: 0;">
     <tr>
