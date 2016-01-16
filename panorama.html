@@ -4,9 +4,10 @@
     <div class="shadow opaque" style="width:100%; height: 100%; background-color: #99CC99; position:absolute; top:0px; left:0px; z-index:1;">
     </div>
     <div style="position: relative; z-index: 2; padding: 10px;">
-        <div id="panorama_text" style="float:left;">
+        <div id="panorama_global">
+            <div id="panorama_text" style="float:left;">
             <h2>Panorama for Oracle</h2>
-            „Panorama” is my free tool for monitoring and performance analysis of Oracle databases.<br/>
+            „Panorama” is my free tool for monitoring and performance analysis of Oracle databases.
             <h3>What does it offer?</h3>
             <ul>
                 <li>Support for:
@@ -30,7 +31,7 @@
 
             <h3>Which preconditions are required?</h3>
             <ul>
-                <li>Java runtime environment, version 7 or above to run Panorama application.<br>(Some problems may occur with IBM JVM. If so please use JVM from SUN/Oracle.)</li>
+                <li>Java runtime environment, version 7 or above to run Panorama application.<br/>(Some problems may occur with IBM JVM. If so please use JVM from SUN/Oracle.)</li>
                 <li>Parts of Oracle's "Diagnostic Pack" are used for some functions of panorama, so licensing of this option is required for connected Oracle-DB</li>
                 <li>Web browser to access Panorama-GUI</li>
                 <li>Your Oracle-User used for login with Panorama requires the grant "SELECT ANY DICTIONARY"</li>
@@ -46,7 +47,7 @@
             <h4>Start running quickly</h4>
             <ul>
                 <li><a href="panorama_download.html" target="_blank">Download file Panorama.war</a></li>
-                <li>Type "java -jar Panorama.war", no matter if your are running Windows, Linux or Mac-OS</li>
+                <li>Type "java -jar Panorama.war" in a terminal window, no matter if your are running Windows, Linux or Mac-OS</li>
                 <li>This starts the embedded Winstone application server within one or two minutes.</li>
                 <li>Now you can reach Panorama's login screen in your browser via "http://localhost:8080/Panorama"</li>
             </ul>
@@ -80,7 +81,7 @@
 
             <h4>Run demo installation</h4>
             <ul>
-                <li><a href="https://panorama-ramm.herokuapp.com" target="_blank">Run preinstalled Panorama at Heroku-cloud (requires connect to Oracle-DB from internet for usage)</a></li>
+                <li><a href="https://panorama-ramm.herokuapp.com" target="_blank">Run preinstalled Panorama at Heroku-cloud (requires connect to your Oracle-DB from internet for usage)</a></li>
             </ul>
 
             <h3>How to get help?</h3>
@@ -103,10 +104,7 @@
                 You can control the directory for this files by setting environment variable PANORAMA_VAR_HOME to your target directory.</li>
 
             </ul>
-
-
-
-            <a href="panorama_download.html" target="_blank"><img alt="Panorama" class="shadow" src="images/Panorama.jpg"/></a>
+            </div>
         </div>
         <div id="panorama_images"  style="float:left;">
 
@@ -116,10 +114,21 @@
 </div>
 <script type="text/javascript">
     var img_urls = [
+        [ "images/login_tnsnames.jpg",       "Login screen: choose your database from tnsnames.ora, supply user name and passwort and push the lower 'Login'-button to login.<br/>" +
+                                                "If you check 'Save login?', your login info will be stored encrypted at server site for fast login next time(upper drop-down selection).<br/>" +
+                                                "To prevent server owner from compromising your passwords, they are encrypted with both server and client key. Your client key ist stored only within your local browser's cookie store." ],
+        [ "images/login_hostportsid.jpg",    "Login screen: Switch identification mode to 'Host,Port,SID /Serice' if your database is not found in tnsnames.ora.<br/>Connect is tried with SID first time. If connection fails, service name is assumed instead of SID." ],
+        [ "images/mouseover-hint.jpg",       "GUI defaults: If you place your mouse over GUI-elements for a while, a tooltip with detailed info will appear.<br/>This is used within the whole application.<br/>Also single cells in grid views may contain their own special tooltip info." ],
+        [ "images/home.jpg",                 "Home: Gives some basic information about your database and it's instances" ],
+        [ "images/grid-usage.jpg",           "GUI defaults: Tables/grid views always have a context menu via right mouse click on table or long touch on tablets.<br/>" +
+                                                "Some context menu functions are column-specific. Content can be sorted by click on column header<br/>" +
+                                                "Additional functions on page are available via hyperlinks or submit buttons<br/>" +
+                                                "Next result is always presented at the bottom of the current page without refusal of current page content.<br/>" +
+                                                "So you can drill down in analysis workflow step by step and go back to previous steps, which are still available above." ],
         [ "images/Panorama.jpg",             "Active session history" ],
     ]
 
-    lightBox_SlideShow("panorama_images", img_urls);
+    lightBox_SlideShow("panorama_global", img_urls);
     jQuery('#panorama_text').css('max-width', '800px');
 </script>
 
