@@ -96,11 +96,11 @@
             <h3>What about security?</h3>
             <ul>
                 <li>For production purposes you should run Panorama with SSL-encrypted web traffic (https). How to for embedded Winstone application server is described above.</li>
-                <li>Your oracle password is stored encrypted in server memory and will be decrypted shortly only for the process establishing connection to your target database.<br/>
+                <li>Your oracle password is stored encrypted in server memory and will be decrypted shortly only for the process of establishing connection to your target database.<br/>
                 The key used for this encryption consists of a server key which is salted with a unique client key specific to your browser.<br/>
                 This way only requests from your browser are able to reuse the stored connect info for reestablishing the database connection.</li>
-                <li>If you retain your login info for further fast logins (checkbox 'Save logins' in statup dialog), this info is stored in local server file system completely encrypted the same way like passwords</li>
-                <li>You can customize the server key used for encryption by setting the environment variable $SECRET_KEY_BASE to value of your choice<br/>
+                <li>If you retain your login info for further fast logins (checkbox 'Save logins' in statup dialog), this info is stored in local server file system completely encrypted the same way like passwords.</li>
+                <li>You can customize the server key used for encryption by setting the environment variable $SECRET_KEY_BASE to value of your choice.<br/>
                     Every change of $SECRET_KEY_BASE at server site leads to invalidation of all stored connection info.
                 </li>
             </ul>
