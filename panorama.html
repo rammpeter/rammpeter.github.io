@@ -49,7 +49,7 @@
                 <li><a href="panorama_download.html" target="_blank">Download file Panorama.war</a></li>
                 <li>Type "java -jar Panorama.war" in a terminal window, no matter if your are running Windows, Linux or Mac-OS</li>
                 <li>This starts the embedded Winstone application server within one or two minutes.</li>
-                <li>Now you can reach Panorama's login screen in your browser via "http://localhost:8080/Panorama"</li>
+                <li>Now you can reach Panorama's login screen in your browser via "http://<your server ip>:8080/Panorama"</li>
             </ul>
 
             <h4>Customize your installation</h4>
@@ -68,7 +68,7 @@
                             java -jar Panorama.war --httpPort=-1 --httpsPort=8443 --httpsKeyStore=&lt;keystore file&gt; --httpsKeyStorePassword=&lt;keystore password&gt;
                         </li>
                         <li>
-                            Use another application prefix to access via "http://my_host:8080/MyPrefix": java -jar Panorama.war --prefix=/MyPrefix
+                            Use another application prefix to access via "http://<your server ip>:8080/MyPrefix": java -jar Panorama.war --prefix=/MyPrefix
                         </li>
                         <li>
                             All command line options of embedded winstone server are described here: <a href="http://winstone.sourceforge.net">http://winstone.sourceforge.net</a>
@@ -77,6 +77,8 @@
                 </li>
                 <li><a href="http://github.com/rammpeter/Panorama/blob/master/start_Panorama.sh" target="_blank">Here you can find a sample shell-script to start Panorama for Unix/Linux</a></li>
                 <li>Panorama.war can also be run as web archive in any Java JEE application server or web container like Tomcat, Glassfish, JBoss etc. .</li>
+                <li>Panorama writes some encrypted session state information and usage log to local filesystem.<br/>
+                    You can control the directory for this files by setting environment variable PANORAMA_VAR_HOME to your target directory.</li>
             </ul>
 
             <h4>Run demo installation</h4>
@@ -100,9 +102,10 @@
                     </ul>
                 </li>
                 <li>If you use tnsnames.ora for TNS name resolution it should be located at server site in $ORACLE_HOME/network/admin or in a directory targeted by environment variable $TNS_ADMIN.</li>
-                <li>Panorama writes some encrypted information to local filesystem.<br/>
-                You can control the directory for this files by setting environment variable PANORAMA_VAR_HOME to your target directory.</li>
-
+                <li>Panorama renders one single web page via Ajax-calls. This way the back button of your browser is not supported to return to former page content.</li>
+                <li>Panorama writes short usage information to file panorama_usage_info.log in the directory targeted by $PANORAMA_VAR_HOME<br/>
+                    You can view this log info via http://<your server ip>:8080/Panorama/usage/info
+                </li>
             </ul>
             </div>
         </div>
