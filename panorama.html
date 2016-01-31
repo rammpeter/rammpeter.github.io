@@ -49,7 +49,7 @@
                 <li><a href="panorama_download.html" target="_blank">Download file Panorama.war</a></li>
                 <li>Type "java -jar Panorama.war" in a terminal window, no matter if your are running Windows, Linux or Mac-OS</li>
                 <li>This starts the embedded Winstone application server within one or two minutes.</li>
-                <li>Now you can reach Panorama's login screen in your browser via "http://<your server ip>:8080/Panorama"</li>
+                <li>Now you can reach Panorama's login screen in your browser via "http://&lt;your server ip&gt;:8080/Panorama"</li>
             </ul>
 
             <h4>Customize your installation</h4>
@@ -68,7 +68,7 @@
                             java -jar Panorama.war --httpPort=-1 --httpsPort=8443 --httpsKeyStore=&lt;keystore file&gt; --httpsKeyStorePassword=&lt;keystore password&gt;
                         </li>
                         <li>
-                            Use another application prefix to access via "http://<your server ip>:8080/MyPrefix": java -jar Panorama.war --prefix=/MyPrefix
+                            Use another application prefix to access via "http://&lt;your server ip&gt;:8080/MyPrefix": java -jar Panorama.war --prefix=/MyPrefix
                         </li>
                         <li>
                             All command line options of embedded winstone server are described here: <a href="http://winstone.sourceforge.net">http://winstone.sourceforge.net</a>
@@ -118,7 +118,7 @@
                 If the next request uses another database, then the current connection is closed and opened with the new connection info.</li>
                 <li>Panorama renders one single web page via Ajax-calls. This way the back button of your browser is not supported to return to former page content.</li>
                 <li>Panorama writes short usage information to plain text file 'panorama_usage_info.log' in the directory targeted by $PANORAMA_VAR_HOME<br/>
-                    You can view this log info via http://<your server ip>:8080/Panorama/usage/info
+                    You can view this log info via http://&lt;your server ip&gt;:8080/Panorama/usage/info
                 </li>
             </ul>
             </div>
