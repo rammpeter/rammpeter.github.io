@@ -144,7 +144,7 @@
                                                 "You can adjust the height of grids per mouse with a slider at the lower bound of the grid" ],
         [ "images/ash-entry.jpg",             "How to start analyzing performance issues" ],
         [ "images/ash-show.jpg",              "Active session history: Choose time range for consideration and first grouping criteria.<br/>Optionally filter on single RAC-instance or some other possible criterias." ],
-        [ "images/ash-first.jpg",             "Active session history: First selection grouped by choosen criteria.<br/>" +
+        [ "images/ash-first.jpg",             "Active session history: First selection grouped by choosen criteria 'Event'.<br/>" +
                                                 "Sort-column 'Total time waited' shows the time all active sessions have spent in this wait event for the filter criterias above.<br/>" +
                                                 "Hyperlinks with numbers in angle brackets mean for example: there are sessions of 8 different RAC-instances in wait event 'ON CPU' working for 936,191 seconds<br/>" +
                                                 "If you click the '< 8 >' then next result will show you one line for each RAC-instance for wait event 'ON CPU'.<br/>" +
@@ -153,7 +153,10 @@
                                                 "You can switch from numeric view to timeline graph via context menu entries 'Show top 10 xxx' (right mouse click on table)" ],
         [ "images/ash-graph_1.jpg",           "Active session history: This graph show top ten group criterias on time line.<br/>" +
                                                 "You can show/hide y-axis and switch chart to use own y-scale for every graph (useful if there are large differences between numeric values of graphs)<br/>"],
-        [ "images/ash-graph_2.jpg",           "Active session history: Context menu function 'Stack single charts' from previous slide allows you to estimate values for single graphs and sum of all graphs at once." ],
+        [ "images/ash-graph_2.jpg",           "Active session history: Context menu function 'Stack single charts' from previous slide allows you to view values for single graphs and sum of all graphs at once." ],
+        [ "images/ash-samples.jpg",           "Active session history: Click the link 'number of sample records' to view the single records of active session history selection.<br/>If the number of records is to large to view they will be grouped by hour." ],
+        [ "images/ash-temp.jpg",              "Active session history: Click the link 'Max. Temp' or 'Max- PGA' to view the Temp and PGA-usage.<br/>'Grouping' allows you to change the time precision for each row. Click 'Samples' to view the records of selected time for drill down." ],
+        [ "images/ash-sqlid.jpg",             "Active session history: If you group your selection by SQL-ID than you may click the link 'SQL-ID' to evaluate this single SQL wthin your choosen time range.<br/>This allows you to change the scope from active session history to SQL evaluation." ],
     ]
 
     lightBox_SlideShow("panorama_global", img_urls);
