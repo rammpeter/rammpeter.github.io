@@ -1,64 +1,31 @@
-<h3>Detection of chained rows of tables</h3>
+<h3>Relevance of access on migrated / chained rows compared to total amount of table access</h3>
 chained rows causes additional read of migrated rows in separate DB-blocks while accessing a record which is not completely contained in current block.<br/>
 Chained rows can be avoided by adjusting PCTFREE and reorganization of affected table.<br/>
-<br/>
-This seslection cannot be directly executed. Please copy PL/SQL-Code and execute external in SQL*Plus !!!<pre style='background-color: #FFFFCC;'>
-SET SERVEROUT ON;
-
-DECLARE
-  statval  NUMBER;
-  statdiff NUMBER;
-  Anzahl   NUMBER;
-  StatNum  NUMBER;
-  Sample_Size NUMBER := 1000;
-
-  TYPE RowID_TableType IS TABLE OF URowID;
-  RowID_Table RowID_TableType;
-
-  FUNCTION Diff RETURN NUMBER IS
-    oldval NUMBER;
-  BEGIN
-    oldval := statval;
-    SELECT Value INTO statval
-    FROM   v$SesStat
-    WHERE  SID=USERENV('SID')
-    AND    Statistic# = StatNum  -- consistent gets
-    ;
-    RETURN statval - oldval;
-  END Diff;
-
-  PROCEDURE RunTest(p_Owner IN VARCHAR2, p_Table_Name IN VARCHAR2) IS
-  BEGIN
-    statdiff := Diff();
-    FOR i IN 1..RowID_Table.COUNT LOOP
-      EXECUTE IMMEDIATE 'SELECT COUNT(*) FROM (SELECT /*+ NO_MERGE */ * FROM '||p_Owner||'.'||p_Table_Name||' WHERE RowID=:A1)' INTO Anzahl USING RowID_Table(i);
-    END LOOP;
-    statdiff := Diff();
-  END RunTest;
-
-BEGIN
-  DBMS_OUTPUT.PUT_LINE('===========================================');
-  DBMS_OUTPUT.PUT_LINE('Ermittlung Chained rows: connected as user='||SYS_CONTEXT ('USERENV', 'SESSION_USER'));
-  DBMS_OUTPUT.PUT_LINE('Sampe-size='||Sample_Size||' rows');
-  SELECT Statistic# INTO StatNum FROM v$StatName WHERE Name='consistent gets';
-  FOR Rec IN (SELECT Owner, Table_Name, Num_Rows
-              FROM   DBA_Tables
-              WHERE  IOT_Type IS NULL
-              AND    Num_Rows > 10000   -- nur genügende große Tabellen testen
-              AND    Owner NOT IN ('SYS','SYSTEM')
-             ) LOOP
-    BEGIN
-      EXECUTE IMMEDIATE 'SELECT RowID FROM '||Rec.Owner||'.'||Rec.Table_Name||' WHERE RowNum <= '||Sample_Size BULK COLLECT INTO RowID_Table;
-      runTest(Rec.Owner, Rec.Table_Name);  -- der erste zum Warmlaufen und übersetzen der Cursor
-      runTest(Rec.Owner, Rec.Table_Name);  -- dieser zum Zaehlen
-      IF statdiff > Sample_Size THEN
-        DBMS_OUTPUT.PUT_LINE('Table='||Rec.Owner||'.'||Rec.Table_Name||',   num rows='||Rec.Num_Rows||',   consistent gets='||statdiff||',   Anteil chained rows='||((statdiff*100/sample_size)-100)||' %');
-      END IF;
-    EXCEPTION
-      WHEN OTHERS THEN
-        DBMS_OUTPUT.PUT_LINE('Table='||Rec.Owner||'.'||Rec.Table_Name||',  Error: '||SQLCODE||':'||SQLERRM);
-    END;
-  END LOOP;
-END;
-/
-             </pre>
+This selection shows the relevance of access on chained rows compared to total amount of table access.<pre style='background-color: #FFFFCC;'>WITH Inst_Filter AS (SELECT :P1 Instance FROM DUAL)
+                      SELECT x.*, CASE WHEN "table fetch by rowid"+"table scan rows gotten" > 0 THEN
+                                  ROUND("table fetch continued row" / ("table fetch by rowid"+"table scan rows gotten") * 100,2)
+                                  ELSE 0 END "Pct. chained row access"
+                      FROM   (
+                              SELECT /*+ NO_MERGE*/ ROUND(Begin_Interval_Time, 'MI') Start_Time,
+                                     SUM(CASE WHEN Stat_Name = 'table fetch continued row' THEN Value ELSE 0 END) "table fetch continued row",
+                                     SUM(CASE WHEN Stat_Name = 'table fetch by rowid'      THEN Value ELSE 0 END) "table fetch by rowid",
+                                     SUM(CASE WHEN Stat_Name = 'table scan rows gotten'    THEN Value ELSE 0 END) "table scan rows gotten"
+                              FROM   (
+                                      SELECT /*+ NO_MERGE*/ ss.Begin_Interval_Time, st.Stat_Id, st.Stat_Name, ss.Min_Snap_ID, st.Snap_ID,
+                                             Value - LAG(Value, 1, Value) OVER (PARTITION BY st.Instance_Number, st.Stat_ID ORDER BY st.Snap_ID) Value
+                                      FROM   (SELECT /*+ NO_MERGE*/ DBID, Instance_Number, Begin_Interval_Time, Snap_ID,
+                                                     MIN(Snap_ID) OVER (PARTITION BY Instance_Number) Min_Snap_ID
+                                              FROM   DBA_Hist_Snapshot ss
+                                              WHERE  Begin_Interval_Time >= SYSDATE - :P2
+                                              AND    ( (SELECT Instance FROM Inst_Filter) IS NULL OR ss.Instance_Number = (SELECT Instance FROM Inst_Filter)    )
+                                             ) ss
+                                      JOIN   DBA_Hist_SysStat st ON st.DBID=ss.DBID AND st.Instance_Number=ss.Instance_Number
+                                      WHERE  st.Snap_ID = ss.Snap_ID /* Vorgänger des ersten mit auswerten für Differenz per LAG */
+                                      AND    st.Stat_Name IN ('table fetch continued row', 'table fetch by rowid', 'table scan rows gotten')
+                                    ) hist
+                              WHERE  hist.Value >= 0    /* Ersten Snap nach Reboot ausblenden */
+                              AND    hist.Snap_ID > hist.Min_Snap_ID /* Vorgaenger des ersten Snap fuer LAG wieder ausblenden */
+                              GROUP BY ROUND(Begin_Interval_Time, 'MI')
+                             ) x
+                      ORDER BY 1
+                      </pre><div>Parameter :P1: Optional filter for selection on RAC-instance</div><div>Parameter :P2: Number of days in history backward from now for consideration</div>

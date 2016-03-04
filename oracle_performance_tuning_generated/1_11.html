@@ -1,15 +1,21 @@
-<h3>Implizite Konvertierungen per INTERNAL_FUNCTION</h3>
-Auslöser von impliziten Typ-Konvertierungen ist oftmals versehentlich mit falschem Typ gebundene Bindevariable.<br/>
-Die Konvertierung verursacht möglicherweise unnötig CPU-Last auf der DB-Maschine.<br/>
-Durch die Ansprache der Spalte per INTERNAL_FUNCTION statt direkt wird die mögliche Nutzung von Indizes für den Zugriff verhindert.<br/>
-In diesen Fällen sollte tunlichst der entsprechende Datentyp für die Variablenbindung verwendet werden.<br/>
-Statement muss für jede RAC-Instanz separat angewandt werden, da wegen akzeptabler akzeptabler Laufzeit nur die aktuell angemeldete Instanz geprüft wird.<pre style='background-color: #FFFFCC;'>SELECT /*+ ORDERED USE_HASH(p s) */
-                              SQL_FullText, s.SQL_ID,
-                              s.Elapsed_Time/1000000 Elasped_Secs,
-                              CPU_Time/1000000 CPU_Secs,
-                              Executions, Rows_Processed,
-                              p.Filter_Predicates
-                       FROM   (SELECT /*+ NO_MERGE */ * FROM v$SQL_PLan WHERE Filter_Predicates LIKE '%INTERNAL_FUNCTION%') p
-                       JOIN   (SELECT /*+ NO_MERGE */ * FROM v$SQLArea) s ON s.SQL_ID = p.SQL_ID AND s.Plan_Hash_Value = p.Plan_Hash_Value
-                       ORDER BY Elapsed_Time DESC NULLS LAST
-             </pre>
+<h3>Sub-optimal index access with only partial usage of index</h3>
+Occurrence of index attributes as filter instead of access criteria with signifcant load by index access targets to possible problems with index usage.<br/>
+This may be caused by for example:<br/>
+- wrong data type for bind variable<br/>
+- usage of functions at the wrong side while accessing columns of index<br/>
+This selection evaluates current SGA.<br/>
+<pre style='background-color: #FFFFCC;'> SELECT h.Elapsed_Secs , p.SQL_ID, p.Child_Number, p.Plan_Hash_Value, p.Operation, p.Options, p.Object_Owner, p.Object_Name, p.ID Plan_Line_ID, p.Access_Predicates, p.Filter_Predicates
+                      FROM   gv$SQL_Plan p
+                      JOIN   (
+                              SELECT /*+ NO_MERGE */ Inst_ID, SQL_ID, SQL_Child_Number, SQL_Plan_Hash_Value, SQL_Plan_Line_ID, COUNT(*) Elapsed_Secs
+                              FROM   gv$Active_Session_History
+                              WHERE  SQL_Plan_Operation = 'INDEX'
+                              GROUP BY Inst_ID, SQL_ID, SQL_Child_Number, SQL_Plan_Hash_Value, SQL_Plan_Line_ID
+                           ) h ON h.Inst_ID=p.Inst_ID AND h.SQL_ID=p.SQL_ID AND h.SQL_Child_Number=p.Child_Number AND h.SQL_Plan_Hash_Value=p.Plan_Hash_Value AND h.SQL_Plan_Line_ID=p.ID
+                      WHERE  p.Access_Predicates IS NOT NULL
+                      AND    p.Filter_predicates IS NOT NULL
+                      AND    p.Operation = 'INDEX'
+                      --AND    INSTR(p.access_predicates, p.filter_predicates) !=0  -- Filter vollständig in Access enthalten
+                      AND h.Elapsed_Secs > :P1
+                      ORDER BY h.Elapsed_Secs DESC
+                    </pre><div>Parameter :P1: Minimum runtime in seconds for index access since last load of SQL in SGA</div>

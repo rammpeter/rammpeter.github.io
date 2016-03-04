@@ -23,7 +23,7 @@
                 </li>
                 <li>it focuses on usage by DBAs and also by software developers with less Oracle knowledge</li>
                 <li>aims to many issues that are inadequately analyzed and presented by other existing tools such as Enterprise Manager</li>
-                <li>Panorama only reads via SELECT-SQLs from database. No write access, structure change, compile etc. needed.</li>
+                <li>Panorama only reads via SELECT-SQLs from database. No write access, structure change, compile etc. is needed at your database.</li>
                 <li>Supports:
                     <ul>
                         <li>Oracle databases on standard hardware as well as RAC-systems and engineered systems (EXADATA)</li>
@@ -34,8 +34,8 @@
 
             <h3>Which preconditions are required?</h3>
             <ul>
-                <li>Java runtime environment, version 7 or above to run Panorama application.<br/>(Some problems may occur with IBM JVM. If so please use JVM from SUN/Oracle.)</li>
-                <li>Parts of Oracle's "Diagnostic Pack" are used for some functions of panorama, so licensing of this option is required for connected Oracle-DB</li>
+                <li>Java runtime environment, version 7 or above to run Panorama application.</li>
+                <li>Licensing of Oracle's "Diagnostic Pack" is required at connected Oracle-DB for some functions of panorama</li>
                 <li>Web browser to access Panorama-GUI</li>
                 <li>Your Oracle-User used for login with Panorama requires the grant "SELECT ANY DICTIONARY"</li>
             </ul>
@@ -124,6 +124,7 @@
                 <li>Panorama writes short usage information to plain text file 'panorama_usage_info.log' in the directory targeted by $PANORAMA_VAR_HOME<br/>
                     You can view this log info via http://&lt;your&nbsp;server&nbsp;ip&gt;:8080/Panorama/usage/info
                 </li>
+                <li>Some Java-problems may occur with IBM JVM. If you have trouble with that please use JVM from SUN/Oracle.</li>
             </ul>
             </div>
         </div>

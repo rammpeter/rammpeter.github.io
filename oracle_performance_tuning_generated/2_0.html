@@ -51,4 +51,4 @@ This selection scans for objects with high block access rate compared to size of
                               AND    s.Logical_Reads > 0
                               ORDER BY Logical_Reads/Num_Rows DESC NULLS LAST
                              ) s
-                      WHERE Num_Rows < :P2</pre><div>Parameter :P1: Number of days in history backward from now for consideration</div><div>Parameter :P2: Maximale Anzahl Rows der betrachteten Table für Aufnahme in Selektion</div>
+                      WHERE Num_Rows < :P2</pre><div>Parameter :P1: Number of days in history backward from now for consideration</div><div>Parameter :P2: Maximum number of rows of table for consideration in result</div>

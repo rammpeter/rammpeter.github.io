@@ -35,4 +35,4 @@ Due to the poor selectivity such indexes are mostly not useful for access optimi
                     AND    (SELECT Count(*) FROM DBA_Constraints ri
                             WHERE  ri.r_owner = p.Owner AND ri.R_Constraint_Name=p.Constraint_Name
                            ) < :P3                      -- Begrenzung auf Anzahl referenzierende Tabellen
-                    ORDER BY Rows_Origin DESC NULLS LAST</pre><div>Parameter :P1: Max. Anzahl Rows der referenzierten Tabelle</div><div>Parameter :P2: Mindestanzahl Rows der referenzierenden Tabelle</div><div>Parameter :P3: Max. Anzahl referenzierende Tabellen (bei groesserer Anzahl FullScan-Problem bei Delete auf Master)</div>
+                    ORDER BY Rows_Origin DESC NULLS LAST</pre><div>Parameter :P1: Max. number of rows in referenced table</div><div>Parameter :P2: Minimun number of rows in referencing table</div><div>Parameter :P3: Max. number of referencing tables (with large number there may be problems with FullTableScan during delete on master table)</div>

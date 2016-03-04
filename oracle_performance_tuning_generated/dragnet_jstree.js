@@ -115,15 +115,19 @@
   "state": { "opened": false }
 , "icon":"images/application-monitor.png"},{
   "id": "0_6",
-  "text": "7. Detection of chained rows of tables",
+  "text": "7. Relevance of access on migrated / chained rows compared to total amount of table access",
   "state": { "opened": false }
 , "icon":"images/application-monitor.png"},{
   "id": "0_7",
-  "text": "8. Table access by rowid replaceable by index lookup (from current SGA)",
+  "text": "8. Detection of chained rows of tables",
   "state": { "opened": false }
 , "icon":"images/application-monitor.png"},{
   "id": "0_8",
-  "text": "9. Table access by rowid replaceable by index lookup (from AWR history)",
+  "text": "9. Table access by rowid replaceable by index lookup (from current SGA)",
+  "state": { "opened": false }
+, "icon":"images/application-monitor.png"},{
+  "id": "0_9",
+  "text": "10. Table access by rowid replaceable by index lookup (from AWR history)",
   "state": { "opened": false }
 , "icon":"images/application-monitor.png"} ]},{
   "id": "1",
@@ -184,6 +188,10 @@
 , "icon":"images/application-monitor.png"},{
   "id": "1_1_6",
   "text": "7. Parallel Query: Degree of parallelism (number of attached PQ servers) higher than limit for single SQL execution",
+  "state": { "opened": false }
+, "icon":"images/application-monitor.png"},{
+  "id": "1_1_7",
+  "text": "8. Statements with planned parallel execution forced to serial",
   "state": { "opened": false }
 , "icon":"images/application-monitor.png"} ]},{
   "id": "1_2",
@@ -253,6 +261,10 @@
   "id": "1_10",
   "text": "11. DELETE-operations replaceable by TRUNCATE",
   "state": { "opened": false }
+, "icon":"images/application-monitor.png"},{
+  "id": "1_11",
+  "text": "12. Sub-optimal index access with only partial usage of index",
+  "state": { "opened": false }
 , "icon":"images/application-monitor.png"} ]},{
   "id": "2",
   "text": "3. Tuning of / load rejection from SGA, PGA",
@@ -275,7 +287,7 @@
   "state": { "opened": false }
 , "icon":"images/application-monitor.png"},{
   "id": "2_4",
-  "text": "5. Objekt-Statistiken: Prüfung auf aktuelle Analyze-Info (Tables)",
+  "text": "5. Objekt statistics: Check on up-to-date analyze info (Tables)",
   "state": { "opened": false }
 , "icon":"images/application-monitor.png"},{
   "id": "2_5",

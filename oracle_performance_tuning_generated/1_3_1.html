@@ -43,4 +43,4 @@ Beginning with 11g stored functions with function result caching or selects/subs
                                    ) obj ON (obj.Owner = p.Object_Owner AND obj.Name = p.Object_Name)
                             JOIN   DBA_Hist_SQLText t  ON (t.DBID=s.DBID AND t.SQL_ID=s.SQL_ID)
                       WHERE Owner NOT IN ('SYS')
-                      ORDER BY s."Executions"/DECODE(obj.Num_Rows, 0, 1, obj.Num_Rows) DESC NULLS LAST</pre><div>Parameter :P1: Number of days in history backward from now for consideration</div><div>Parameter :P2: Minimale Anzahl Executions für Aufnahme in Selektion</div>
+                      ORDER BY s."Executions"/DECODE(obj.Num_Rows, 0, 1, obj.Num_Rows) DESC NULLS LAST</pre><div>Parameter :P1: Number of days in history backward from now for consideration</div><div>Parameter :P2: Minimum number of executions for consideration in selection</div>
