@@ -31,6 +31,7 @@
                         <li>Oracle database versions beginning with Oracle 10.2</li>
                     </ul>
                 </li>
+                <li><a href="panorama_content.html" target="_blank">Here you can find a function overview by available top level menu entries</a></li>
             </ul>
 
             <h3>Which preconditions are required?</h3>
@@ -119,7 +120,8 @@
                     </ul>
                 </li>
                 <li>If you use tnsnames.ora for TNS name resolution it should be located at server site in $ORACLE_HOME/network/admin or in a directory targeted by environment variable $TNS_ADMIN.</li>
-                <li>Panorama starts multiple server instances in JRuby (default = 3).<br/>Each server instance hold it's own Oracle-connection to the last used database and reuses this open connection, if the next requests uses the same database connection info.<br/>
+                <li>Panorama serves an arbitrary number of multiple web-client sessions at one time, each client may choose his own target database connection</li>
+                <li>Therefore Panorama starts multiple server instances in JRuby for simultaneous request processing (default = 3).<br/>Each server instance hold it's own Oracle-connection to the last used database and reuses this open connection, if the next requests uses the same database connection info.<br/>
                 If the next request uses another database, then the current connection is closed and opened with the new connection info.</li>
                 <li>Panorama renders one single web page via Ajax-calls. This way the back button of your browser is not supported to return to former page content.</li>
                 <li>Panorama writes short usage information to plain text file 'panorama_usage_info.log' in the directory targeted by $PANORAMA_VAR_HOME<br/>
