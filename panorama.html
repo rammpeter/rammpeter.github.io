@@ -115,7 +115,7 @@
             <ul>
                 <li>Panorama is an Ruby on Rails application that runs with JRuby. Web resources you can find here:
                     <ul>
-                        <li><a href="http://github.com/rammpeter/Panorama_Gem" target="_blank">Source code</a></li>
+                        <li><a href="http://github.com/rammpeter/Panorama_Gem" target="_blank">Source code</a>, last commit is for release <span id="panorama_version"></span> from <span id="panorama_date"></span></li>
                         <li><a href="http://rawgit.com/rammpeter/Panorama_Gem/master/app/views/help/version_history.html" target="_blank">Version history</a></li>
                     </ul>
                 </li>
@@ -128,6 +128,7 @@
                     You can view this log info via http://&lt;your&nbsp;server&nbsp;ip&gt;:8080/Panorama/usage/info
                 </li>
                 <li>Some Java-problems may occur with IBM JVM. If you have trouble with that please use JVM from SUN/Oracle.</li>
+                <li>Under some circimstances </li>
             </ul>
                 <img src="images/Panorama_Overview.png"/>
 
@@ -137,6 +138,22 @@
     </div>
 </div>
 <script type="text/javascript">
+    // Version und Datum ermitteln aus version.rb
+    try {
+        $.get("https://raw.githubusercontent.com/rammpeter/Panorama_Gem/master/lib/Panorama/version.rb", function( version_html ) {
+            var rest = version_html.substring(version_html.indexOf('VERSION =')+11);    // Begin of version in string
+            jQuery('#panorama_version').html(rest.substring(0, rest.indexOf("'")));
+
+            rest = rest.substring(rest.indexOf('RELEASE_DATE = Date.parse(')+27)        // begin of date in string
+            jQuery('#panorama_date').html(rest.substring(0, rest.indexOf("'")));
+        }, 'text');
+    }
+    catch(err) {
+        console.log("Error getting release and date: "+err.message);
+    }
+
+
+
     var img_urls = [
         [ "images/login_tnsnames.jpg",       "Login screen: choose your database from tnsnames.ora, supply user name and passwort and push the lower 'Login'-button to login.<br/>" +
                                                 "If you check 'Save login?', your login info will be stored encrypted at server site for fast login next time(upper drop-down selection).<br/>" +
