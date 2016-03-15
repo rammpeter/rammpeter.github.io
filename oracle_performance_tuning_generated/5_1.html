@@ -1,4 +1,4 @@
-<h3>Substantial larger runtime per module compared to average over longer time range</h3>
+<h3>Substantial larger runtime per module compared to average over longer time period</h3>
 Based on active session history are shown outlier on databaase runtime per module je Module.<br/>
 Units for time consideration are defined by date format picture of TRUNC-function (DD=day, HH24=hour etc.)<pre style='background-color: #FFFFCC;'>WITH Modules AS (
                SELECT /*+ PARALLEL(h,2) */
@@ -18,9 +18,9 @@ Units for time consideration are defined by date format picture of TRUNC-functio
                   SUM(Secs_Waiting)        "Waiting secs. total",
                   ROUND(AVG(Secs_Waiting)) "Waiting secs. avg",
                   MIN(Secs_Waiting)        "Waiting secs. min",
-                  MIN(Time_Range_Start) KEEP (DENSE_RANK FIRST ORDER BY Secs_Waiting) "Time range start of min.",
+                  MIN(Time_Range_Start) KEEP (DENSE_RANK FIRST ORDER BY Secs_Waiting) "Time period start of min.",
                   MAX(Secs_Waiting)        "Waiting secs. max.",
-                  MAX(Time_Range_Start) KEEP (DENSE_RANK LAST ORDER BY Secs_Waiting) "Time range start of max.",
+                  MAX(Time_Range_Start) KEEP (DENSE_RANK LAST ORDER BY Secs_Waiting) "Time period start of max.",
                   MIN(First_Occurrence)    "First occurrence",
                   MAX(Last_Occurrence)     "Last occurrence"
            FROM   Modules

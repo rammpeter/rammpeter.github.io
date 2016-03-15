@@ -1,6 +1,6 @@
-<h3>Konkurrenz bzgl. Speicher, Latches: Überblick über Sequence-Nutzung</h3>
-Wenn in Applikation gecacht werden kann, müssen Sequences nicht einzeln von DB gelesen werden.<br/>
-    Dies reduziert DB-Roundtrips der Applikation und wird hier bewertet.<pre style='background-color: #FFFFCC;'>SELECT /* DB-Tools Ramm  Ueberblick Sequence-Nutzung */ *
+<h3>Concurrency on memory, latches: Overview over usage of sequences</h3>
+If sequences may be cached in application, next values must not be read from DB one by one.<br/>
+                                                              This may reduce the number of roundtrips between application and database.<pre style='background-color: #FFFFCC;'>SELECT /* DB-Tools Ramm  Overview usage of sequences */ *
                       FROM   (
                               SELECT ROUND(Executions/CASE WHEN (Last_Active_Time - First_Load_Time) < 1 THEN 1 ELSE Last_Active_Time - First_Load_Time END) Executions_per_Day,
                                      ROUND(Rows_Processed/CASE WHEN (Last_Active_Time - First_Load_Time) < 1 THEN 1 ELSE Last_Active_Time - First_Load_Time END) Rows_Processed_per_Day,

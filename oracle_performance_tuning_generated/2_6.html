@@ -1,5 +1,5 @@
-<h3>PGA-Auslastung: Historische Auslastung PGA-Strukturen</h3>
-Unzureichende Bereitstellung PGA für Sort-/Hash-Operationen führt zu Auslagern auf TEMP-Tablespace mit entsprechenden Performance-Auswirkungen.<pre style='background-color: #FFFFCC;'>SELECT /*+ DB-Tools Ramm - PGA-Historie*/
+<h3>PGA-Usage: Historic utilization of PGA-structures</h3>
+Insufficient supply of PGA-memory for sort and hash operations leads to transfer to TEMP-tablespace with according impact on performance<pre style='background-color: #FFFFCC;'>SELECT /*+ DB-Tools Ramm - PGA-Historie*/
                              ss.Begin_Interval_Time, p.Instance_Number,
                              ROUND(MAX(DECODE(p.Name, 'aggregate PGA target parameter'      , p.Value, 0))/(1024*1024)) "PGA Aggregate Target (MB)",
                              ROUND(MAX(DECODE(p.Name, 'aggregate PGA auto target'           , p.Value, 0))/(1024*1024)) "PGA Auto Target (MB)",

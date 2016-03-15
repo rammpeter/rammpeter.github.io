@@ -1,7 +1,7 @@
-<h3>Fehlende Nutzung von Bindevariablen</h3>
-Nutzung von Literalen statt Bindevariablen für Filterbedingungen ohne Kompensierung durch cursor_sharing-Parameter führt zu hohen Parse-Zahlen und Flutung der SQL-Area in der SGA.<br/>
-Das folgende Statement sucht grob nach diesbezüglichen Ausreissern.<br/>
-Optional muss die Länge des untersuchten Substrings variert werden.<pre style='background-color: #FFFFCC;'>WITH Len AS (SELECT :P1 Substr_Len FROM DUAL)
+<h3>Missing usage of bind variables</h3>
+Usage of literals instead of bind variables for filter without compensation by cursor_sharing-parameter leads to high parse counts and flooding of SQL-Area in SGA.<br/>
+This selection looks for statements which differentiate themself only by literals. It compares the first x characters of SQL to identify similar statements.<br/>
+The length of the compared substring may be varied.<pre style='background-color: #FFFFCC;'>WITH Len AS (SELECT :P1 Substr_Len FROM DUAL)
                        SELECT g.*, s.SQL_Text "Beispiel SQL-Text"
                        FROM   (
                                SELECT COUNT(*) Variationen, Inst_ID, MIN(Parsing_Schema_Name) UserName, COUNT(DISTINCT Parsing_Schema_Name) Anzahl_User,
@@ -20,4 +20,4 @@ Optional muss die Länge des untersuchten Substrings variert werden.<pre style='
                               ) g
                        JOIN gv$SQLArea s ON s.Inst_ID = g.Inst_ID AND s.SQL_ID = g.SQL_ID
                        ORDER BY "Memory (MB)" DESC NULLS LAST
-             </pre><div>Parameter :P1: Anzahl Zeichen der SQL-Statements für Vergleich (links beginnend)</div>
+             </pre><div>Parameter :P1: Number of characters for comparison of SQLs (beginning at left side of statement)</div>

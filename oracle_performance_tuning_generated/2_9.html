@@ -1,6 +1,6 @@
-<h3>Aktive Sessions (AWR-Historie)</h3>
-Die Anzahl der zu einem Zeitpunkt aktiven Sessions lässt Rückschlüsse auf Systemlast zu<br/>
-    Die Peaks der gleichzeitig aktiven Sessions sollte Grundlage für die Bemessung von Session-Pools (z.B. von Application-Servern) darstellen.<pre style='background-color: #FFFFCC;'>SELECT /*+ PARALLEL(s,4) DB-Tools Ramm: aktive Sessions */
+<h3>Active sessions (from AWR history DBA_Hist_Active_Sess_History)</h3>
+Number of simultaneously active sessions allows conclusions on system load.<br/>
+                          Peak number of simultaneously active sessions can be the base for sizing of session-pools (e.g. for application server).<pre style='background-color: #FFFFCC;'>SELECT /*+ PARALLEL(s,4) DB-Tools Ramm: active sessions */
                              Sample_Time, count(*) "Active Sessions"
                       FROM   DBA_hist_Active_Sess_History s
                       WHERE  Sample_Time >SYSDATE - :P1

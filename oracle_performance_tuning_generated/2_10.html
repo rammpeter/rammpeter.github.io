@@ -1,9 +1,10 @@
-<h3>Parse-Aktivität</h3>
-Folgende Stmts. beurteilen Verhältnis von parses zu executes.<br/>
-    Bei hochfrequenten Parses sollten Alternativen untersucht werden:<br/>
-    - Wiederverwendung geparster Statements in Applikation<br/>
-    - Nutzung von Statements-Caches auf Ebene Application-Server bzw. JDBC-Treiber<br/>
-    - Nutzung session cached cursors-Feature der DB<pre style='background-color: #FFFFCC;'>SELECT /* DB-Tools Ramm Parse-Ratio Einzelwerte */ s.*, ROUND(Executions/DECODE(Parses, 0, 1, Parses),2) "Execs/Parse"
+<h3>Parse activity</h3>
+Consideration of ratio parses vs. executes.<br/>
+                                    For highly frequent parses you should look for alternatives like:<br/>
+                                    - reuse of already parsed statements in application<br/>
+                                    - usage of statement caches in application server or JDBC-driver<br/>
+                                    - usage of DB-feature "session cached cursor"<br/>
+              <pre style='background-color: #FFFFCC;'>SELECT /* DB-Tools Ramm Parse-Ratio single values */ s.*, ROUND(Executions/DECODE(Parses, 0, 1, Parses),2) "Execs/Parse"
                       FROM   (
                               SELECT s.SQL_ID, s.Instance_Number, Parsing_schema_Name, SUM(s.Executions_Delta) Executions,
                                      SUM(s.Parse_Calls_Delta) Parses

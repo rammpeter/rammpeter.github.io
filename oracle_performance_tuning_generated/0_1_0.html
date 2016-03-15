@@ -1,7 +1,7 @@
 <h3>Detection of indexes not used for access or ensurance of uniqueness</h3>
 Selection of non-unique indexes without usage in SQL statements.<br/>
 Necessity of  existence of indexes may be put into question if these indexes are not used for uniqueness or access optimization.<br/>
-However the index may be useful for coverage of foreign key constraints, even if there had been no usage of index in considered time range.<br/>
+However the index may be useful for coverage of foreign key constraints, even if there had been no usage of index in considered time period.<br/>
 Ultimate knowledge about usage of index may be gained by tagging index with 'ALTER INDEX ... MONITORING USAGE' and monitoring usage via V$OBJECT_USAGE.<br/>
 Additional info about usage of index can be gained by querying DBA_Hist_Seg_Stat or DBA_Hist_Active_Sess_History.<pre style='background-color: #FFFFCC;'>SELECT /* DB-Tools Ramm nicht genutzte Indizes */ * FROM (
                     SELECT (SELECT SUM(bytes)/(1024*1024) MBytes FROM DBA_SEGMENTS s WHERE s.SEGMENT_NAME = i.Index_Name AND s.Owner = i.Owner) MBytes,

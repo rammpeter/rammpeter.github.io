@@ -1,27 +1,28 @@
-<h3>DELETE-operations replaceable by TRUNCATE</h3>
-Delete-operations on tables without filter should be replaced by TRUNCATE TABLE.<br/>
-This reduces runtime, redo-contention and ensures reset of high water mark<pre style='background-color: #FFFFCC;'> SELECT *
+<h3>Problematic usage of cartesian joins (from AWR history)</h3>
+Cartesian joins may be problematic in case of joining two large results without join condition.<br/>
+Problems may be targeted by execution time of SQL or size of affected tables.<br/>
+Results are from DBA_Hist_SQL_Plan<pre style='background-color: #FFFFCC;'>SELECT ps.*,
+                             (SELECT Num_Rows FROM DBA_Indexes i WHERE i.Owner = ps.Object_Owner AND i.Index_Name = ps.Object_Name) Num_Rows_Index,
+                             (SELECT Num_Rows FROM  DBA_Tables t WHERE t.Owner = ps.Object_Owner AND t.Table_Name = ps.Object_Name) Num_Rows_Table
                       FROM   (
-                              SELECT 'SGA' Source, inst_ID, SQL_ID, TO_CHAR(SUBSTR(SQL_FullText, 1, 1000)) SQL_Text, ROUND(Elapsed_Time/1000000,2) Elapsed_Time_Secs, Executions
-                              FROM   gv$SQLArea
-                              WHERE /*+ ORDERED_PREDICATED */
-                                    Command_Type = 7  -- DELETE
-                              AND   (    REGEXP_LIKE(SQL_FullText, 'FROM+ [[:alpha:]_]+$', 'i')
-                                    )
-                              UNION ALL
-                              SELECT 'AWR' Source, s.Instance_Number,  t.SQL_ID, t.SQL_Text, ROUND(SUM(s.Elapsed_Time_Delta)/1000000,2) Elapsed_Time_Secs, SUM(Executions_Delta) Executions
-                              FROM   (
-                                      SELECT DBID, SQL_ID, TO_CHAR(SUBSTR(t.SQL_Text, 1, 1000)) SQL_Text
-                                      FROM   DBA_Hist_SQLText t
-                                      WHERE /*+ ORDERED_PREDICATED */
-                                            Command_Type = 7  -- DELETE
-                                      AND   (    REGEXP_LIKE(t.SQL_Text, 'FROM+ [[:alpha:]_]+$', 'i')
-                                            )
-                                    ) t
-                              JOIN  DBA_Hist_SQLStat s ON s.DBID = t.DBID AND s.SQL_ID=t.SQL_ID
-                              JOIN  DBA_Hist_Snapshot ss ON ss.DBID=t.DBID AND ss.Snap_ID=s.Snap_ID AND ss.Instance_Number = s.Instance_Number
-                              WHERE ss.Begin_Interval_Time > SYSDATE - :P1
-                              GROUP BY s.Instance_Number, t.SQL_ID, t.SQL_Text
-                             )
-                      ORDER BY Elapsed_Time_Secs DESC
-                    </pre><div>Parameter :P1: Number of days in history backward from now for consideration</div>
+                              SELECT /*+ LEADING(p) */ s.Instance_Number, p.SQL_ID, p.Plan_Hash_Value, p.Operation, p.Options, p.Object_Owner, p.Object_Name, p.ID Line_ID, p.Parent_ID,
+                                     SUM(s.Executions_Delta) Executions, SUM(s.Elapsed_Time_Delta/1000000) Elapsed_Time_Secs
+                              FROM   (WITH plans AS (SELECT /*+ NO_MERGE LEADING(i) USE_NL(i o) */ o.*
+                                                     FROM   (SELECT /*+ PARALLEL(i,2) */ DISTINCT DBID, SQL_ID, Plan_Hash_Value FROM DBA_Hist_SQL_Plan i WHERE options = 'CARTESIAN') i
+                                                     JOIN   DBA_Hist_SQL_Plan o ON o.DBID=i.DBID AND o.SQL_ID=I.SQL_ID AND o.Plan_Hash_Value = i.Plan_Hash_Value
+                                                    )
+                                      SELECT /*+ NO_MERGE */ Level, plans.*
+                                      FROM   plans
+                                      CONNECT BY PRIOR DBID = DBID AND PRIOR SQL_ID=SQL_ID AND  PRIOR Plan_Hash_Value = Plan_Hash_Value AND PRIOR  id = parent_id AND PRIOR Object_Name IS NULL  -- Nur Nachfolger suchen so lange Vorgänger kein Object_Name hat
+                                      START WITH options = 'CARTESIAN'
+                                     ) p
+                              JOIN   DBA_Hist_SQLStat s ON s.DBID = p.DBID AND s.SQL_ID = p.SQL_ID AND s.Plan_Hash_Value = p.Plan_Hash_Value
+                              JOIN   DBA_Hist_Snapshot ss ON ss.DBID = p.DBID AND ss.Instance_Number = s.Instance_Number AND ss.Snap_ID = s.Snap_ID
+                              WHERE Object_Name IS NOT NULL -- Erstes Vorkommen von ObjectName in der Parent-Hierarchie nutzen
+                              AND   ss.Begin_Interval_Time > SYSDATE - :P1
+                              AND   p.Object_Owner != NVL(:P2, 'Hugo')
+                              GROUP BY s.Instance_Number, p.SQL_ID, p.Plan_Hash_Value, p.Operation, p.Options, p.Object_Owner, p.Object_Name, p.ID, p.ID, p.Parent_ID
+                             ) ps
+                      WHERE   Elapsed_Time_Secs > :P3
+                      ORDER BY Elapsed_Time_Secs DESC, SQL_ID, Plan_Hash_Value
+                      </pre><div>Parameter :P1: Number of days in history backward from now for consideration</div><div>Parameter :P2: Exclusion of single object owners from result</div><div>Parameter :P3: Minimum total execution time of SQL in SGA in seconds</div>

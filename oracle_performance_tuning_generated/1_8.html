@@ -1,28 +1,15 @@
-<h3>Problematic usage of cartesian joins (from current SGA)</h3>
-Cartesian joins may be problematic in case of joining two large results without join condition.<br/>
-Problems may be targeted by execution time of SQL or size of affected tables.<br/>
-Results are from GV$SQL_Plan<pre style='background-color: #FFFFCC;'>SELECT /*+ USE_HASH(p s i t) LEADING(p) */ p.Inst_ID, p.SQL_ID, p.Child_Number, p.Operation, p.Options, p.Object_Owner, p.Object_Name, NVL(i.Num_Rows, t.Num_Rows) Num_Rows,
-                             s.Executions, s.Elapsed_Time/1000000 Elapsed_Time_Secs,
-                             p.ID Line_ID, p.Parent_ID
-                      FROM   (WITH plans AS (SELECT /*+ NO_MERGE */ *
-                                             FROM   gv$SQL_Plan
-                                             WHERE  (Inst_ID, SQL_ID, Plan_Hash_Value, Child_Number) IN (SELECT Inst_ID, SQL_ID, Plan_Hash_Value, Child_Number
-                                                                                                         FROM gv$SQL_Plan
-                                                                                                         WHERE  options = 'CARTESIAN'
-                                                                                                        )
-                                            )
-                              SELECT /*+ NO_MERGE */ Level, plans.*
-                              FROM   plans
-                              CONNECT BY PRIOR Inst_ID = Inst_ID AND PRIOR SQL_ID=SQL_ID AND  PRIOR Plan_Hash_Value = Plan_Hash_Value AND  PRIOR child_number = child_number AND PRIOR  id = parent_id AND PRIOR Object_Name IS NULL -- Nur Nachfolger suchen so lange Vorgänger kein Object_Name hat
-                              START WITH options = 'CARTESIAN'
-                             ) p
-                      JOIN   (SELECT /*+ NO_MERGE */ Inst_ID, SQL_ID, Child_Number, Executions, Elapsed_Time
-                              FROM gv$SQL
-                             ) s ON s.Inst_ID = p.Inst_ID AND s.SQL_ID = p.SQL_ID AND s.Child_Number = p.Child_Number
-                      LEFT OUTER JOIN DBA_Indexes i ON i.Owner = p.Object_Owner AND i.Index_Name = p.Object_Name
-                      LEFT OUTER JOIN DBA_Tables t  ON t.Owner = p.Object_Owner AND t.Table_Name = p.Object_Name
-                      WHERE Object_Name IS NOT NULL  -- Erstes Vorkommen von ObjectName in der Parent-Hierarchie nutzen
-                      AND   Object_Owner != NVL(:P1, 'Hugo')
-                      AND   Elapsed_Time/1000000 > :P2
-                      ORDER BY s.Elapsed_Time DESC, s.SQL_ID, s.Child_Number
-            </pre><div>Parameter :P1: Exclusion of single object owners from result</div><div>Parameter :P2: Minimum total execution time of SQL in SGA in seconds</div>
+<h3>Implicit conversion by INTERNAL_FUNCTION</h3>
+Implicit type conversions are often accidentially due to wrong type of bind variable.<br/>
+This conversion may cause unnecessary CPU load.<br/>
+By accessing column per INTERNAL_FUNCTION instead of direct access usage of existing index may be excluded.<br/>
+For this cases according data type should be used for bind variable.<pre style='background-color: #FFFFCC;'>SELECT /*+ ORDERED USE_HASH(p s) */
+                              SQL_FullText, p.Inst_ID, s.SQL_ID, s.Parsing_Schema_Name,
+                              s.Elapsed_Time/1000000 Elasped_Secs,
+                              CPU_Time/1000000 CPU_Secs,
+                              Executions, Rows_Processed,
+                              p.Filter_Predicates
+                       FROM   (SELECT /*+ NO_MERGE */ * FROM gv$SQL_PLan WHERE Filter_Predicates LIKE '%INTERNAL_FUNCTION%') p
+                       JOIN   (SELECT /*+ NO_MERGE */ * FROM gv$SQLArea) s ON s.Inst_ID = p.Inst_ID AND s.SQL_ID = p.SQL_ID AND s.Plan_Hash_Value = p.Plan_Hash_Value
+                       WHERE  s.Parsing_Schema_Name NOT IN ('SYS')
+                       ORDER BY Elapsed_Time DESC NULLS LAST
+             </pre>

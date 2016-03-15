@@ -235,35 +235,47 @@
   "state": { "opened": false }
 , "icon":"images/application-monitor.png"} ]},{
   "id": "1_4",
-  "text": "5. Identification of statements with alternating execution plans in history",
+  "text": "5. Suboptimal index usage in SQL statements",
+  "state": { "opened": false }
+, "children": [{
+  "id": "1_4_0",
+  "text": "1. Sub-optimal index access with only partial usage of index",
   "state": { "opened": false }
 , "icon":"images/application-monitor.png"},{
+  "id": "1_4_1",
+  "text": "2. Excessive filtering after TABLE ACCESS BY ROWID due to weak index access criteria (current SGA)",
+  "state": { "opened": false }
+, "icon":"images/application-monitor.png"},{
+  "id": "1_4_2",
+  "text": "3. Excessive filtering after TABLE ACCESS BY ROWID due to weak index access criteria (AWR history)",
+  "state": { "opened": false }
+, "icon":"images/application-monitor.png"} ]},{
   "id": "1_5",
-  "text": "6. Nested loop join on large tables with large result of SQL (consideration of current SGA)",
+  "text": "6. Identification of statements with alternating execution plans in history",
   "state": { "opened": false }
 , "icon":"images/application-monitor.png"},{
   "id": "1_6",
-  "text": "7. Iteration in nested-loop join against full scan operation",
+  "text": "7. Nested loop join on large tables with large result of SQL (consideration of current SGA)",
   "state": { "opened": false }
 , "icon":"images/application-monitor.png"},{
   "id": "1_7",
-  "text": "8. Implicit conversion by INTERNAL_FUNCTION",
+  "text": "8. Iteration in nested-loop join against full scan operation",
   "state": { "opened": false }
 , "icon":"images/application-monitor.png"},{
   "id": "1_8",
-  "text": "9. Problematic usage of cartesian joins (from current SGA)",
+  "text": "9. Implicit conversion by INTERNAL_FUNCTION",
   "state": { "opened": false }
 , "icon":"images/application-monitor.png"},{
   "id": "1_9",
-  "text": "10. Problematic usage of cartesian joins (from AWR history)",
+  "text": "10. Problematic usage of cartesian joins (from current SGA)",
   "state": { "opened": false }
 , "icon":"images/application-monitor.png"},{
   "id": "1_10",
-  "text": "11. DELETE-operations replaceable by TRUNCATE",
+  "text": "11. Problematic usage of cartesian joins (from AWR history)",
   "state": { "opened": false }
 , "icon":"images/application-monitor.png"},{
   "id": "1_11",
-  "text": "12. Sub-optimal index access with only partial usage of index",
+  "text": "12. DELETE-operations replaceable by TRUNCATE",
   "state": { "opened": false }
 , "icon":"images/application-monitor.png"} ]},{
   "id": "2",
@@ -291,27 +303,27 @@
   "state": { "opened": false }
 , "icon":"images/application-monitor.png"},{
   "id": "2_5",
-  "text": "6. Objekt-Statistiken: Prüfung auf aktuelle Analyze-Info (Indizes)",
+  "text": "6. Objekt statistics: Check on up-to-date analyze info (Indexes)",
   "state": { "opened": false }
 , "icon":"images/application-monitor.png"},{
   "id": "2_6",
-  "text": "7. PGA-Auslastung: Historische Auslastung PGA-Strukturen",
+  "text": "7. PGA-Usage: Historic utilization of PGA-structures",
   "state": { "opened": false }
 , "icon":"images/application-monitor.png"},{
   "id": "2_7",
-  "text": "8. Konkurrenz bzgl. Speicher, Latches: Unzureichend gecachte Sequences",
+  "text": "8. Concurrency on memory, latches: insufficient cached sequences",
   "state": { "opened": false }
 , "icon":"images/application-monitor.png"},{
   "id": "2_8",
-  "text": "9. Konkurrenz bzgl. Speicher, Latches: Überblick über Sequence-Nutzung",
+  "text": "9. Concurrency on memory, latches: Overview over usage of sequences",
   "state": { "opened": false }
 , "icon":"images/application-monitor.png"},{
   "id": "2_9",
-  "text": "10. Aktive Sessions (AWR-Historie)",
+  "text": "10. Active sessions (from AWR history DBA_Hist_Active_Sess_History)",
   "state": { "opened": false }
 , "icon":"images/application-monitor.png"},{
   "id": "2_10",
-  "text": "11. Parse-Aktivität",
+  "text": "11. Parse activity",
   "state": { "opened": false }
 , "icon":"images/application-monitor.png"},{
   "id": "2_11",
@@ -323,7 +335,7 @@
   "state": { "opened": false }
 , "children": [{
   "id": "3_0",
-  "text": "1. Fehlende Nutzung von Bindevariablen",
+  "text": "1. Missing usage of bind variables",
   "state": { "opened": false }
 , "icon":"images/application-monitor.png"},{
   "id": "3_1",
@@ -387,7 +399,7 @@
   "state": { "opened": false }
 , "icon":"images/application-monitor.png"} ]},{
   "id": "5_1",
-  "text": "2. Substantial larger runtime per module compared to average over longer time range",
+  "text": "2. Substantial larger runtime per module compared to average over longer time period",
   "state": { "opened": false }
 , "icon":"images/application-monitor.png"},{
   "id": "5_2",

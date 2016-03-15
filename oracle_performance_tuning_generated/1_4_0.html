@@ -1,0 +1,21 @@
+<h3>Sub-optimal index access with only partial usage of index</h3>
+Occurrence of index attributes as filter instead of access criteria with signifcant load by index access targets to possible problems with index usage.<br/>
+This may be caused by for example:<br/>
+- wrong data type for bind variable<br/>
+- usage of functions at the wrong side while accessing columns of index<br/>
+This selection evaluates current SGA.<br/>
+<pre style='background-color: #FFFFCC;'> SELECT h.Elapsed_Secs , p.SQL_ID, p.Child_Number, p.Plan_Hash_Value, p.Operation, p.Options, p.Object_Owner, p.Object_Name, p.ID Plan_Line_ID, p.Access_Predicates, p.Filter_Predicates
+                      FROM   gv$SQL_Plan p
+                      JOIN   (
+                              SELECT /*+ NO_MERGE */ Inst_ID, SQL_ID, SQL_Child_Number, SQL_Plan_Hash_Value, SQL_Plan_Line_ID, COUNT(*) Elapsed_Secs
+                              FROM   gv$Active_Session_History
+                              WHERE  SQL_Plan_Operation = 'INDEX'
+                              GROUP BY Inst_ID, SQL_ID, SQL_Child_Number, SQL_Plan_Hash_Value, SQL_Plan_Line_ID
+                           ) h ON h.Inst_ID=p.Inst_ID AND h.SQL_ID=p.SQL_ID AND h.SQL_Child_Number=p.Child_Number AND h.SQL_Plan_Hash_Value=p.Plan_Hash_Value AND h.SQL_Plan_Line_ID=p.ID
+                      WHERE  p.Access_Predicates IS NOT NULL
+                      AND    p.Filter_predicates IS NOT NULL
+                      AND    p.Operation = 'INDEX'
+                      --AND    INSTR(p.access_predicates, p.filter_predicates) !=0  -- Filter vollständig in Access enthalten
+                      AND h.Elapsed_Secs > :P1
+                      ORDER BY h.Elapsed_Secs DESC
+                    </pre><div>Parameter :P1: Minimum runtime in seconds for index access since last load of SQL in SGA</div>

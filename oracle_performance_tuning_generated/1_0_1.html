@@ -31,4 +31,4 @@ They are out of place for OLTP-like access (small access time, many executions).
                              GROUP BY s.DBID, s.SQL_ID, s.Plan_Hash_Value
                              HAVING SUM(Executions_Delta) > :P2  -- Nur vielfache Ausfuehrung mit Full Scan stellt Problem dar
                             ) s ON s.DBID=p.DBID AND s.SQL_ID=p.SQL_ID AND s.Plan_Hash_Value=p.Plan_Hash_Value
-                      ORDER BY Executions*Num_Rows DESC NULLS LAST</pre><div>Parameter :P1: Number of days in history backward from now for consideration</div><div>Parameter :P2: Minimum number of executions within time range for consideration in result</div>
+                      ORDER BY Executions*Num_Rows DESC NULLS LAST</pre><div>Parameter :P1: Number of days in history backward from now for consideration</div><div>Parameter :P2: Minimum number of executions within time period for consideration in result</div>
