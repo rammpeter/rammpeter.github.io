@@ -1,7 +1,8 @@
-<h3>Konkurrenz bzgl. Speicher: Verdrängung im Shared Pool</h3>
-Dieser View listet Objekte an, die für ihre Platzierung im Shared Pool andere verdrängen mussten.<br/>
-Bei der Selektion werden die Inhalte gelöscht, d.h., die Selektion zeigt die Verdrängungen seit der letzten Selektion (nur einmalig).<br/>
-'No. Items flushed from shared pool' von 7..8 ist normal, höhere Werte zeigen Probleme Platz zu finden.<pre style='background-color: #FFFFCC;'>SELECT /* DB-Tools Ramm  Verdreaengung Shared Pool */
+<h3>Concurrency on memory: sqeezing out in shared pool</h3>
+This view lists objects which squeezed out others from shared pool to get place.<br/>
+While selecting this view it's contents in SGA will be deleted. That means, this view shows replacement since the last execution of this view (only one time).<br/>
+Value for 'No. Items flushed from shared pool' from 7..8 is normal, higher values indicate problems to find place in shared pool.<br/>
+<pre style='background-color: #FFFFCC;'>SELECT /* DB-Tools Ramm  Verdreaengung Shared Pool */
                          RAWTOHEX(Addr)         "row-address in array or SGA",
                          Indx         "index in fixed table array",
                          Inst_ID      "Instance",

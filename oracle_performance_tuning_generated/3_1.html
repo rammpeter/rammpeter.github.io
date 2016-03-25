@@ -1,15 +1,16 @@
-<h3>Mehrfach offene Cursoren: Überblick über SQL</h3>
-Je Session sollte für ein SQL-Statement i.d.R. auch nur ein Cursor aktiv sein.<br/>
-Mehrfach geöffnete Cursor auf identischen SQL fluten Session_Cached_Cursor und PGA.<pre style='background-color: #FFFFCC;'>SELECT /* Anzahl Open Cursor gruppiert nach SQL */
+<h3>Multiple open cursor: overview over SQL</h3>
+Normally there should be only one open cursor per SQL statement and session.<br/>
+SQLs with multiple open cursors withon one session my flood session cursor cache and PGA<br/>
+<pre style='background-color: #FFFFCC;'>SELECT /* Panorama: Number of open cursor grouped by SQL */
                              oc.*
                       FROM   (
                               SELECT Inst_ID, SQL_ID,
-                                     COUNT(*) Anzahl_OC,
-                                     COUNT(DISTINCT SID) Anzahl_SID,
-                                     ROUND(Count(*) / COUNT(DISTINCT SID),2) "Anzahl OC je SID",
+                                     COUNT(*) "Number of open cursor",
+                                     COUNT(DISTINCT SID) "Number of sessions",
+                                     ROUND(Count(*) / COUNT(DISTINCT SID),2) "open cursors per session",
                                      MIN(SQL_Text) SQL_Text
                               FROM   gv$Open_Cursor
                               GROUP BY Inst_ID, SQL_ID
                               HAVING Count(*) / COUNT(DISTINCT SID) > 1
                              ) oc
-                      ORDER BY Anzahl_OC DESC NULLS LAST</pre>
+                      ORDER BY 3 DESC NULLS LAST</pre>

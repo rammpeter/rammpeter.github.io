@@ -1,8 +1,9 @@
-<h3>Einstellung Recovery-Verhalten</h3>
-Die Vorgaben von Recovery-Zeiten (fast_start_mttr_target) beeinflussen im Extrem drastisch das I/O-Verhalten der DB.<br/>
-Durch Erhöhung der Aggressivität des DB-Writers zur Einhaltung kurzer Vorgaben können:<br/>
-- Viele kleine asynchrone Write-Requests erzeugt werden statt weniger Requests mit mehreren Blöcken (im Normalfall bis 3000 DB-Blöcke / async.Write-Request)<br/>
-- Die max. Anzahl async. Write-Requests des OS erreicht werden und massiv Verzögerungen im I/O der DB auftreten<pre style='background-color: #FFFFCC;'>SELECT /*+ DB-Tools Ramm MTTR-Historie */ r.Instance_Number, ss.Begin_Interval_Time, target_mttr, estimated_mttr, optimal_logfile_size, CKPT_BLOCK_WRITES
+<h3>Adjustment of recovery behaviour</h3>
+The target for recovery times (fast_start_mttr_target) influences strongly the I/O-behaviour of your database.<br/>
+Short targets for recovery and therefore more aggressive DB-writer my lead to:<br/>
+- many small asychroneous write requests are executed instead of instead of less requests with more blocks per request (normally until 3000 DB-blocks per async. write request)<br/>
+- maximum limit of OS for simultaneous async. write requests is reached and I/O is considerably slowed down due to that<br/>
+<pre style='background-color: #FFFFCC;'>SELECT /*+ DB-Tools Ramm MTTR-Historie */ r.Instance_Number, ss.Begin_Interval_Time, target_mttr, estimated_mttr, optimal_logfile_size, CKPT_BLOCK_WRITES
                   FROM   dba_hist_instance_recovery r
                   JOIN   DBA_Hist_Snapshot ss ON ss.DBID = r.DBID AND ss.Instance_Number = r.Instance_Number AND ss.Snap_ID = r.Snap_ID
                   WHERE  r.Instance_Number = :P1

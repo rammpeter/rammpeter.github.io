@@ -339,19 +339,19 @@
   "state": { "opened": false }
 , "icon":"images/application-monitor.png"},{
   "id": "3_1",
-  "text": "2. Mehrfach offene Cursoren: Überblick über SQL",
+  "text": "2. Multiple open cursor: overview over SQL",
   "state": { "opened": false }
 , "icon":"images/application-monitor.png"},{
   "id": "3_2",
-  "text": "3. Mehrfach offene Cursoren: Mehrfach in Session geöffnete SQL",
+  "text": "3. Multiple open cursor: SQLs opened multiple in session",
   "state": { "opened": false }
 , "icon":"images/application-monitor.png"},{
   "id": "3_3",
-  "text": "4. Konkurrenz bzgl. Speicher: Verdrängung im Shared Pool",
+  "text": "4. Concurrency on memory: sqeezing out in shared pool",
   "state": { "opened": false }
 , "icon":"images/application-monitor.png"},{
   "id": "3_4",
-  "text": "5. Probleme mit Function-based Index bei cusor_sharing != EXACT",
+  "text": "5. Problems with function based index if cursor_sharing != EXACT",
   "state": { "opened": false }
 , "icon":"images/application-monitor.png"},{
   "id": "3_5",
@@ -371,11 +371,11 @@
   "state": { "opened": false }
 , "icon":"images/application-monitor.png"},{
   "id": "4_2",
-  "text": "3. Commit / Rollback - Aufkommen",
+  "text": "3. Commit / Rollback - Emergence",
   "state": { "opened": false }
 , "icon":"images/application-monitor.png"},{
   "id": "4_3",
-  "text": "4. Einstellung Recovery-Verhalten",
+  "text": "4. Adjustment of recovery behaviour",
   "state": { "opened": false }
 , "icon":"images/application-monitor.png"} ]},{
   "id": "5",

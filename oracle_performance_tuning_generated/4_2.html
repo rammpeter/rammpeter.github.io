@@ -1,5 +1,5 @@
-<h3>Commit / Rollback - Aufkommen</h3>
-Aus den Zahlen des Commit- und Rollback-Verhaltens lassen sich Rückschlüsse auf evtl. problematisches Applikationsverhalten ziehen.<pre style='background-color: #FFFFCC;'>SELECT /* DB-Tools Ramm Commits und Rollbacks in gegebenen Zeitraum */ Begin, Instance_Number, User_Commits, User_Rollbacks,
+<h3>Commit / Rollback - Emergence</h3>
+From the amount of commit and rollback operations one can conclude to possibly problematic application behaviour<pre style='background-color: #FFFFCC;'>SELECT /* DB-Tools Ramm Commits und Rollbacks in gegebenen Zeitraum */ Begin, Instance_Number, User_Commits, User_Rollbacks,
                          ROUND(User_Rollbacks/(DECODE(User_Commits+User_Rollbacks, 0, 1, User_Commits+User_Rollbacks))*100) Percent_Rollback,
                          Rollback_Changes
                   FROM   (
