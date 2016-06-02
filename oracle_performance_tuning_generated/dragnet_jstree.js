@@ -329,6 +329,10 @@
   "id": "2_11",
   "text": "12. Non-optimal database configuration parameters",
   "state": { "opened": false }
+, "icon":"images/application-monitor.png"},{
+  "id": "2_12",
+  "text": "13. Amount of logon processes per time",
+  "state": { "opened": false }
 , "icon":"images/application-monitor.png"} ]},{
   "id": "3",
   "text": "4. Redundant cursors / usage of bind variables",
@@ -339,23 +343,27 @@
   "state": { "opened": false }
 , "icon":"images/application-monitor.png"},{
   "id": "3_1",
-  "text": "2. Multiple open cursor: overview over SQL",
+  "text": "2. Number of distinct SQL-IDs per time in time line",
   "state": { "opened": false }
 , "icon":"images/application-monitor.png"},{
   "id": "3_2",
-  "text": "3. Multiple open cursor: SQLs opened multiple in session",
+  "text": "3. Multiple open cursor: overview over SQL",
   "state": { "opened": false }
 , "icon":"images/application-monitor.png"},{
   "id": "3_3",
-  "text": "4. Concurrency on memory: sqeezing out in shared pool",
+  "text": "4. Multiple open cursor: SQLs opened multiple in session",
   "state": { "opened": false }
 , "icon":"images/application-monitor.png"},{
   "id": "3_4",
-  "text": "5. Problems with function based index if cursor_sharing != EXACT",
+  "text": "5. Concurrency on memory: sqeezing out in shared pool",
   "state": { "opened": false }
 , "icon":"images/application-monitor.png"},{
   "id": "3_5",
-  "text": "6. Critical amount of child cursors per SQL-ID",
+  "text": "6. Problems with function based index if cursor_sharing != EXACT",
+  "state": { "opened": false }
+, "icon":"images/application-monitor.png"},{
+  "id": "3_6",
+  "text": "7. Critical amount of child cursors per SQL-ID",
   "state": { "opened": false }
 , "icon":"images/application-monitor.png"} ]},{
   "id": "4",

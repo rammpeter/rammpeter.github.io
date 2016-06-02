@@ -1,19 +1,16 @@
-<h3>Multiple open cursor: SQLs opened multiple in session</h3>
+<h3>Multiple open cursor: overview over SQL</h3>
 Normally there should be only one open cursor per SQL statement and session.<br/>
 SQLs with multiple open cursors withon one session my flood session cursor cache and PGA<br/>
-<pre style='background-color: #FFFFCC;'>SELECT /* SQLs mehrfach als Cursor geoeffnet je Session */
-                             sq.*, cu.SID "Session-ID", s.UserName, cu.Anz_Open_Cursor "Number of open cursor", cu.Anz_Sql "Number of SQLs",
-                             s.Client_Info, s.Machine, s.Program, s.Module, s.Action, cu.SQL_Text
+<pre style='background-color: #FFFFCC;'>SELECT /* Panorama: Number of open cursor grouped by SQL */
+                             oc.*
                       FROM   (
-                              SELECT oc.Inst_ID, oc.SID, oc.SQL_ID, COUNT(*) Anz_Open_Cursor, COUNT(DISTINCT oc.SQL_ID) Anz_Sql, MIN(oc.SQL_Text) SQL_Text
-                              FROM   gv$Open_Cursor oc
-                              GROUP BY oc.Inst_ID, oc.SID, oc.SQL_ID
-                              HAVING count(*) > COUNT(DISTINCT oc.SQL_ID)
-                             ) cu
-                      JOIN   gv$Session s ON s.Inst_ID=cu.Inst_ID AND s.SID=cu.SID
-                      JOIN   (SELECT Inst_ID, SQL_ID, COUNT(*) "Number of childs", MIN(Parsing_schema_name) Parsing_schema_Name
-                              FROM gv$SQL
+                              SELECT Inst_ID, SQL_ID,
+                                     COUNT(*) "Number of open cursor",
+                                     COUNT(DISTINCT SID) "Number of sessions",
+                                     ROUND(Count(*) / COUNT(DISTINCT SID),2) "open cursors per session",
+                                     MIN(SQL_Text) SQL_Text
+                              FROM   gv$Open_Cursor
                               GROUP BY Inst_ID, SQL_ID
-                             )sq ON sq.Inst_ID = cu.Inst_ID AND sq.SQL_ID = cu.SQL_ID
-                      WHERE sq.Parsing_Schema_Name NOT IN ('SYS')
-                      ORDER BY cu.Anz_Open_Cursor-cu.Anz_Sql DESC NULLS LAST</pre>
+                              HAVING Count(*) / COUNT(DISTINCT SID) > 1
+                             ) oc
+                      ORDER BY 3 DESC NULLS LAST</pre>
