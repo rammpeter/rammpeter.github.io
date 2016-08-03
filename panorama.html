@@ -62,7 +62,7 @@
                 <ul>
                     <li>You can specify the following additional Java-options executing "java &lt;options&gt; -jar Panorama.war":
                         <ul>
-                            <li>"-Xmx1024m -Xms1024m" : heap memory allocation for JVM, minimum value of512 MB suggested, for processing of large results choose 1024m or higher</li>
+                            <li>"-Xmx1024m -Xms1024m" : startup and max. heap memory allocation for JVM,<br>minimum value of 512 MB suggested,<br>for production use choose 1024m or higher (suggestion: 4096m)</li>
                             <li>"XX:MaxPermSize=512M" : object space for java classes, suggested value 512MB (until Java 7, unnecessary beginning Java 8)</li>
                             <li>"-Djava.io.tmpdir=mydir" : define working directory for exraction of jar file, default is system's temp dir</li>
                         </ul>
