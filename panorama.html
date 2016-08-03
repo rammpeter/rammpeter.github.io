@@ -54,7 +54,7 @@
                 <ul>
                     <li><a href="panorama_download.html" target="_blank">Download file Panorama.war</a></li>
                     <li>Type "java -jar Panorama.war --prefix=/Panorama" in a terminal window, no matter if your are running Windows, Linux or Mac-OS</li>
-                    <li>This starts the embedded Winstone application server within one or two minutes.</li>
+                    <li>This starts the embedded Jetty application server within one or two minutes.</li>
                     <li>Now you can reach Panorama's login screen in your browser via "http://&lt;your&nbsp;server&nbsp;ip&gt;:8080/Panorama"</li>
                 </ul>
 
@@ -62,27 +62,24 @@
                 <ul>
                     <li>You can specify the following additional Java-options executing "java &lt;options&gt; -jar Panorama.war":
                         <ul>
-                            <li>"-Xmx1024m" :maximum allowed memory allocation for JVM, minimum value of 1024 MB suggested for processing of large results</li>
-                            <li>"XX:MaxPermSize=512M" : object space for java classes, suggested value 512MB</li>
+                            <li>"-Xmx1024m -Xms1024m" : heap memory allocation for JVM, minimum value of512 MB suggested, for processing of large results choose 1024m or higher</li>
+                            <li>"XX:MaxPermSize=512M" : object space for java classes, suggested value 512MB (until Java 7, unnecessary beginning Java 8)</li>
                             <li>"-Djava.io.tmpdir=mydir" : define working directory for exraction of jar file, default is system's temp dir</li>
-                            <li>"-Djruby.compile.invokedynamic=true" : Fix possible problems with some JREs resulting in "java.lang.ClassNotFoundException:"</li>
                         </ul>
                     </li>
-                    <li>You can specify additional Winstone-options executing "java -jar Panorama.war &lt;options&gt;":
+                    <li>You can specify additional Jetty-options executing "java -jar Panorama.war &lt;server options&gt;" like:
                         <ul>
-                            <li>Allow only SSL encrypted https-connections with disabled http-port:<br/>
-                                java -jar Panorama.war --httpPort=-1 --httpsPort=8443 --httpsKeyStore=&lt;keystore file&gt; --httpsKeyStorePassword=&lt;keystore password&gt;
+                            <li>Use another http-port than default 8080 for your application<br/>
+                                java -jar Panorama.war --port 9090
                             </li>
                             <li>
-                                Use another application prefix to access via "http://&lt;your&nbsp;server&nbsp;ip&gt;:8080/MyPrefix": java -jar Panorama.war --prefix=/MyPrefix
-                            </li>
-                            <li>
-                                All command line options of embedded winstone server are described here: <a href="http://winstone.sourceforge.net">http://winstone.sourceforge.net</a>
+                                All command line options of embedded Jetty server are described here: <a href="http://www.eclipse.org/jetty/documentation/" target="_blank">http://www.eclipse.org/jetty/documentation/</a>
                             </li>
                         </ul>
                     </li>
                     <li><a href="http://github.com/rammpeter/Panorama/blob/master/start_Panorama.sh" target="_blank">Here you can find a sample shell-script to start Panorama for Unix/Linux</a></li>
-                    <li>Panorama.war can also be run as web archive in any Java JEE application server or web container like Tomcat, Glassfish, JBoss etc. .</li>
+                    <li>Panorama.war can also be run as web archive in any Java JEE application server or web container like Tomcat, Glassfish, JBoss etc. .<br>
+                        For production use with SSL encrypted https-connections I personally use Tomcat.</li>
                     <li>Panorama writes some encrypted session state information and usage log to local filesystem.<br/>
                         You can control the directory for this files by setting environment variable PANORAMA_VAR_HOME to your target directory.</li>
                 </ul>
@@ -103,9 +100,9 @@
 
                 <h3>What about security?</h3>
                 <ul>
-                    <li>For production purposes you should run Panorama with SSL-encrypted web traffic (https). How to for embedded Winstone application server is described above.</li>
+                    <li>For production purposes you should run Panorama with SSL-encrypted web traffic (https). Easiest way for SSL connections is to run Panorama in a configured Tomcat etc. or use Apache as proxy.</li>
                     <li>Your oracle password is stored encrypted in server memory and will be decrypted shortly only for the process of establishing connection to your target database.<br/>
-                    The key used for this encryption consists of a server key which is salted with a unique client key specific to your browser.<br/>
+                    The key used for this encryption consists of a server key which is salted with a unique client key specific to your browser instance.<br/>
                     This way only requests from your browser are able to reuse the stored connect info for reestablishing the database connection.</li>
                     <li>If you retain your login info for further fast logins (checkbox 'Save logins' in statup dialog), this info is stored in local server file system completely encrypted the same way like passwords.</li>
                     <li>You can customize the server key used for encryption by setting the environment variable $SECRET_KEY_BASE to value of your choice.<br/>
@@ -135,7 +132,7 @@
                 <h4>Possible runtime problems</h4>
                 <ul>
                     <li>Some Java-problems may occur with IBM JVM. If you have trouble with that please use JVM from SUN/Oracle.</li>
-                    <li>Under some rare circumstances (e.g. at Windows 10) Panorama's URL is "http://&lt;your&nbsp;server&nbsp;ip&gt;:8080" without the suffix "Panorama" if you don't specify it by "--prefix=/Panorama"</li>
+                    <li>Under some rare circumstances (e.g. at Windows 10) Panorama's URL is "http://&lt;your&nbsp;server&nbsp;ip&gt;:8080" without the suffix "Panorama"</li>
                 </ul>
                 <img src="images/Panorama_Overview.png"/>
 
