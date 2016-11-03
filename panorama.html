@@ -38,7 +38,7 @@
                 <ul>
                     <li>Java runtime environment, version 7 or above to run Panorama application.</li>
                     <li>Licensing of Oracle's "Diagnostic Pack" is required at connected Oracle-DB for several functions of panorama</li>
-                    <li>Licensing of Oracle's "Tuning Pack" is required at connected Oracle-DB for usage of function "SQL monitor"</li>
+                    <li>Licensing of Oracle's "Tuning Pack" is required at connected Oracle-DB if using Panorama's function "SQL monitor"</li>
                     <li>Web browser to access Panorama-GUI</li>
                     <li>Your Oracle-User used for login with Panorama requires the grant "SELECT ANY DICTIONARY"</li>
                 </ul>
@@ -54,8 +54,8 @@
                 <ul>
                     <li><a href="panorama_download.html" target="_blank">Download file Panorama.war</a></li>
                     <li>Type "java -jar Panorama.war" in a terminal window, no matter if your are running Windows, Linux or Mac-OS</li>
-                    <li>This starts the embedded Jetty application server within one or two minutes.</li>
-                    <li>Now you can reach Panorama's login screen in your browser via "http://&lt;your&nbsp;server&nbsp;ip&gt;:8080/Panorama"</li>
+                    <li>This starts the embedded Jetty application server within one or two minutes, accessible at port 8080 via "http://&lt;your&nbsp;server&nbsp;ip&gt;:8080"</li>
+                    <li>Now you can connect to Panorama's login screen in your browser via "http://&lt;your&nbsp;server&nbsp;ip&gt;:8080/Panorama"</li>
                 </ul>
 
                 <h4>Customize your installation</h4>
@@ -96,8 +96,8 @@
                     The key used for this encryption consists of a server key which is salted with a unique client key specific to your browser instance.<br/>
                     This way only requests from your browser are able to reuse the stored connect info for reestablishing the database connection.</li>
                     <li>If you retain your login info for further fast logins (checkbox 'Save logins' in statup dialog), this info is stored in local server file system completely encrypted the same way like passwords.</li>
-                    <li>You can customize the server key used for encryption by setting the environment variable $SECRET_KEY_BASE to value of your choice.<br/>
-                        Every change of $SECRET_KEY_BASE at server site leads to invalidation of all stored connection info.
+                    <li>You can customize the server key used for encryption by setting the environment variable SECRET_KEY_BASE to value of your choice.<br/>
+                        Every change of SECRET_KEY_BASE at server site leads to invalidation of all stored connection info.
                     </li>
                 </ul>
 
@@ -115,7 +115,7 @@
                     <li>Therefore Panorama starts multiple server instances in JRuby for simultaneous request processing (default = 3).<br/>Each server instance hold it's own Oracle-connection to the last used database and reuses this open connection, if the next requests uses the same database connection info.<br/>
                     If the next request uses another database, then the current connection is closed and opened with the new connection info.</li>
                     <li>Panorama renders one single web page via Ajax-calls. This way the back button of your browser is not supported to return to former page content.</li>
-                    <li>Panorama writes short usage information to plain text file 'panorama_usage_info.log' in the directory targeted by $PANORAMA_VAR_HOME<br/>
+                    <li>Panorama writes short usage information to local plain text file 'panorama_usage_info.log' in the directory targeted by environment variable PANORAMA_VAR_HOME<br/>
                         You can view this log info via http://&lt;your&nbsp;server&nbsp;ip&gt;:8080/Panorama/usage/info
                     </li>
                 </ul>
