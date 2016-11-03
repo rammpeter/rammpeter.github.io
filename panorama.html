@@ -53,7 +53,7 @@
                 <h4>Start running quickly</h4>
                 <ul>
                     <li><a href="panorama_download.html" target="_blank">Download file Panorama.war</a></li>
-                    <li>Type "java -jar Panorama.war --prefix=/Panorama" in a terminal window, no matter if your are running Windows, Linux or Mac-OS</li>
+                    <li>Type "java -jar Panorama.war" in a terminal window, no matter if your are running Windows, Linux or Mac-OS</li>
                     <li>This starts the embedded Jetty application server within one or two minutes.</li>
                     <li>Now you can reach Panorama's login screen in your browser via "http://&lt;your&nbsp;server&nbsp;ip&gt;:8080/Panorama"</li>
                 </ul>
@@ -65,16 +65,7 @@
                             <li>"-Xmx1024m -Xms1024m" : startup and max. heap memory allocation for JVM,<br>minimum value of 512 MB suggested,<br>for production use choose 1024m or higher (suggestion: 4096m)</li>
                             <li>"XX:MaxPermSize=512M" : object space for java classes, suggested value 512MB (until Java 7, unnecessary beginning Java 8)</li>
                             <li>"-Djava.io.tmpdir=mydir" : define working directory for exraction of jar file, default is system's temp dir</li>
-                        </ul>
-                    </li>
-                    <li>You can specify additional Jetty-options executing "java -jar Panorama.war &lt;server options&gt;" like:
-                        <ul>
-                            <li>Use another http-port than default 8080 for your application<br/>
-                                java -jar Panorama.war --port 9090
-                            </li>
-                            <li>
-                                All command line options of embedded Jetty server are described here: <a href="http://www.eclipse.org/jetty/documentation/" target="_blank">http://www.eclipse.org/jetty/documentation/</a>
-                            </li>
+                            <li>"-Dwarbler.port=9090" : Use another http-port than default 8080 for Panorama's URL</li>
                         </ul>
                     </li>
                     <li><a href="http://github.com/rammpeter/Panorama/blob/master/start_Panorama.sh" target="_blank">Here you can find a sample shell-script to start Panorama for Unix/Linux</a></li>
