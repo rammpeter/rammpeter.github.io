@@ -40,7 +40,11 @@
                     <li>Licensing of Oracle's "Diagnostic Pack" is required at connected Oracle-DB for several functions of panorama</li>
                     <li>Licensing of Oracle's "Tuning Pack" is required at connected Oracle-DB if using Panorama's function "SQL monitor"</li>
                     <li>Web browser to access Panorama-GUI</li>
-                    <li>Your Oracle-User used for login with Panorama requires the grant "SELECT ANY DICTIONARY"</li>
+                    <li>Your Oracle-User used for login with Panorama requires the following grants:</li>
+                    <ul>
+                        <li>"SELECT ANY DICTIONARY" as default grant for access on DBA_xxx-views</li>
+                        <li>Starting with Oracle 12.1 you need the grant "OEM_MONITOR" to generate Oracle's builtin AWR-reports and ASH-reports</li>
+                    </ul>
                 </ul>
 
                 <h3>How to get it?</h3>
