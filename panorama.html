@@ -36,7 +36,10 @@
 
                 <h3>Which preconditions are required?</h3>
                 <ul>
-                    <li>Java runtime environment, version 7 or above to run Panorama application.</li>
+                    <li>
+                        Java runtime environment, version 7 or above to run Panorama application.<b/>
+                        Beginning with Java 8 you also need the <a href="http://www.oracle.com/technetwork/java/javase/downloads/jce8-download-2133166.html">Java Cryptography Extension Files</a> installed.
+                    </li>
                     <li>Licensing of Oracle's "Diagnostic Pack" is required at connected Oracle-DB for several functions of panorama</li>
                     <li>Licensing of Oracle's "Tuning Pack" is required at connected Oracle-DB if using Panorama's function "SQL monitor"</li>
                     <li>Web browser to access Panorama-GUI</li>
@@ -87,7 +90,10 @@
                 <h3>How to get help?</h3>
                 <ul>
                     <li>Look at the image slide show to to get some info about Panorama's features</li>
-                    <li>Look at my blog at <a href="https://rammpeter.wordpress.com/category/panorama-news-and-hints/" target="_blank">https://rammpeter.wordpress.com</a> for news and usage hints</li>
+                    <li>
+                        Look at my blog at <a href="https://rammpeter.wordpress.com/category/panorama-news-and-hints/" target="_blank">https://rammpeter.wordpress.com</a> for news and usage hints.<b/>
+                        To stay informed about further development you may subscribe to this blog.
+                    </li>
                     <li><a href="https://github.com/rammpeter/Panorama/wiki" target="_blank">WIKI and FAQ (unforunately still under construction)</a></li>
                     <li>Write a <a href="mailto:Peter@ramm-oberhermsdorf.de">mail</a> if nothing else helps or to report problems.</li>
                     <li>Have a look at <a href="https://www.facebook.com/Panorama.for.Oracle" target="_blank">facebook</a></li>
@@ -126,9 +132,13 @@
 
                 <h4>Possible runtime problems</h4>
                 <ul>
+                    <li>
+                        Beginning with Java8 u102 you need to install the "Java Cryptography Extension (JCE) Unlimited Strength Jurisdiction Policy Files for JDK/JRE 8" to use strong encryption with Panorama<b/>
+                        Panorama will remind you at startup if this is necessary.
+                        <a href="http://www.oracle.com/technetwork/java/javase/downloads/jce8-download-2133166.html">Here you may find the JCE-files for Java 8</a>
+                    </li>
                     <li>Some Java-problems may occur with IBM JVM. If you have trouble with that please use JVM from SUN/Oracle.</li>
                     <li>Under some rare circumstances (e.g. at Windows 10) Panorama's URL is "http://&lt;your&nbsp;server&nbsp;ip&gt;:8080" without the suffix "Panorama"</li>
-                    <li>Beginning with Java8 u102 you need to install the "Java Cryptography Extension (JCE) Unlimited Strength Jurisdiction Policy Files for JDK/JRE 8" to use strong encryption with Panorama<b/>Panorama will remind you at startup if this is necessary.</li>
                 </ul>
                 <img src="images/Panorama_Overview.png"/>
 
