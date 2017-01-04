@@ -5,11 +5,14 @@ Over all schemas usage can be monitored with following SQL.<br/>
 Caution: GATHER_INDEX_STATS also counts as usage even if no other select touches this index.<br/>
 <br/>
 Additional information about index usage can be requested from DBA_Hist_Seg_Stat and DBA_Hist_Active_Sess_History.<pre style='background-color: #FFFFCC;'>SELECT /* DB-Tools Ramm: unused indexes */ u.*, i.Num_Rows, i.Distinct_Keys,
-                             (SELECT SUM(s.Bytes) FROM DBA_Segments s WHERE s.Owner=u.Owner AND s.Segment_Name=u.Index_Name)/(1024*1024) MBytes,
+                             seg.MBytes,
                              i.Tablespace_Name, i.Uniqueness, i.Index_Type,
-                             (SELECT IOT_Type FROM DBA_Tables t WHERE t.Owner = u.Owner AND t.Table_Name = u.Table_Name) IOT_Type
+                             (SELECT IOT_Type FROM DBA_Tables t WHERE t.Owner = u.Owner AND t.Table_Name = u.Table_Name) IOT_Type,
+                             c.Constraint_Name foreign_key_protection,
+                             rc.Owner||'.'||rc.Table_Name  Referenced_Table,
+                             rt.Num_Rows     Num_Rows_Referenced_Table
                       FROM   (
-                              SELECT u.UserName Owner, io.name Index_Name, t.name Table_Name,
+                              SELECT /*+ NO_MERGE */ u.UserName Owner, io.name Index_Name, t.name Table_Name,
                                      decode(bitand(i.flags, 65536), 0, 'NO', 'YES') Monitoring,
                                      decode(bitand(ou.flags, 1), 0, 'NO', 'YES') Used,
                                      ou.start_monitoring, ou.end_monitoring
@@ -18,9 +21,19 @@ Additional information about index usage can be requested from DBA_Hist_Seg_Stat
                               JOIN   sys.obj$ io ON io.obj# = ou.obj#
                               JOIN   sys.obj$ t  ON t.obj# = i.bo#
                               JOIN   DBA_Users u ON u.User_ID = io.owner#  --
-                              WHERE  TO_DATE(ou.Start_Monitoring, 'MM/DD/YYYY HH24:MI:SS') < SYSDATE-:P1
+                              CROSS JOIN (SELECT UPPER(:P1) Name FROM DUAL) schema
+                              WHERE  TO_DATE(ou.Start_Monitoring, 'MM/DD/YYYY HH24:MI:SS') < SYSDATE-:P2
+                              AND    (schema.name IS NULL OR schema.Name = u.UserName)
                              )u
-                      JOIN DBA_Indexes i ON i.Owner = u.Owner AND i.Index_Name = u.Index_Name AND i.Table_Name=u.Table_Name
-                      WHere Used='NO' AND Monitoring='YES'
-                      AND i.Num_Rows > :P2
-                      ORDER BY i.Num_Rows DESC NULLS LAST</pre><div>Parameter :P1: Minumin age in days of Start-Monitoring timestamp of unused index</div><div>Parameter :P2: Minimum number of rows of index for consideration in selection</div>
+                      JOIN DBA_Indexes i                    ON i.Owner = u.Owner AND i.Index_Name = u.Index_Name AND i.Table_Name=u.Table_Name
+                      LEFT OUTER JOIN DBA_Ind_Columns ic    ON ic.Index_Owner = u.Owner AND ic.Index_Name = u.Index_Name AND ic.Column_Position = 1
+                      LEFT OUTER JOIN DBA_Cons_Columns cc   ON cc.Owner = ic.Table_Owner AND cc.Table_Name = ic.Table_Name AND cc.Column_Name = ic.Column_Name AND cc.Position = 1
+                      LEFT OUTER JOIN DBA_Constraints c     ON c.Owner = cc.Owner AND c.Constraint_Name = cc.Constraint_Name AND c.Constraint_Type = 'R'
+                      LEFT OUTER JOIN DBA_Constraints rc    ON rc.Owner = c.R_Owner AND rc.Constraint_Name = c.R_Constraint_Name
+                      LEFT OUTER JOIN DBA_Tables rt         ON rt.Owner = rc.Owner AND rt.Table_Name = rc.Table_Name
+                      LEFT OUTER JOIN (SELECT Owner, Segment_Name, ROUND(SUM(bytes)/(1024*1024),1) MBytes FROM DBA_Segments GROUP BY Owner, Segment_Name
+                                      ) seg ON seg.Owner = u.Owner AND seg.Segment_Name = u.Index_Name
+                      WHERE u.Used='NO' AND u.Monitoring='YES'
+                      AND i.Num_Rows > :P3
+                      ORDER BY i.Num_Rows DESC NULLS LAST
+                     </pre><div>Parameter :P1: List only indexes for this schema (optional)</div><div>Parameter :P2: Minumin age in days of Start-Monitoring timestamp of unused index</div><div>Parameter :P3: Minimum number of rows of index for consideration in selection</div>

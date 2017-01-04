@@ -1,23 +1,35 @@
-<h3>Missing usage of bind variables</h3>
-Usage of literals instead of bind variables for filter without compensation by cursor_sharing-parameter leads to high parse counts and flooding of SQL-Area in SGA.<br/>
-This selection looks for statements which differentiate themself only by literals. It compares the first x characters of SQL to identify similar statements.<br/>
-The length of the compared substring may be varied.<pre style='background-color: #FFFFCC;'>WITH Len AS (SELECT :P1 Substr_Len FROM DUAL)
-                       SELECT g.*, s.SQL_Text "Beispiel SQL-Text"
-                       FROM   (
-                               SELECT COUNT(*) Variationen, Inst_ID, MIN(Parsing_Schema_Name) UserName, COUNT(DISTINCT Parsing_Schema_Name) Anzahl_User,
-                                      SUBSTR(s.SQL_Text, 1, Len.Substr_Len) SubSQL_Text,
-                                      ROUND(SUM(Sharable_Mem+Persistent_Mem+Runtime_Mem)/(1024*1024),3) "Memory (MB)",
-                                      MIN(s.SQL_ID) SQL_ID,
-                                      MIN(TO_DATE(s.First_Load_Time, 'YYYY-MM-DD/HH24:MI:SS')) Min_First_Load,
-                                      MIN(Last_Load_Time) Min_Last_Load,
-                                      MAX(Last_Load_Time) Max_Last_Load,
-                                      MAX(Last_Active_Time) Max_Last_Active,
-                                      MIN(Parsing_Schema_Name) Parsing_Schema_Name,
-                                      COUNT(DISTINCT Parsing_Schema_Name) "Different pars. schema names"
-                               FROM   gv$SQLArea s, Len
-                               GROUP BY Inst_ID, SUBSTR(s.SQL_Text, 1, Len.Substr_Len)
-                               HAVING COUNT(*) > 10
-                              ) g
-                       JOIN gv$SQLArea s ON s.Inst_ID = g.Inst_ID AND s.SQL_ID = g.SQL_ID
-                       ORDER BY "Memory (MB)" DESC NULLS LAST
-             </pre><div>Parameter :P1: Number of characters for comparison of SQLs (beginning at left side of statement)</div>
+<h3>Missing usage of bind variables: Detection by identical plan-hash-value</h3>
+Usage of literals instead of bind variables with high number of different literals leads to high parse counts and flooding of SQL-Area in SGA.<br/>
+You may reduce the problem by setting cursor_sharing != EXACT, but you still need large amount of SGA-memory to match your SQL with the corresponding SQL with replaced bind variables.<br/>
+So strong suggestion is: Use bind variables!<br/>
+This selection looks for statements with identical execution plans by plan-hash-value.<pre style='background-color: #FFFFCC;'>WITH Ret AS (SELECT :P1 Days FROM DUAL)
+                      SELECT x.SQL_Plan_Hash_Value, x.Different_SQL_IDs, x.Last_Used_SQL_ID, u.UserName, x.First_Occurrence, x.Last_Occurrence, x.Elapsed_Secs
+                      FROM   (
+                              SELECT h.SQL_Plan_Hash_Value,
+                                     COUNT(DISTINCT h.SQL_ID) Different_SQL_IDs,
+                                     MAX(h.SQL_ID) KEEP (DENSE_RANK LAST ORDER BY h.Sample_Time) Last_Used_SQL_ID,
+                                     User_ID,
+                                     MIN(h.Sample_Time) First_Occurrence,
+                                     MAX(h.Sample_Time) Last_Occurrence,
+                                     SUM(CASE WHEN h.Sample=1 OR d.Min_Sample_Time IS NULL OR h.Sample_Time < d.Min_Sample_Time THEN h.Sample END) Elapsed_Secs   /* dont count twice in SGA and AWR */
+                              FROM   (SELECT Inst_ID Instance_Number, Sample_Time, SQL_Plan_Hash_Value, SQL_ID, 1 Sample, User_ID,
+                                             MIN(Sample_Time) OVER (PARTITION BY SQL_Plan_Hash_Value) Delimiter
+                                      FROM   gv$Active_Session_History
+                                      CROSS JOIN Ret
+                                      WHERE  Sample_Time > SYSDATE-Ret.Days
+                                      UNION ALL
+                                      SELECT Instance_Number, Sample_Time, SQL_Plan_Hash_Value, SQL_ID, 10 Sample, User_ID,NULL Delimiter
+                                      FROM   DBA_Hist_Active_Sess_History
+                                      CROSS JOIN Ret
+                                      WHERE  Sample_Time > SYSDATE-Ret.Days
+                                     ) h
+                              LEFT OUTER JOIN (SELECT Inst_ID Instance_Number, SQL_Plan_Hash_Value, MIN(Sample_Time) Min_Sample_Time   /* limit Values in AWR-table from SGA*/
+                                               FROM   gv$Active_Session_History
+                                               GROUP BY  Inst_ID, SQL_Plan_Hash_Value
+                                              ) d ON d.Instance_Number = h.Instance_Number AND d.SQL_Plan_Hash_Value = h.SQL_Plan_Hash_Value
+                              WHERE  h.SQL_Plan_Hash_Value != 0
+                              GROUP BY h.SQL_Plan_Hash_Value, h.User_ID
+                             ) x
+                      JOIN   DBA_Users u ON u.User_ID = x.User_ID
+                      WHERE Different_SQL_IDs > :P2
+                      ORDER BY Different_SQL_IDs DESC</pre><div>Parameter :P1: Number of days in history backward from now for consideration</div><div>Parameter :P2: Minimum number of different SQL-IDs per plan-hash-value for consideration in selection</div>

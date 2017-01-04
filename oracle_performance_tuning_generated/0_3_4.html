@@ -1,6 +1,12 @@
-<h3>Unused marked but not physical deleted columns</h3>
-For as unused marked columns it may be worth to reorganize the table by ALTER TABLE DROP UNSED COLUMNS or recreation of table.<br/>
-<pre style='background-color: #FFFFCC;'>SELECT /* DB-Tools Ramm Unused gesetzte Spalten ohne ALTER TABLE DROP UNUSED COLUMNS*/ cs.*, t.Num_Rows
-                      FROM   DBA_Unused_Col_Tabs cs
-                      JOIN   DBA_Tables t ON t.Owner = cs.Owner AND t.Table_Name = cs.Table_Name
-                      ORDER BY t.Num_Rows*cs.Count DESC NULLS LAST</pre>
+<h3>Detection of less informative columns</h3>
+For columns of large tables with less DISTINCT-values meaning can be questioned.<br/>
+May be it their value is redundant to other columns of that table. In this case you can extract this column as separate master-data table with n:1-relation (normalization).<br/>
+<pre style='background-color: #FFFFCC;'>SELECT /* DB-Tools Ramm Spalten mit wenig Distinct-Values */
+                             c.Owner, c.Table_Name, c.Column_Name, t.Num_Rows, c.Num_Nulls, c.Num_Distinct,
+                             ROUND((c.Avg_Col_Len*(Num_Rows-Num_Nulls)+Num_Nulls)/(1024*1024),2) Megabyte
+                      FROM   DBA_Tab_Columns c
+                      JOIN   DBA_Tables t ON t.Owner = c.Owner AND t.Table_Name = c.Table_Name
+                      WHERE  NVL(c.Num_Distinct,0) != 0
+                      AND    NVL(t.Num_Rows,0) > :P1
+                      AND    c.Owner NOT IN ('SYS', 'SYSTEM', 'WMSYS')
+                      ORDER BY c.Num_Distinct, t.Num_Rows DESC NULLS LAST</pre><div>Parameter :P1: Minimum number of rows in table for consideration in selection</div>

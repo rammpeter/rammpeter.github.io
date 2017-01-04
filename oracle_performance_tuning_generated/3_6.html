@@ -1,10 +1,12 @@
-<h3>Critical amount of child cursors per SQL-ID</h3>
-Large amount of child cursors per SQL-ID (> 500) show risk of latch waits and heavy CPU-usage for parse and execute.<br/>
-Following counter columns show reasons why parsing SQL results in new child cursor.<br/>
-Documentation is available here: http://docs.oracle.com/cd/E16655_01/server.121/e17615/refrn30254.htm#REFRN30254<pre style='background-color: #FFFFCC;'>SELECT /* Panorama-Tool Ramm  */
-                         Inst_ID, SQL_ID, COUNT(*) Child_Count
-                        
-                    FROM   gv$SQL_Shared_Cursor
-                    GROUP BY Inst_ID, SQL_ID
-                    HAVING COUNT(*) > :P1
-                    ORDER BY COUNT(*) DESC</pre><div>Parameter :P1: Minimum number of child cursors per SQL-ID for display</div>
+<h3>Problems with function based index if cursor_sharing != EXACT</h3>
+If setting parameter cursor_sharing=FORCE or SIMILAR at session or instance level function based indexes with literals may not be considered for use,<br/>
+because this literals become replaced by bind variables.<br/>
+Solution: Transfer literals into PL/SQL-functions and call this function in function based index instead.<br/>
+This view selects potential hits for function based indexes no more used for SQL execution.<br/>
+<pre style='background-color: #FFFFCC;'>SELECT /* Panorama-Tool Ramm  */
+                         i.Owner, i.Index_Name, i.Index_type, i.Table_Name, i.Num_Rows,
+                         e.Column_Position, e.Column_Expression
+                  FROM   DBA_Indexes i
+                  JOIN   DBA_Ind_Expressions e ON e.Index_Owner = i.Owner AND e.Index_Name = i.Index_Name
+                  WHERE  Index_Type LIKE 'FUNCTION-BASED%'
+                  AND    Owner NOT IN ('SYS', 'XDB', 'SYSMAN')</pre>

@@ -9,7 +9,7 @@ This selection already suppresses indexes used for elimination of 'table access 
                                (
                                 SELECT /*+ NO_MERGE USE_HASH(i ms io) */
                                        i.Owner, i.Table_Name, i.Index_Name, i.Num_Rows,
-                                       (SELECT SUM(s.Bytes) FROM DBA_Segments s WHERE s.Owner=i.Owner AND s.Segment_Name=i.Index_Name)/(1024*1024) "MBytes",
+                                       seg.MBytes "MBytes",
                                        ms.Column_Name "Max. selective column", ms.Max_Num_Distinct,
                                        ROUND(ms.Max_Num_Distinct / i.Num_Rows, 2) "Max. selectivity",
                                        tc.Column_Name "Min. selective column", tc.Num_Distinct "Min. num. distinct"
@@ -33,6 +33,8 @@ This selection already suppresses indexes used for elimination of 'table access 
                                                  AND   i.UniqueNess = 'NONUNIQUE'
                                                  GROUP BY i.Owner, i.Index_Name
                                                 ) io ON io.Owner = i.Owner AND io.Index_Name = i.Index_Name
+                                LEFT OUTER JOIN (SELECT Owner, Segment_Name, ROUND(SUM(bytes)/(1024*1024),1) MBytes FROM DBA_Segments GROUP BY Owner, Segment_Name
+                                                ) seg ON seg.Owner = i.Owner AND seg.Segment_Name = i.Index_Name
                                 WHERE  i.Num_Rows IS NOT NULL AND i.Num_Rows > 0
                                 AND    ms.Max_Num_Distinct > i.Num_Rows/:P1   -- Ein Feld mit gen∏gend groﬂer Selektivit‰t existiert im Index
                                 AND    tc.Column_Name != ms.Column_Name     -- Spalte mit hoechster Selektivit‰t ausblenden

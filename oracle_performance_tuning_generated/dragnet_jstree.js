@@ -23,7 +23,7 @@
   "state": { "opened": false }
 , "icon":"images/application-monitor.png"},{
   "id": "0_0_1",
-  "text": "2. Test for recommendable index-compression",
+  "text": "2. Recommendations for index-compression, test by selectivity",
   "state": { "opened": false }
 , "icon":"images/application-monitor.png"},{
   "id": "0_0_2",
@@ -31,7 +31,11 @@
   "state": { "opened": false }
 , "icon":"images/application-monitor.png"},{
   "id": "0_0_3",
-  "text": "4. Avoid data redundancy in primary key index (move to index-organized tables)",
+  "text": "4. Recommendations for index-compression, test by selectivity of single columns from multicolumn index",
+  "state": { "opened": false }
+, "icon":"images/application-monitor.png"},{
+  "id": "0_0_4",
+  "text": "5. Avoid data redundancy in primary key index (move to index-organized tables)",
   "state": { "opened": false }
 , "icon":"images/application-monitor.png"} ]},{
   "id": "0_1",
@@ -60,6 +64,10 @@
 , "icon":"images/application-monitor.png"},{
   "id": "0_1_5",
   "text": "6. Coverage of foreign-key relations by indexes (detection of potentially unnecessary indexes)",
+  "state": { "opened": false }
+, "icon":"images/application-monitor.png"},{
+  "id": "0_1_6",
+  "text": "7. Indexes on partitioned tables with same columns like partition keys",
   "state": { "opened": false }
 , "icon":"images/application-monitor.png"} ]},{
   "id": "0_2",
@@ -91,19 +99,23 @@
   "state": { "opened": false }
 , "icon":"images/application-monitor.png"},{
   "id": "0_3_2",
-  "text": "3. Detection of not used columns (all values = NULL)",
+  "text": "3. Tables without write access (DML) since last analysis",
   "state": { "opened": false }
 , "icon":"images/application-monitor.png"},{
   "id": "0_3_3",
-  "text": "4. Detection of less informative columns",
+  "text": "4. Detection of not used columns (all values = NULL)",
   "state": { "opened": false }
 , "icon":"images/application-monitor.png"},{
   "id": "0_3_4",
-  "text": "5. Unused marked but not physical deleted columns",
+  "text": "5. Detection of less informative columns",
   "state": { "opened": false }
 , "icon":"images/application-monitor.png"},{
   "id": "0_3_5",
-  "text": "6. Dropped tables in recycle bin",
+  "text": "6. Unused marked but not physical deleted columns",
+  "state": { "opened": false }
+, "icon":"images/application-monitor.png"},{
+  "id": "0_3_6",
+  "text": "7. Dropped tables in recycle bin",
   "state": { "opened": false }
 , "icon":"images/application-monitor.png"} ]},{
   "id": "0_4",
@@ -128,6 +140,10 @@
 , "icon":"images/application-monitor.png"},{
   "id": "0_9",
   "text": "10. Table access by rowid replaceable by index lookup (from AWR history)",
+  "state": { "opened": false }
+, "icon":"images/application-monitor.png"},{
+  "id": "0_10",
+  "text": "11. Possibly expensive TABLE ACCESS BY INDEX ROWID with additional filter predicates on table",
   "state": { "opened": false }
 , "icon":"images/application-monitor.png"} ]},{
   "id": "1",
@@ -263,7 +279,7 @@
   "state": { "opened": false }
 , "icon":"images/application-monitor.png"},{
   "id": "1_8",
-  "text": "9. Implicit conversion by INTERNAL_FUNCTION",
+  "text": "9. Implicit conversion by TO_NUMBER or INTERNAL_FUNCTION (prevented usage of indexes)",
   "state": { "opened": false }
 , "icon":"images/application-monitor.png"},{
   "id": "1_9",
@@ -329,41 +345,41 @@
   "id": "2_11",
   "text": "12. Non-optimal database configuration parameters",
   "state": { "opened": false }
-, "icon":"images/application-monitor.png"},{
-  "id": "2_12",
-  "text": "13. Amount of logon processes per time",
-  "state": { "opened": false }
 , "icon":"images/application-monitor.png"} ]},{
   "id": "3",
   "text": "4. Redundant cursors / usage of bind variables",
   "state": { "opened": false }
 , "children": [{
   "id": "3_0",
-  "text": "1. Missing usage of bind variables",
+  "text": "1. Missing usage of bind variables: Detection by identical plan-hash-value",
   "state": { "opened": false }
 , "icon":"images/application-monitor.png"},{
   "id": "3_1",
-  "text": "2. Number of distinct SQL-IDs per time in time line",
+  "text": "2. Missing usage of bind variables: Detection by identical part of SQL-text",
   "state": { "opened": false }
 , "icon":"images/application-monitor.png"},{
   "id": "3_2",
-  "text": "3. Multiple open cursor: overview over SQL",
+  "text": "3. Number of distinct SQL-IDs per time in time line",
   "state": { "opened": false }
 , "icon":"images/application-monitor.png"},{
   "id": "3_3",
-  "text": "4. Multiple open cursor: SQLs opened multiple in session",
+  "text": "4. Multiple open cursor: overview over SQL",
   "state": { "opened": false }
 , "icon":"images/application-monitor.png"},{
   "id": "3_4",
-  "text": "5. Concurrency on memory: sqeezing out in shared pool",
+  "text": "5. Multiple open cursor: SQLs opened multiple in session",
   "state": { "opened": false }
 , "icon":"images/application-monitor.png"},{
   "id": "3_5",
-  "text": "6. Problems with function based index if cursor_sharing != EXACT",
+  "text": "6. Concurrency on memory: sqeezing out in shared pool",
   "state": { "opened": false }
 , "icon":"images/application-monitor.png"},{
   "id": "3_6",
-  "text": "7. Critical amount of child cursors per SQL-ID",
+  "text": "7. Problems with function based index if cursor_sharing != EXACT",
+  "state": { "opened": false }
+, "icon":"images/application-monitor.png"},{
+  "id": "3_7",
+  "text": "8. Critical amount of child cursors per SQL-ID",
   "state": { "opened": false }
 , "icon":"images/application-monitor.png"} ]},{
   "id": "4",
@@ -433,6 +449,10 @@
   "id": "5_7",
   "text": "8. Longer inactive sessions with continued active transactions",
   "state": { "opened": false }
+, "icon":"images/application-monitor.png"},{
+  "id": "5_8",
+  "text": "9. Excessive logon operations (by listener-log)",
+  "state": { "opened": false }
 , "icon":"images/application-monitor.png"} ]},{
   "id": "6",
   "text": "7. PL/SQL-usage hints",
@@ -440,6 +460,10 @@
 , "children": [{
   "id": "6_0",
   "text": "1. Usage of NVL with function call as alternative parameter",
+  "state": { "opened": false }
+, "icon":"images/application-monitor.png"},{
+  "id": "6_1",
+  "text": "2. Identification of probably unused PL/SQL-objects",
   "state": { "opened": false }
 , "icon":"images/application-monitor.png"} ]} ]
           }

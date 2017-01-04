@@ -4,7 +4,7 @@ If last analyze table was far enough in history this selection may help to detec
 Stated here are inserts and updates since last GATHER_TABLE_STATS for tables without any delete operations.<br/>
 <pre style='background-color: #FFFFCC;'>SELECT /* DB-Tools Ramm Housekeeping*/
                              m.Table_Owner, m.Table_Name, m.TimeStamp, t.Last_analyzed,
-                             ROUND(m.Timestamp - t.Last_Analyzed, 2) Tage_nach_Analyze,
+                             ROUND(m.Timestamp - t.Last_Analyzed, 2) Days_After_Analyze,
                              m.Inserts, m.Updates, m.Deletes, m.Truncated, m.Drop_Segments
                       FROM   (SELECT Table_Owner, Table_Name, MAX(Timestamp) Timestamp,
                                      SUM(Inserts) Inserts, SUM(Updates) Updates, SUM(Deletes) Deletes,
