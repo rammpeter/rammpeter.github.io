@@ -11,6 +11,11 @@ body{
 	font-family: Verdana, 'Lucida Sans Unicode', sans-serif;      /* globaler Font der Seite */
 }
 
+pre {
+	font-family: Consolas,monospace;
+	color:rgb(85,85,85);  /* dunkles grau */
+}
+
 /* Hinweis-Schilder des Menüs */
 .menu_entry {
 	background-repeat:no-repeat;
