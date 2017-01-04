@@ -138,7 +138,7 @@
                         <a href="http://www.oracle.com/technetwork/java/javase/downloads/jce8-download-2133166.html">Here you may find the JCE-files for Java 8</a>
                     </li>
                     <li>
-                        Environment variable CLASSPATH should not be set before starting Panorama.war to ensure that only Panorama's elements are used, especially the builtin JDBC driver for Oracle<br/>
+                        Environment variable <pre style="display: inline;">CLASSPATH</pre> should not be set before starting Panorama.war to ensure that only Panorama's elements are used, especially the builtin JDBC driver for Oracle<br/>
                         If your are unsure for example what JDBC driver is used you can monitor class load paths by: <pre> java -verbose:class -jar Panorama.war | grep Oracle</pre>
                     </li>
                     <li>Some Java-problems may occur with IBM JVM. If you have trouble with that please use JVM from SUN/Oracle.</li>
