@@ -137,6 +137,7 @@
                         Panorama will remind you at startup if this is necessary.
                         <a href="http://www.oracle.com/technetwork/java/javase/downloads/jce8-download-2133166.html">Here you may find the JCE-files for Java 8</a>
                     </li>
+                    <li>Environment variable CLASSPATH should not be set before starting Panorama.war to ensure that only Panorama's elements are used, especially the builtin JDBC driver for Oracle</li>
                     <li>Some Java-problems may occur with IBM JVM. If you have trouble with that please use JVM from SUN/Oracle.</li>
                     <li>Under some rare circumstances (e.g. at Windows 10) Panorama's URL is "http://&lt;your&nbsp;server&nbsp;ip&gt;:8080" without the suffix "Panorama"</li>
                 </ul>
