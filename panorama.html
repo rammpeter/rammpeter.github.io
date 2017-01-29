@@ -88,18 +88,15 @@
                 </ul>
                 <h4>Start Docker image</h4>
                 Panorama is also available as docker image at dockerhub.com for immediate execution at your docker host.<br/>
-                To download and start Panorama immediately type:
-                <pre>
-                    docker run --name panorama -p8080:8080 -d rammpeter/panorama
-                </pre>
-                You can refine your Docker container:
+                To download and start Panorama immediately type:<br/>
+                <pre>docker run --name panorama -p8080:8080 -d rammpeter/panorama</pre>
+                You can customize your Docker container:
                 <ul>
                     <li>Mount your host's tnsnames.ora into the container so Panorama can use it:  <pre style="display: inline;">-v $TNS_ADMIN/tnsnames.ora:/etc/tnsnames.ora -e TNS_ADMIN=/etc</pre></li>
-                    <li>Set your timezone for Docker container (default is UTC): <pre style="display: inline;">-e TZ="Europe/Berlin"</pre></li>
+                    <li>Set your timezone for Docker container (default is UTC): <pre style="display: inline;">-e TZ="Europe/Berlin"</pre>
+                    </li>
                 </ul>
-                <pre>
-                    docker run --name panorama -p8080:8080 -v $TNS_ADMIN/tnsnames.ora:/etc/tnsnames.ora -e TNS_ADMIN=/etc -e TZ="Europe/Berlin" -d panorama-2.4.72
-                </pre>
+                <pre>docker run --name panorama -p8080:8080 -v $TNS_ADMIN/tnsnames.ora:/etc/tnsnames.ora -e TNS_ADMIN=/etc -e TZ="Europe/Berlin" -d panorama-2.4.72</pre>
 
                 <h3>How to get help?</h3>
                 <ul>
@@ -159,6 +156,11 @@
                     <li>Under some rare circumstances (e.g. at Windows 10) Panorama's URL is <pre style="display: inline;">http://&lt;your&nbsp;server&nbsp;ip&gt;:8080</pre> without the suffix "Panorama"</li>
                 </ul>
                 <img src="images/Panorama_Overview.png"/>
+                <h3>At least</h3>
+                One request to americans: Please<br/>
+                <div>
+                    <img style="float: left" src="images/trash.png" height="50px"/><div style="font-weight: bold; font-size: larger;"><div style="color: red;">DUMP</div><div style="color: blue;">TRUMP</div></div>
+                </div>
 
             </div>
         </div>
