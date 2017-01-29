@@ -86,17 +86,22 @@
                 <ul>
                     <li><a href="https://panorama-ramm.herokuapp.com" target="_blank">Run preinstalled Panorama at Heroku-cloud (requires connect to your Oracle-DB from internet for usage)</a></li>
                 </ul>
-                <h4>Start Docker image</h4>
+
+                <h4>Start as Docker image</h4>
                 Panorama is also available as docker image at dockerhub.com for immediate execution at your docker host.<br/>
                 To download and start Panorama immediately type:<br/>
                 <pre>docker run --name panorama -p8080:8080 -d rammpeter/panorama</pre>
                 You can customize your Docker container:
                 <ul>
-                    <li>Mount your host's tnsnames.ora into the container so Panorama can use it:  <pre style="display: inline;">-v $TNS_ADMIN/tnsnames.ora:/etc/tnsnames.ora -e TNS_ADMIN=/etc</pre></li>
-                    <li>Set your timezone for Docker container (default is UTC): <pre style="display: inline;">-e TZ="Europe/Berlin"</pre>
-                    </li>
+                    <li>Mount your host's tnsnames.ora at $TNS_ADMIN/tnsnames.ora into the container in folder /etc and tell it Panorama by setting $TNS_ADMIN in container so Panorama can refer to your config:  <pre style="display: inline;">-v $TNS_ADMIN/tnsnames.ora:/etc/tnsnames.ora -e TNS_ADMIN=/etc</pre></li>
+                    <li>Set your timezone for Docker container (default is UTC): <pre style="display: inline;">-e TZ="Europe/Berlin"</pre></li>
+                    <li>Set maximum Java heap space memory usable for Panorama in megabytes (Default=1024):<pre style="display: inline;">-e MAX_JAVA_HEAP_SPACE_MB=1024</pre>  </li>
                 </ul>
-                <pre>docker run --name panorama -p8080:8080 -v $TNS_ADMIN/tnsnames.ora:/etc/tnsnames.ora -e TNS_ADMIN=/etc -e TZ="Europe/Berlin" -d panorama-2.4.72</pre>
+                Example:
+                <pre>docker run --name panorama -p8080:8080 \
+  -v $TNS_ADMIN/tnsnames.ora:/etc/tnsnames.ora -e TNS_ADMIN=/etc -e TZ="Europe/Berlin" \
+  -e MAX_JAVA_HEAP_SPACE_MB=1024 \
+  -d rammpeter/panorama</pre>
 
                 <h3>How to get help?</h3>
                 <ul>
