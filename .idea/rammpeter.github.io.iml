@@ -1,7 +1,15 @@
 <?xml version="1.0" encoding="UTF-8"?>
+<<<<<<< HEAD
 <module version="4">
   <component name="ModuleRunConfigurationManager">
     <shared />
     <local />
+=======
+<module type="RUBY_MODULE" version="4">
+  <component name="NewModuleRootManager">
+    <content url="file://$MODULE_DIR$" />
+    <orderEntry type="jdk" jdkName="RVM: jruby-1.7.20" jdkType="JRUBY_SDK" />
+    <orderEntry type="sourceFolder" forTests="false" />
+>>>>>>> cb0c6de7c14ff25ed5bcc32aeba52afc38596dfc
   </component>
 </module>
