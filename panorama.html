@@ -67,6 +67,10 @@
 
                 <h4>Customize your installation</h4>
                 <ul>
+                    <li>Panorama stores encrypted session connect data and usage log in your local filesystem.<br/>
+                        You can control the directory for this files by setting the environment variable <pre style="display: inline;">PANORAMA_VAR_HOME</pre> to your target directory.<br/>
+                        Without defining <pre style="display: inline;">PANORAMA_VAR_HOME</pre> you will lose your saved connection info at restart of Panorama server.
+                    </li>
                     <li>You can specify the following additional Java-options executing <pre style="display: inline;">java &lt;options&gt; -jar Panorama.war</pre>:
                         <ul>
                             <li><pre style="display: inline;">-Xmx1024m -Xms1024m</pre> : startup and max. heap memory allocation for JVM,<br>minimum value of 512 MB suggested,<br>for production use choose 1024m or higher (suggestion: 4096m)</li>
@@ -78,8 +82,6 @@
                     <li><a href="http://github.com/rammpeter/Panorama/blob/master/start_Panorama.sh" target="_blank">Here you can find a sample shell-script to start Panorama for Unix/Linux</a></li>
                     <li>Panorama.war can also be run as web archive in any Java JEE application server or web container like Tomcat, Glassfish, JBoss etc. .<br>
                         For production use with SSL encrypted https-connections I personally use Tomcat.</li>
-                    <li>Panorama writes some encrypted session state information and usage log to local filesystem.<br/>
-                        You can control the directory for this files by setting environment variable <pre style="display: inline;">PANORAMA_VAR_HOME</pre> to your target directory.</li>
                 </ul>
 
                 <h4>Run demo installation</h4>
@@ -148,6 +150,9 @@
 
                 <h4>Possible runtime problems</h4>
                 <ul>
+                    <li>
+                        Without defining environment variable <pre style="display: inline;">PANORAMA_VAR_HOME</pre> before starting Panorama you will lose your stored database connection info during restart because Jetty chooses a new temporary subdir for every startup.
+                    </li>
                     <li>
                         Beginning with Java8 u102 you need to install the "Java Cryptography Extension (JCE) Unlimited Strength Jurisdiction Policy Files for JDK/JRE 8" to use strong encryption with Panorama<b/>
                         Panorama will remind you at startup if this is necessary.
