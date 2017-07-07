@@ -209,6 +209,10 @@
   "id": "1_1_7",
   "text": "8. Statements with planned parallel execution forced to serial",
   "state": { "opened": false }
+, "icon":"images/application-monitor.png"},{
+  "id": "1_1_8",
+  "text": "9. Problematic usage of parallel query for short running SQLs (Current SGA)",
+  "state": { "opened": false }
 , "icon":"images/application-monitor.png"} ]},{
   "id": "1_2",
   "text": "3. Potentially unnecessary execution of SQL statements",

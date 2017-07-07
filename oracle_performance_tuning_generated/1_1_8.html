@@ -1,0 +1,15 @@
+<h3>Problematic usage of parallel query for short running SQLs (Current SGA)</h3>
+For short running SQL the effort for starting parallel query processes is often higher than for excuting the SQL iteself.<br/>
+Additional problems may be caused by the limited amount of PQ-processes for frequently executed SQLs.<br/>
+Therfore for SQLs with runtime in seconds or less you should always avoid using parallel query.<br/>
+This selection considers SQLs in the current SGA<pre style='background-color: #FFFFCC;'>SELECT Inst_ID, SQL_ID, Parsing_Schema_Name, Executions, Elapsed_Time/1000000 Elapsed_Time_Secs,
+                           CASE WHEN Executions > 0 THEN ROUND(Elapsed_Time/1000000/Executions, 5) END Elapsed_Time_Secs_per_Exec,
+                           Px_Servers_Executions,
+                           CASE WHEN Executions > 0 THEN ROUND(Px_Servers_Executions/Executions) END PQ_per_Exec,
+                           First_Load_Time, Last_Active_Time, Elapsed_Time, SQL_Text
+                    FROM   gv$SQLArea
+                    WHERE  PX_Servers_Executions > 0
+                    AND    Elapsed_Time / 1000000 / CASE WHEN Executions > 0 THEN Executions ELSE 1 END < :P1
+                    AND    UPPER(SQL_FullText) NOT LIKE '%GV$%'
+                    AND    Parsing_Schema_Name NOT IN ('SYS')
+                    ORDER BY PX_Servers_Executions DESC</pre><div>Parameter :P1: Maximum runtime per execution in seconds for consideration in result</div>
