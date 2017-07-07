@@ -164,6 +164,7 @@
                     </li>
                     <li>Some Java-problems may occur with IBM JVM. If you have trouble with that please use JVM from SUN/Oracle.</li>
                     <li>Under some rare circumstances (e.g. at Windows 10) Panorama's URL is <pre style="display: inline;">http://&lt;your&nbsp;server&nbsp;ip&gt;:8080</pre> without the suffix "Panorama"</li>
+                    <li>If you encounter the error <pre style="display: inline;">Java::JavaLang::OutOfMemoryError (PermGen space)</pre> with Java version less than Java 8 than define initial value and limit for per space like <pre style="display: inline;">java -XX:PermSize=128M -XX:MaxPermSize=256M</pre></li>
                 </ul>
                 <img src="images/Panorama_Overview.png"/>
                 <h3>At least</h3>
