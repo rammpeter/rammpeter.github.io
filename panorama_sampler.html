@@ -1,0 +1,74 @@
+<html><head><meta content="text/html; charset=UTF-8" http-equiv="content-type" /></head>
+<body onload="window.location = 'http://rammpeter.github.io/index.html?target=panorama_sampler';">
+
+<div style="position: relative;" xmlns="http://www.w3.org/1999/html">
+    <div class="shadow opaque" style="width:100%; height: 100%; background-color: #99CC99; position:absolute; top:0px; left:0px; z-index:1;">
+    </div>
+    <div style="position: relative; z-index: 2; padding: 10px;">
+        <div id="panorama_sampler_global">
+            <div id="panorama_sampler_text" style="float:left;">
+                <h2>Panorama-Sampler (still Alpha status)</h2>
+
+                'Panorama-Sampler' is an add-on for Panorama which allows it's own database workload recording as alternative to use of AWR data.<br/>
+                This enables you to use Panorama's functions for evaluation of historic workload info:
+                <ul>
+                    <li>with any database edition including Standard Edition</li>
+                    <li>without licensing of Diagnostics Pack for Enterprise Edition</li>
+                </ul>
+                During logon to a database with Panorama you can choose one of three options how Panorama gets access to historic workload info for this database:
+                <ul>
+                    <li>Use Oracle's AWR data which requires Enterprise Edition and licensing of Diagnostics Pack for that database</li>
+                    <li>Use Panorama's own sampling engine, which requires only a small onetime fee in the future after resolving Beta status</li>
+                    <li>Don't use historic workload info, but this way Panorama's functions are strongly reduced</li>
+                </ul>
+
+                <h3>Licensing</h3>
+
+                You may try Panorama-Sampler unlimited within Beta phase. After Beta phase there will be a trial period of 30 days without license.<br/>
+                After the trial period you need to buy a license certificate per database instance (based on DB-ID) to proceed in usage.
+
+                <h3>Usage</h3>
+
+                <h4>Configure your Panorama server instance for Panorama-Sampler</h4>
+
+                <ul>
+                    <li>You enable Panorama-Sampler if you provide the master-password for Panorama-Sampler at Panorama's startup via environment variable PANORAMA_SAMPLER_MASTER_PASSWORD</li>
+                    <li>If master-password is set, Panorama starts enhanced with:
+                        <ul>
+                            <li>Additional menu entry "Panorama-Sampler config" in menu "Spec. additions"</li>
+                            <li>Background process for data sampling at each configured target database</li>
+                        </ul>
+                    </li>
+                    <li>Access to GUI-function "Panorama-Sampler config" is protected by the same master-password</li>
+
+                </ul>
+
+                <h4>Configure Panorama-Sampler for workload recording of your database instance</h4>
+
+                To activate sampling for your database, add it at function "Panorama-Sampler config" in menu "Spec. additions" and configure:
+                <ul>
+                    <li>TNS-Alias resp. host, port, SID/service-name</li>
+                    <li>user/password for the schema containing Panorama's tables for workload recording</li>
+                    <li>Schema name if workload tables should be created in different schema than used for connection. Important e.g. for CDB where you need to login with system account to sample workload of all PDBs</li>
+                    <li>cycle in minutes for snapshots</li>
+                    <li>retention in days for housekeeping</li>
+                </ul>
+                The configured connection user needs the grant SELECT ANY DICTIONARY to work. <br/>
+                The configured table owner needs the roles CONNECT, RESOURCE and quota on its default tablespace.
+
+                <h3>Further implementation details</h3>
+                <ul>
+                    <li>For RAC-systems configure one entry for each RAC-instance with instance-specific service name or given SID.</li>
+                    <li>You may use different master-passwords. This results in one configuration-set per master-password. Sampling is active only for the configuration set of the master password Panorama is started with</li>
+                    <li>Sampling cycle for function similar to Active Session History is fixed to 10 seconds</li>
+                    <li>Your configured connection passwords are stored in file system at Panorama server encrypted with a combination of server key (see Panorama: What about security) and your master password</li>
+                </ul>
+
+            </div>
+        </div>
+        <div style="clear: both;"></div>
+    </div>
+</div>
+
+</body>
+</html>

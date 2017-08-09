@@ -119,7 +119,7 @@
 
                 <h3>What about security?</h3>
                 <ul>
-                    <li>For production purposes you should run Panorama with SSL-encrypted web traffic (https). Easiest way for SSL connections is to run Panorama in a configured Tomcat etc. or use Apache as proxy.</li>
+                    <li>For production purposes you should run Panorama with SSL-encrypted web traffic (https). Easiest way for SSL connections is to run Panorama in a configured Tomcat etc. or use Nginx/Apache as proxy.</li>
                     <li>Your oracle password is stored encrypted in server memory and will be decrypted shortly only for the process of establishing connection to your target database.<br/>
                     The key used for this encryption consists of a server key which is salted with a unique client key specific to your browser instance.<br/>
                     This way only requests from your browser are able to reuse the stored connect info for reestablishing the database connection.</li>
