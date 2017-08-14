@@ -55,10 +55,10 @@
                 </ul>
                 The configured connection user needs the the following grants to work:
                 <ul>
-                    <li><pre style="display: inline;">GRANT CONNECT, RESOURCE</pre> to create tables</li>
+                    <li><pre style="display: inline;">GRANT CONNECT, RESOURCE, CREATE VIEW</pre> to create tables and views</li>
                     <li>Enough quota on it's default tablespace to create objects</li>
                     <li><pre style="display: inline;">GRANT SELECT ANY DICTIONARY</pre> to select from dictionary tables</li>
-                    <li><pre style="display: inline;">GRANT EXECUTE ON DBMS_LOCK</pre> to execute DBMS_LOCK.SLEEP in active session sampler</li>
+                    <li><pre style="display: inline;">GRANT EXECUTE ON DBMS_LOCK</pre> as SYS to allow execution of DBMS_LOCK.SLEEP in active session sampler</li>
                     <li>The right to create objects in different object schema if connection user and object schema are different</li>
                 </ul>
 
