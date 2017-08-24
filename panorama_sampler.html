@@ -70,6 +70,14 @@
                     <li>Your configured connection passwords are stored in file system at Panorama server encrypted with a combination of server key (see Panorama: What about security) and your master password</li>
                 </ul>
 
+                <h3>Limitations compared to AWR</h3>
+                <h4>Sampling of active sessions</h4>
+                <ul>
+                    <li>Plan-line-ID and operation are not recorded because of missing source in v$-views</li>
+                    <li>Only top level SQL is recorded as listed by v$Session.sql_id</li>
+                    <li>I/O-Requests and amount read/written is not recorded because sampling from v$SesStat is too slow for one sample per second</li>
+                </ul>
+
             </div>
         </div>
         <div style="clear: both;"></div>

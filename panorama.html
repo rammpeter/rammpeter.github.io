@@ -96,14 +96,24 @@
                 You can customize your Docker container:
                 <ul>
                     <li>Mount your host's tnsnames.ora at $TNS_ADMIN/tnsnames.ora into the container in folder /etc and tell it Panorama by setting $TNS_ADMIN in container so Panorama can refer to your config:  <pre style="display: inline;">-v $TNS_ADMIN/tnsnames.ora:/etc/tnsnames.ora -e TNS_ADMIN=/etc</pre></li>
+                    <li>Mount directory for Panorama's config files (/var/opt/panorama) to a directory of your choice outside the container so the config persists even if container is rebuilded</li>
                     <li>Set your timezone for Docker container (default is UTC): <pre style="display: inline;">-e TZ="Europe/Berlin"</pre></li>
                     <li>Set maximum Java heap space memory usable for Panorama in megabytes (Default=1024):<pre style="display: inline;">-e MAX_JAVA_HEAP_SPACE_MB=1024</pre>  </li>
                 </ul>
                 Example:
                 <pre>docker run --name panorama -p8080:8080 \
-  -v $TNS_ADMIN/tnsnames.ora:/etc/tnsnames.ora -e TNS_ADMIN=/etc -e TZ="Europe/Berlin" \
+  -v $TNS_ADMIN/tnsnames.ora:/etc/tnsnames.ora \
+  -v /var/opt/my_panorama_config:/var/opt/panorama \
+  -e TNS_ADMIN=/etc -e TZ="Europe/Berlin" \
   -e MAX_JAVA_HEAP_SPACE_MB=1024 \
   -d rammpeter/panorama</pre>
+
+                Startup of application in docker container may require one or two minutes.
+                Your docker container is up and running if this last two lines appear in log calling <pre style="display: inline;">docker logs panorama</pre>
+                <pre>
+2017-08-24 17:17:18.024:INFO:oejs.ServerConnector:main: Started ServerConnector@6a83bd10{HTTP/1.1}{0.0.0.0:8080}
+2017-08-24 17:17:18.024:INFO:oejs.Server:main: Started @137606ms
+                </pre>
 
                 <h3>How to get help?</h3>
                 <ul>
