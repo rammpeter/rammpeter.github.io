@@ -45,7 +45,7 @@
 
                 <h4>Configure Panorama-Sampler for workload recording of your database instance</h4>
 
-                To activate sampling for your database, add it at function "Panorama-Sampler config" in menu "Spec. additions" and configure:
+                <h5>To activate sampling for your database, add it at function "Panorama-Sampler config" in menu "Spec. additions" and configure:</h5>
                 <ul>
                     <li>TNS-Alias resp. host, port, SID/service-name</li>
                     <li>user/password for the schema containing Panorama's tables for workload recording</li>
@@ -53,7 +53,7 @@
                     <li>cycle in minutes for snapshots</li>
                     <li>retention in days for housekeeping</li>
                 </ul>
-                The configured connection user needs the the following grants to work:
+                <h5>The configured connection user needs the the following grants to work:</h5>
                 <ul>
                     <li><pre style="display: inline;">GRANT CONNECT, RESOURCE, CREATE VIEW</pre> to create tables and views</li>
                     <li>Enough quota on it's default tablespace to create objects</li>
@@ -61,6 +61,8 @@
                     <li><pre style="display: inline;">GRANT EXECUTE ON DBMS_LOCK</pre> as SYS to allow execution of DBMS_LOCK.SLEEP in active session sampler</li>
                     <li>The right to create objects in different object schema if connection user and object schema are different</li>
                 </ul>
+                If the connection user has the grant <pre style="display: inline;">GRANT SELECT ANY TABLE</pre> in addition, than PL/SQL-packages are created for the execution of sampling.</br>
+                If the connection user doesn't have this grant, than larger anonymous PL/SQL is executed at each snapshot instead of package call that may result in a bit more parse effort.
 
                 <h3>Further implementation details</h3>
                 <ul>
