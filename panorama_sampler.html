@@ -12,20 +12,16 @@
                 'Panorama-Sampler' is an add-on for Panorama which allows it's own database workload recording as alternative to use of AWR data.<br/>
                 This enables you to use Panorama's functions for evaluation of historic workload info:
                 <ul>
-                    <li>with any database edition including Standard Edition</li>
-                    <li>without licensing of Diagnostics Pack for Enterprise Edition</li>
+                    <li><b>with any database edition including Standard Edition</b></li>
+                    <li><b>without licensing of Diagnostics Pack for Enterprise Edition</b></li>
                 </ul>
+                <img src="images/Panorama-Sampler.png"/><br/>
                 During logon to a database with Panorama you can choose one of three options how Panorama gets access to historic workload info for this database:
                 <ul>
                     <li>Use Oracle's AWR data which requires Enterprise Edition and licensing of Diagnostics Pack for that database</li>
                     <li>Use Panorama's own sampling engine, which requires only a small onetime fee in the future after resolving Beta status</li>
                     <li>Don't use historic workload info, but this way Panorama's functions are strongly reduced</li>
                 </ul>
-
-                <h3>Licensing</h3>
-
-                You may try Panorama-Sampler unlimited within Beta phase. After Beta phase there will be a trial period of 30 days without license.<br/>
-                After the trial period you need to buy a license certificate per database instance (based on DB-ID) to proceed in usage.
 
                 <h3>Usage</h3>
 
@@ -64,6 +60,11 @@
                 If the connection user has the grant <pre style="display: inline;">GRANT SELECT ANY TABLE</pre> in addition, than PL/SQL-packages are created for the execution of sampling.</br>
                 If the connection user doesn't have this grant, than larger anonymous PL/SQL is executed at each snapshot instead of package call that may result in a bit more parse effort.
 
+                <h3>Licensing</h3>
+
+                You may try Panorama-Sampler unlimited within Beta phase. After Beta phase there will be a trial period of 30 days without license.<br/>
+                After the trial period you need to buy a license certificate per database instance (based on DB-ID) to proceed in usage.
+
                 <h3>Function volume</h3>
                 Until now Panorama-Sampler offers replacement for the follwing AWR views:
                 <ul>
@@ -99,6 +100,10 @@
                     <li>Plan-line-ID and operation are not recorded because of missing source in v$-views</li>
                     <li>Only top level SQL is recorded as listed by v$Session.sql_id</li>
                     <li>I/O-Requests and amount read/written is not recorded because sampling from v$SesStat is too slow for one sample per second</li>
+                </ul>
+                <h4>Sampling of segment statistics</h4>
+                <ul>
+                    <li>'gc cr blocks served', 'gc current blocks served' and 'chain row excess' are not available from v$SegStat</li>
                 </ul>
 
             </div>
