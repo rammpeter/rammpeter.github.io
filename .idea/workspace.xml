@@ -2,11 +2,8 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="a44be585-1d70-46dc-8663-cadff6f53192" name="Default" comment="">
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/images/Datenbank_2017-Banner_Speaker-180x180-ENG.jpg" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/images/Panorama-Sampler.png" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/panorama_sampler.html" afterPath="$PROJECT_DIR$/panorama_sampler.html" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/start.html" afterPath="$PROJECT_DIR$/start.html" />
     </list>
     <ignored path="rammpeter.github.io.iws" />
     <ignored path=".idea/workspace.xml" />
@@ -50,8 +47,8 @@
       <file leaf-file-name="panorama_sampler.html" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/panorama_sampler.html">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="207">
-              <caret line="15" column="91" lean-forward="false" selection-start-line="15" selection-start-column="91" selection-end-line="15" selection-end-column="91" />
+            <state relative-caret-position="819">
+              <caret line="66" column="46" lean-forward="false" selection-start-line="66" selection-start-column="46" selection-end-line="66" selection-end-column="46" />
               <folding>
                 <element signature="n#style#0;n#div#0;n#body#0;n#html#0;n#!!top" expanded="true" />
                 <element signature="n#style#0;n#div#0;n#div#0;n#body#0;n#html#0;n#!!top" expanded="true" />
@@ -423,14 +420,7 @@
       <workItem from="1503310899633" duration="8878000" />
       <workItem from="1503913141654" duration="608000" />
       <workItem from="1503929331045" duration="1765000" />
-      <workItem from="1504014346485" duration="6717000" />
-    </task>
-    <task id="LOCAL-00089" summary="non breakable space">
-      <created>1454261363597</created>
-      <option name="number" value="00089" />
-      <option name="presentableId" value="LOCAL-00089" />
-      <option name="project" value="LOCAL" />
-      <updated>1454261363597</updated>
+      <workItem from="1504014346485" duration="7225000" />
     </task>
     <task id="LOCAL-00090" summary="Docu">
       <created>1454266081814</created>
@@ -768,11 +758,18 @@
       <option name="project" value="LOCAL" />
       <updated>1504260010537</updated>
     </task>
-    <option name="localTasksCounter" value="138" />
+    <task id="LOCAL-00138" summary="Panorama-Sampler image">
+      <created>1504615612206</created>
+      <option name="number" value="00138" />
+      <option name="presentableId" value="LOCAL-00138" />
+      <option name="project" value="LOCAL" />
+      <updated>1504615612207</updated>
+    </task>
+    <option name="localTasksCounter" value="139" />
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="86382000" />
+    <option name="totallyTimeSpent" value="86890000" />
   </component>
   <component name="TodoView">
     <todo-panel id="selected-file">
@@ -824,7 +821,6 @@
     <option name="myLimit" value="2678400000" />
   </component>
   <component name="VcsManagerConfiguration">
-    <MESSAGE value="Dragnet pages refreshed" />
     <MESSAGE value="Comment" />
     <MESSAGE value="Overview" />
     <MESSAGE value="Function overview" />
@@ -849,7 +845,8 @@
     <MESSAGE value="Panorama-Sampler, Docker" />
     <MESSAGE value="Panorama-Sampler, SELECT ANY TABLE" />
     <MESSAGE value="Panorama-Sampler" />
-    <option name="LAST_COMMIT_MESSAGE" value="Panorama-Sampler" />
+    <MESSAGE value="Panorama-Sampler image" />
+    <option name="LAST_COMMIT_MESSAGE" value="Panorama-Sampler image" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager />
@@ -1237,8 +1234,8 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/panorama_sampler.html">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="207">
-          <caret line="15" column="91" lean-forward="false" selection-start-line="15" selection-start-column="91" selection-end-line="15" selection-end-column="91" />
+        <state relative-caret-position="819">
+          <caret line="66" column="46" lean-forward="false" selection-start-line="66" selection-start-column="46" selection-end-line="66" selection-end-column="46" />
           <folding>
             <element signature="n#style#0;n#div#0;n#body#0;n#html#0;n#!!top" expanded="true" />
             <element signature="n#style#0;n#div#0;n#div#0;n#body#0;n#html#0;n#!!top" expanded="true" />
