@@ -26,8 +26,8 @@
       <file leaf-file-name="panorama.html" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/panorama.html">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="273">
-              <caret line="178" column="57" lean-forward="false" selection-start-line="178" selection-start-column="16" selection-end-line="178" selection-end-column="57" />
+            <state relative-caret-position="212">
+              <caret line="54" column="184" lean-forward="false" selection-start-line="54" selection-start-column="64" selection-end-line="54" selection-end-column="184" />
               <folding>
                 <element signature="n#style#0;n#div#0;n#div#0;n#body#0;n#html#0;n#!!top" expanded="true" />
                 <element signature="n#style#0;n#div#1;n#div#0;n#body#0;n#html#0;n#!!top" expanded="true" />
@@ -47,8 +47,8 @@
       <file leaf-file-name="panorama_sampler.html" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/panorama_sampler.html">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="343">
-              <caret line="64" column="54" lean-forward="false" selection-start-line="64" selection-start-column="54" selection-end-line="64" selection-end-column="54" />
+            <state relative-caret-position="340">
+              <caret line="64" column="181" lean-forward="false" selection-start-line="64" selection-start-column="181" selection-end-line="64" selection-end-column="181" />
               <folding>
                 <element signature="n#style#0;n#div#0;n#body#0;n#html#0;n#!!top" expanded="true" />
                 <element signature="n#style#0;n#div#0;n#div#0;n#body#0;n#html#0;n#!!top" expanded="true" />
@@ -102,6 +102,7 @@
     <findStrings>
       <find>java -jar Panorama.war</find>
       <find>DICT</find>
+      <find>licen</find>
     </findStrings>
   </component>
   <component name="FindManager">
@@ -420,14 +421,7 @@
       <workItem from="1503310899633" duration="8878000" />
       <workItem from="1503913141654" duration="608000" />
       <workItem from="1503929331045" duration="1765000" />
-      <workItem from="1504014346485" duration="8899000" />
-    </task>
-    <task id="LOCAL-00091" summary="Facebook added">
-      <created>1455285596198</created>
-      <option name="number" value="00091" />
-      <option name="presentableId" value="LOCAL-00091" />
-      <option name="project" value="LOCAL" />
-      <updated>1455285596198</updated>
+      <workItem from="1504014346485" duration="9022000" />
     </task>
     <task id="LOCAL-00092" summary="Facebook added">
       <created>1455285712120</created>
@@ -765,11 +759,18 @@
       <option name="project" value="LOCAL" />
       <updated>1504616299561</updated>
     </task>
-    <option name="localTasksCounter" value="140" />
+    <task id="LOCAL-00140" summary="Panorama-Sampler license">
+      <created>1504821304381</created>
+      <option name="number" value="00140" />
+      <option name="presentableId" value="LOCAL-00140" />
+      <option name="project" value="LOCAL" />
+      <updated>1504821304381</updated>
+    </task>
+    <option name="localTasksCounter" value="141" />
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="88564000" />
+    <option name="totallyTimeSpent" value="88687000" />
   </component>
   <component name="TodoView">
     <todo-panel id="selected-file">
@@ -821,7 +822,6 @@
     <option name="myLimit" value="2678400000" />
   </component>
   <component name="VcsManagerConfiguration">
-    <MESSAGE value="Comment" />
     <MESSAGE value="Overview" />
     <MESSAGE value="Function overview" />
     <MESSAGE value="Get release and date from version.rb" />
@@ -846,7 +846,8 @@
     <MESSAGE value="Panorama-Sampler, SELECT ANY TABLE" />
     <MESSAGE value="Panorama-Sampler" />
     <MESSAGE value="Panorama-Sampler image" />
-    <option name="LAST_COMMIT_MESSAGE" value="Panorama-Sampler image" />
+    <MESSAGE value="Panorama-Sampler license" />
+    <option name="LAST_COMMIT_MESSAGE" value="Panorama-Sampler license" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager />
@@ -1205,10 +1206,18 @@
         <state />
       </provider>
     </entry>
+    <entry file="file://$PROJECT_DIR$/start.html">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="390">
+          <caret line="26" column="0" lean-forward="false" selection-start-line="26" selection-start-column="0" selection-end-line="26" selection-end-column="0" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
     <entry file="file://$PROJECT_DIR$/panorama.html">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="273">
-          <caret line="178" column="57" lean-forward="false" selection-start-line="178" selection-start-column="16" selection-end-line="178" selection-end-column="57" />
+        <state relative-caret-position="212">
+          <caret line="54" column="184" lean-forward="false" selection-start-line="54" selection-start-column="64" selection-end-line="54" selection-end-column="184" />
           <folding>
             <element signature="n#style#0;n#div#0;n#div#0;n#body#0;n#html#0;n#!!top" expanded="true" />
             <element signature="n#style#0;n#div#1;n#div#0;n#body#0;n#html#0;n#!!top" expanded="true" />
@@ -1224,18 +1233,10 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/start.html">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="390">
-          <caret line="26" column="0" lean-forward="false" selection-start-line="26" selection-start-column="0" selection-end-line="26" selection-end-column="0" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/panorama_sampler.html">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="343">
-          <caret line="64" column="54" lean-forward="false" selection-start-line="64" selection-start-column="54" selection-end-line="64" selection-end-column="54" />
+        <state relative-caret-position="340">
+          <caret line="64" column="181" lean-forward="false" selection-start-line="64" selection-start-column="181" selection-end-line="64" selection-end-column="181" />
           <folding>
             <element signature="n#style#0;n#div#0;n#body#0;n#html#0;n#!!top" expanded="true" />
             <element signature="n#style#0;n#div#0;n#div#0;n#body#0;n#html#0;n#!!top" expanded="true" />
