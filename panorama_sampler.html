@@ -36,11 +36,11 @@
                             <li>Background process for data sampling at each configured target database</li>
                         </ul>
                     </li>
-                    <li>Access to GUI-function "Panorama-Sampler config" is protected by the same master-password</li>
+                    <li>Access to GUI-function "Panorama-Sampler config" is protected by this master-password</li>
 
                 </ul>
 
-                <h4>Configure Panorama-Sampler for workload recording of your database instance</h4>
+                <h4>Configure Panorama-Sampler for workload recording on your database instance</h4>
 
                 <h5>To activate sampling for your database, add it at function "Panorama-Sampler config" in menu "Spec. additions" and configure:</h5>
                 <ul>
@@ -59,7 +59,8 @@
                     <li>The right to create objects in different object schema if connection user and object schema are different</li>
                 </ul>
                 If the connection user has the grant <pre style="display: inline;">GRANT SELECT ANY TABLE</pre> in addition, than PL/SQL-packages are created for the execution of sampling.</br>
-                If the connection user doesn't have this grant, than larger anonymous PL/SQL is executed at each snapshot instead of package call that may result in a bit more parse effort.
+                If the connection user doesn't have this grant, than larger anonymous PL/SQL is executed at each snapshot instead of package call that may result in a bit more parse effort.<br>
+                Reason for need of possible anonymous PL/SQL is: you may not select from V$-tables from inside PL/SQL-packages because this right is based on role SELECT_CATALOG_ROLE and roles are not propagated to PL/SQL objects.
 
                 <h3>Licensing</h3>
 

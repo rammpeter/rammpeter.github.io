@@ -47,8 +47,8 @@
       <file leaf-file-name="panorama_sampler.html" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/panorama_sampler.html">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="267">
-              <caret line="32" column="81" lean-forward="true" selection-start-line="32" selection-start-column="81" selection-end-line="32" selection-end-column="81" />
+            <state relative-caret-position="450">
+              <caret line="62" column="182" lean-forward="false" selection-start-line="62" selection-start-column="182" selection-end-line="62" selection-end-column="182" />
               <folding>
                 <element signature="n#style#0;n#div#0;n#body#0;n#html#0;n#!!top" expanded="true" />
                 <element signature="n#style#0;n#div#0;n#div#0;n#body#0;n#html#0;n#!!top" expanded="true" />
@@ -423,14 +423,7 @@
       <workItem from="1503929331045" duration="1765000" />
       <workItem from="1504014346485" duration="11306000" />
       <workItem from="1505309605150" duration="603000" />
-      <workItem from="1505465765945" duration="842000" />
-    </task>
-    <task id="LOCAL-00093" summary="Facebook added">
-      <created>1455285916331</created>
-      <option name="number" value="00093" />
-      <option name="presentableId" value="LOCAL-00093" />
-      <option name="project" value="LOCAL" />
-      <updated>1455285916331</updated>
+      <workItem from="1505465765945" duration="1471000" />
     </task>
     <task id="LOCAL-00094" summary="Facebook added">
       <created>1455286129166</created>
@@ -768,11 +761,18 @@
       <option name="project" value="LOCAL" />
       <updated>1504821420613</updated>
     </task>
-    <option name="localTasksCounter" value="142" />
+    <task id="LOCAL-00142" summary="Panorama-Sampler Doku">
+      <created>1505567443894</created>
+      <option name="number" value="00142" />
+      <option name="presentableId" value="LOCAL-00142" />
+      <option name="project" value="LOCAL" />
+      <updated>1505567443894</updated>
+    </task>
+    <option name="localTasksCounter" value="143" />
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="92416000" />
+    <option name="totallyTimeSpent" value="93045000" />
   </component>
   <component name="TodoView">
     <todo-panel id="selected-file">
@@ -824,7 +824,6 @@
     <option name="myLimit" value="2678400000" />
   </component>
   <component name="VcsManagerConfiguration">
-    <MESSAGE value="Overview" />
     <MESSAGE value="Function overview" />
     <MESSAGE value="Get release and date from version.rb" />
     <MESSAGE value="counter" />
@@ -849,7 +848,8 @@
     <MESSAGE value="Panorama-Sampler" />
     <MESSAGE value="Panorama-Sampler image" />
     <MESSAGE value="Panorama-Sampler license" />
-    <option name="LAST_COMMIT_MESSAGE" value="Panorama-Sampler license" />
+    <MESSAGE value="Panorama-Sampler Doku" />
+    <option name="LAST_COMMIT_MESSAGE" value="Panorama-Sampler Doku" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager />
@@ -1362,8 +1362,8 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/panorama_sampler.html">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="267">
-          <caret line="32" column="81" lean-forward="true" selection-start-line="32" selection-start-column="81" selection-end-line="32" selection-end-column="81" />
+        <state relative-caret-position="450">
+          <caret line="62" column="182" lean-forward="false" selection-start-line="62" selection-start-column="182" selection-end-line="62" selection-end-column="182" />
           <folding>
             <element signature="n#style#0;n#div#0;n#body#0;n#html#0;n#!!top" expanded="true" />
             <element signature="n#style#0;n#div#0;n#div#0;n#body#0;n#html#0;n#!!top" expanded="true" />
