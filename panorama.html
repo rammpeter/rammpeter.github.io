@@ -178,8 +178,9 @@
                     <li>If you run Panorama on virtualised headless Linux server and your browser hangs after first request:
                         <ul>
                             <li>Reason: Your server does not generate enough enthropy values in /dev/random, so read on /dev/random blocks during encryption operation</li>
-                            <li>Solution: Start Panorama with non-blocking entrophie generator by option "java.security.egd=file:/dev/urandom"<br>
-                                <pre style="display: inline;">java -Djava.security.egd=file:/dev/urandom -jar Panorama.war</pre></li>
+                            <li>Solution: Start Panorama with non-blocking entrophie generator by option "java.security.egd=file:/dev/urandom"<li>
+                            <li>With embedded Jetty app-server use <pre style="display: inline;">java -Djava.security.egd=file:/dev/urandom -jar Panorama.war</pre></li>
+                            <li>With Tomcat set <pre style="display: inline;">export CATALINA_OPTS=-Djava.security.egd=file:/dev/urandom</pre> before starting Tomcat</li>
                         </ul>
                     </li>
                 </ul>
