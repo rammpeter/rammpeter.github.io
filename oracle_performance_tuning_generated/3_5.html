@@ -1,26 +1,19 @@
-<h3>Concurrency on memory: sqeezing out in shared pool</h3>
-This view lists objects which squeezed out others from shared pool to get place.<br/>
-While selecting this view it's contents in SGA will be deleted. That means, this view shows replacement since the last execution of this view (only one time).<br/>
-Value for 'No. Items flushed from shared pool' from 7..8 is normal, higher values indicate problems to find place in shared pool.<br/>
-Role DBA is required to execute this selection.<br/>
-<pre style='background-color: #FFFFCC;'>SELECT /* DB-Tools Ramm  Verdreaengung Shared Pool */
-                         RAWTOHEX(Addr)         "row-address in array or SGA",
-                         Indx         "index in fixed table array",
-                         Inst_ID      "Instance",
-                         KsmLrIdx,
-                         KsmLrDur,
-                         KsmLrShrPool,
-                         KsmLrCom     "Type of allocation",
-                         KsmLrSiz     "Size of Allocation in Bytes",
-                         KsmLrNum     "No. items flushed from sh.pool",
-                         KsmLrHon     "Name of object beeing loaded",
-                         KsmLrOHV     "HashValue of object",
-                         RAWTOHEX(KsmLrSes)     "Session Raw (V$Session.SAddr)",
-                         KsmLrADU,
-                         KsmLRNID,
-                         KSMLRNsd,
-                         KSMLRNcd,
-                         KsmLRNed
-                  FROM   x$ksmlru
-                  WHERE  ksmlrnum>0
-                  ORDER BY KsmLrNum DESC NULLS LAST</pre>
+<h3>Multiple open cursor: SQLs opened multiple in session</h3>
+Normally there should be only one open cursor per SQL statement and session.<br/>
+SQLs with multiple open cursors withon one session my flood session cursor cache and PGA<br/>
+<pre style='background-color: #FFFFCC;'>SELECT /* SQLs mehrfach als Cursor geoeffnet je Session */
+                             sq.*, cu.SID "Session-ID", s.UserName, cu.Anz_Open_Cursor "Number of open cursor", cu.Anz_Sql "Number of SQLs",
+                             s.Client_Info, s.Machine, s.Program, s.Module, s.Action, cu.SQL_Text
+                      FROM   (
+                              SELECT oc.Inst_ID, oc.SID, oc.SQL_ID, COUNT(*) Anz_Open_Cursor, COUNT(DISTINCT oc.SQL_ID) Anz_Sql, MIN(oc.SQL_Text) SQL_Text
+                              FROM   gv$Open_Cursor oc
+                              GROUP BY oc.Inst_ID, oc.SID, oc.SQL_ID
+                              HAVING count(*) > COUNT(DISTINCT oc.SQL_ID)
+                             ) cu
+                      JOIN   gv$Session s ON s.Inst_ID=cu.Inst_ID AND s.SID=cu.SID
+                      JOIN   (SELECT Inst_ID, SQL_ID, COUNT(*) "Number of childs", MIN(Parsing_schema_name) Parsing_schema_Name
+                              FROM gv$SQL
+                              GROUP BY Inst_ID, SQL_ID
+                             )sq ON sq.Inst_ID = cu.Inst_ID AND sq.SQL_ID = cu.SQL_ID
+                      WHERE sq.Parsing_Schema_Name NOT IN ('SYS')
+                      ORDER BY cu.Anz_Open_Cursor-cu.Anz_Sql DESC NULLS LAST</pre>

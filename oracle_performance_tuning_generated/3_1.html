@@ -1,25 +1,24 @@
-<h3>Missing usage of bind variables: Detection by identical part of SQL-text</h3>
+<h3>Missing usage of bind variables: Detection by identical plan-hash-value from SGA</h3>
 Usage of literals instead of bind variables with high number of different literals leads to high parse counts and flooding of SQL-Area in SGA.<br/>
 You may reduce the problem by setting cursor_sharing != EXACT, but you still need large amount of SGA-memory to match your SQL with the corresponding SQL with replaced bind variables.<br/>
 So strong suggestion is: Use bind variables!<br/>
-This selection looks for statements in SGA which differentiate themself only by literals. It compares the first x characters of SQL to identify similar statements.<br/>
-The length of the compared substring may be varied.<pre style='background-color: #FFFFCC;'>WITH Len AS (SELECT :P1 Substr_Len FROM DUAL)
-                       SELECT g.*, s.SQL_Text "Beispiel SQL-Text"
-                       FROM   (
-                               SELECT COUNT(*) Variationen, Inst_ID, MIN(Parsing_Schema_Name) UserName, COUNT(DISTINCT Parsing_Schema_Name) Anzahl_User,
-                                      SUBSTR(s.SQL_Text, 1, Len.Substr_Len) SubSQL_Text,
-                                      ROUND(SUM(Sharable_Mem+Persistent_Mem+Runtime_Mem)/(1024*1024),3) "Memory (MB)",
-                                      MIN(s.SQL_ID) SQL_ID,
-                                      MIN(TO_DATE(s.First_Load_Time, 'YYYY-MM-DD/HH24:MI:SS')) Min_First_Load,
-                                      MIN(Last_Load_Time) Min_Last_Load,
-                                      MAX(Last_Load_Time) Max_Last_Load,
-                                      MAX(Last_Active_Time) Max_Last_Active,
-                                      MIN(Parsing_Schema_Name) Parsing_Schema_Name,
-                                      COUNT(DISTINCT Parsing_Schema_Name) "Different pars. schema names"
-                               FROM   gv$SQLArea s, Len
-                               GROUP BY Inst_ID, SUBSTR(s.SQL_Text, 1, Len.Substr_Len)
-                               HAVING COUNT(*) > 10
-                              ) g
-                       JOIN gv$SQLArea s ON s.Inst_ID = g.Inst_ID AND s.SQL_ID = g.SQL_ID
-                       ORDER BY "Memory (MB)" DESC NULLS LAST
-             </pre><div>Parameter :P1: Number of characters for comparison of SQLs (beginning at left side of statement)</div>
+This selection looks for statements with identical execution plans by plan-hash-value from SGA.<pre style='background-color: #FFFFCC;'>SELECT a.Inst_ID                                                         "Instance",
+                            a.Plan_Hash_Value                                                 "Plan hash value",
+                            a.Parsing_Schema_Name                                             "Parsing schema",
+                            COUNT(*)                                                          "No. of entries in gv$SQLArea",
+                            COUNT(DISTINCT a.SQL_ID)                                          "No. of different SQL-IDs",
+                            MIN(a.Last_Active_Time)                                           "Oldest active time",
+                            MAX(a.Last_Active_Time)                                           "Youngest active time",
+                            MIN(TO_DATE(a.First_Load_Time, 'YYYY-MM-DD/HH24:MI:SS'))          "First load time",
+                            ROUND(SUM(a.Elapsed_Time)/1000000)                                "Elapsed time (seconds)",
+                            MAX(a.SQL_ID) KEEP (DENSE_RANK LAST ORDER BY Last_Active_Time)    "SQL_ID",
+                            ROUND(SUM(a.Sharable_Mem)  /(1024*1024), 2)                       "Sharable memory (MB)",
+                            ROUND(SUM(a.Persistent_Mem)/(1024*1024), 2)                       "Persistent memory (MB)",
+                            ROUND(SUM(a.Runtime_Mem)   /(1024*1024), 2)                       "Runtime memory (MB)",
+                            SUBSTR(MAX(a.SQL_Text) KEEP (DENSE_RANK LAST ORDER BY Last_Active_Time), 1, 400)  "SQL text"
+                     FROM   gv$SQLArea a
+                     WHERE  a.Plan_Hash_Value != 0
+                     GROUP BY a.Inst_ID, a.Plan_Hash_Value, a.Parsing_Schema_Name
+                     HAVING COUNT(*) > :P1
+                     ORDER BY 4 DESC
+            </pre><div>Parameter :P1: Minimum number of different SQL-IDs per plan-hash-value for consideration in selection</div>

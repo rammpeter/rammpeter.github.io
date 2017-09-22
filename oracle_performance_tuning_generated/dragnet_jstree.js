@@ -355,35 +355,39 @@
   "state": { "opened": false }
 , "children": [{
   "id": "3_0",
-  "text": "1. Missing usage of bind variables: Detection by identical plan-hash-value",
+  "text": "1. Missing usage of bind variables: Detection by identical plan-hash-value from Active Session History",
   "state": { "opened": false }
 , "icon":"images/application-monitor.png"},{
   "id": "3_1",
-  "text": "2. Missing usage of bind variables: Detection by identical part of SQL-text",
+  "text": "2. Missing usage of bind variables: Detection by identical plan-hash-value from SGA",
   "state": { "opened": false }
 , "icon":"images/application-monitor.png"},{
   "id": "3_2",
-  "text": "3. Number of distinct SQL-IDs per time in time line",
+  "text": "3. Missing usage of bind variables: Detection by identical part of SQL-text",
   "state": { "opened": false }
 , "icon":"images/application-monitor.png"},{
   "id": "3_3",
-  "text": "4. Multiple open cursor: overview over SQL",
+  "text": "4. Number of distinct SQL-IDs per time in time line",
   "state": { "opened": false }
 , "icon":"images/application-monitor.png"},{
   "id": "3_4",
-  "text": "5. Multiple open cursor: SQLs opened multiple in session",
+  "text": "5. Multiple open cursor: overview over SQL",
   "state": { "opened": false }
 , "icon":"images/application-monitor.png"},{
   "id": "3_5",
-  "text": "6. Concurrency on memory: sqeezing out in shared pool",
+  "text": "6. Multiple open cursor: SQLs opened multiple in session",
   "state": { "opened": false }
 , "icon":"images/application-monitor.png"},{
   "id": "3_6",
-  "text": "7. Problems with function based index if cursor_sharing != EXACT",
+  "text": "7. Concurrency on memory: sqeezing out in shared pool",
   "state": { "opened": false }
 , "icon":"images/application-monitor.png"},{
   "id": "3_7",
-  "text": "8. Critical amount of child cursors per SQL-ID",
+  "text": "8. Problems with function based index if cursor_sharing != EXACT",
+  "state": { "opened": false }
+, "icon":"images/application-monitor.png"},{
+  "id": "3_8",
+  "text": "9. Critical amount of child cursors per SQL-ID",
   "state": { "opened": false }
 , "icon":"images/application-monitor.png"} ]},{
   "id": "4",
