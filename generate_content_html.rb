@@ -8,7 +8,7 @@ require 'menu_helper.rb'
 class Generator
   include MenuHelper
 
-  # Fake-Implementierungen für Voraussetzungen dragnet_helper
+  # Fake-Implementierungen für Voraussetzungen menu_helper
 
   def t(a, args)
     args[:default]
@@ -23,13 +23,21 @@ class Generator
   end
 
   def sql_select_one(args)
-    0
+    1
   end
+
   def sql_select_all(args)
     []
   end
+
   def sql_select_all(args)
     []
+  end
+
+  module MenuHelper::PanoramaSamplerStructureCheck
+    def self.object_sizes_exists?
+      true
+    end
   end
 
   module MenuHelper::EngineConfig
