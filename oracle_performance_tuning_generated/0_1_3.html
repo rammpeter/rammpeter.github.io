@@ -2,7 +2,10 @@
 DB monitors usage (access) on indexes if declared so before by 'ALTER INDEX ... MONITORING USAGE'.<br/>
 Results of usage monitoring can be queried from v$Object_Usage but only for current schema.<br/>
 Over all schemas usage can be monitored with following SQL.<br/>
-Caution: GATHER_INDEX_STATS also counts as usage even if no other select touches this index.<br/>
+Caution:<br/>
+- Recursive index-lookup by foreign key validation does not count as usage in v$Object_Usage.<br/>
+- So please be careful if index is only needed for foreign key protection (to prevent full scans on detail-table at deletes on master-table).<br/>
+- GATHER_TABLE_STATS and GATHER_INDEX_STATS may also counts as usage even if no other select touches this index (no longer detected in DB-version >= 12).<br/>
 <br/>
 Additional information about index usage can be requested from DBA_Hist_Seg_Stat and DBA_Hist_Active_Sess_History.<pre style='background-color: #FFFFCC;'>SELECT /* DB-Tools Ramm: unused indexes */ u.*, i.Num_Rows, i.Distinct_Keys,
                              seg.MBytes,

@@ -3,8 +3,7 @@
   <component name="ChangeListManager">
     <list default="true" id="a44be585-1d70-46dc-8663-cadff6f53192" name="Default" comment="">
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/generate_content_html.rb" afterPath="$PROJECT_DIR$/generate_content_html.rb" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/panorama_content.html" afterPath="$PROJECT_DIR$/panorama_content.html" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/oracle_performance_tuning_generated/0_1_3.html" afterPath="$PROJECT_DIR$/oracle_performance_tuning_generated/0_1_3.html" />
     </list>
     <ignored path="rammpeter.github.io.iws" />
     <ignored path=".idea/workspace.xml" />
@@ -52,7 +51,7 @@
         <entry file="file://$PROJECT_DIR$/panorama_sampler.html">
           <provider selected="true" editor-type-id="text-editor">
             <state relative-caret-position="150">
-              <caret line="10" column="0" lean-forward="true" selection-start-line="10" selection-start-column="0" selection-end-line="10" selection-end-column="0" />
+              <caret line="10" column="0" lean-forward="false" selection-start-line="10" selection-start-column="0" selection-end-line="10" selection-end-column="0" />
               <folding>
                 <element signature="n#style#0;n#div#0;n#body#0;n#html#0;n#!!top" expanded="true" />
                 <element signature="n#style#0;n#div#0;n#div#0;n#body#0;n#html#0;n#!!top" expanded="true" />
@@ -435,14 +434,7 @@
       <workItem from="1506326000893" duration="5640000" />
       <workItem from="1506492610980" duration="3609000" />
       <workItem from="1507720629613" duration="6111000" />
-      <workItem from="1509436568637" duration="4692000" />
-    </task>
-    <task id="LOCAL-00101" summary="Function overview">
-      <created>1457108720239</created>
-      <option name="number" value="00101" />
-      <option name="presentableId" value="LOCAL-00101" />
-      <option name="project" value="LOCAL" />
-      <updated>1457108720240</updated>
+      <workItem from="1509436568637" duration="5350000" />
     </task>
     <task id="LOCAL-00102" summary="Get release and date from version.rb">
       <created>1457723684736</created>
@@ -780,11 +772,18 @@
       <option name="project" value="LOCAL" />
       <updated>1509450769214</updated>
     </task>
-    <option name="localTasksCounter" value="150" />
+    <task id="LOCAL-00150" summary="Menu functions generated">
+      <created>1509451813014</created>
+      <option name="number" value="00150" />
+      <option name="presentableId" value="LOCAL-00150" />
+      <option name="project" value="LOCAL" />
+      <updated>1509451813014</updated>
+    </task>
+    <option name="localTasksCounter" value="151" />
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="120669000" />
+    <option name="totallyTimeSpent" value="121327000" />
   </component>
   <component name="TodoView">
     <todo-panel id="selected-file">
@@ -836,7 +835,6 @@
     <option name="myLimit" value="2678400000" />
   </component>
   <component name="VcsManagerConfiguration">
-    <MESSAGE value="counter" />
     <MESSAGE value="LinkedIn" />
     <MESSAGE value="Tuning pack required" />
     <MESSAGE value="Dragnet SQLs in submenu" />
@@ -861,7 +859,8 @@
     <MESSAGE value="Panorama-Sampler Doku" />
     <MESSAGE value="/dev/urandom" />
     <MESSAGE value="Next panorama sampler functions" />
-    <option name="LAST_COMMIT_MESSAGE" value="Next panorama sampler functions" />
+    <MESSAGE value="Menu functions generated" />
+    <option name="LAST_COMMIT_MESSAGE" value="Menu functions generated" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager />
@@ -1492,7 +1491,7 @@
     <entry file="file://$PROJECT_DIR$/panorama_sampler.html">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="150">
-          <caret line="10" column="0" lean-forward="true" selection-start-line="10" selection-start-column="0" selection-end-line="10" selection-end-column="0" />
+          <caret line="10" column="0" lean-forward="false" selection-start-line="10" selection-start-column="0" selection-end-line="10" selection-end-column="0" />
           <folding>
             <element signature="n#style#0;n#div#0;n#body#0;n#html#0;n#!!top" expanded="true" />
             <element signature="n#style#0;n#div#0;n#div#0;n#body#0;n#html#0;n#!!top" expanded="true" />
