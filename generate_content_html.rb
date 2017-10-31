@@ -32,6 +32,18 @@ class Generator
     []
   end
 
+  module MenuHelper::EngineConfig
+    class Hugo
+      def panorama_sampler_master_password
+        true
+      end
+    end
+
+    def self.config
+      Hugo.new
+    end
+  end
+
   def generate
     def print_menu_entry(menu_entry, level)
       ioutput = "<tr><td><b>"

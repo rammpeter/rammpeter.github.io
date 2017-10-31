@@ -7,7 +7,7 @@
     <div style="position: relative; z-index: 2; padding: 10px;">
         <div id="panorama_sampler_global">
             <div id="panorama_sampler_text" style="float:left;">
-                <h2>Panorama-Sampler (still Beta status)</h2>
+                <h2>Panorama-Sampler</h2>
 
                 'Panorama-Sampler' is an add-on for Panorama which allows it's own database workload recording as alternative to use of AWR data.<br/>
                 This enables you to use Panorama's functions for evaluation of historic workload info:
@@ -16,12 +16,15 @@
                     <li><b>without licensing of Diagnostics Pack for Enterprise Edition</b></li>
                 </ul>
                 <img src="images/Panorama-Sampler.png"/><br/>
-                During logon to a database with Panorama you can choose one of three options how Panorama gets access to historic workload info for this database:
+                <h3>Functions</h3>
+                Panorama-Sampler delivers several functions for recording historic workload information
                 <ul>
-                    <li>Use Oracle's AWR data which requires Enterprise Edition and licensing of Diagnostics Pack for that database</li>
-                    <li>Use Panorama's own sampling engine, which requires only a small onetime fee in the future after resolving Beta status</li>
-                    <li>Don't use historic workload info, but this way Panorama's functions are strongly reduced</li>
+                    <li>Replacement for Active Workload Repository (AWR) and Active Session History (ASH)</li>
+                    <li>Sampling of storage object sizes</li>
+                    <li>Sampling of DB-cache usage by objects (coming soon)</li>
+                    <li>Sampling of detailed blocking lock information (coming soon)</li>
                 </ul>
+                Evaluation and visualization of recorded data is possible with Panorama's web client app.
 
                 <h3>Usage</h3>
 
@@ -37,7 +40,6 @@
                         </ul>
                     </li>
                     <li>Access to GUI-function "Panorama-Sampler config" is protected by this master-password</li>
-
                 </ul>
 
                 <h4>Configure Panorama-Sampler for workload recording on your database instance</h4>
@@ -49,6 +51,7 @@
                     <li>Schema name if workload tables should be created in different schema than used for connection. Important e.g. for CDB where you need to login with system account to sample workload of all PDBs</li>
                     <li>cycle in minutes for snapshots</li>
                     <li>retention in days for housekeeping</li>
+                    <li>Minimum values for executions and runtime as precondition for SQLs to be recorded in SQL history</li>
                 </ul>
                 <h5>The configured connection user needs the the following grants to work:</h5>
                 <ul>
@@ -62,11 +65,19 @@
                 If the connection user doesn't have this grant, than larger anonymous PL/SQL is executed at each snapshot instead of package call that may result in a bit more parse effort.<br>
                 Reason for need of possible anonymous PL/SQL is: you may not select from V$-tables from inside PL/SQL-packages because this right is based on role SELECT_CATALOG_ROLE and roles are not propagated to PL/SQL objects.
 
+                <h4>Choose access on Panorama-Sampler's data in Panorama's web client application</h4>
+                During logon to a database with Panorama you can choose one of three options how Panorama gets access to historic workload info for this database:
+                <ul>
+                    <li>Use Oracle's AWR data which requires Enterprise Edition and licensing of Diagnostics Pack for that database</li>
+                    <li>Use workload data recorded by Panorama's own sampling engine</li>
+                    <li>Don't use historic workload info, but this way Panorama's functions are strongly reduced</li>
+                </ul>
+
                 <h3>Licensing</h3>
 
-                You may use this Beta release of Panorama-Sampler for free under the terms and conditions of <a href="http://www.gnu.org/licenses/gpl-3.0" target="_blank">GNU General Public License</a>.<br/>
-                After that extensive Beta phase it is still an open decision to keep also the final release for free or it might be that you need to buy a license certificate per database instance (based on DB-ID) for .<br/>
-                Predicted price in that case after Beta phase would be approx. 200$ for lifetime license per database instance after a trial period of 30 days.
+                You may use this current release of Panorama-Sampler for free under the terms and conditions of <a href="http://www.gnu.org/licenses/gpl-3.0" target="_blank">GNU General Public License</a>.<br/>
+                For further releases it is still an open decision to keep them also for free or it might be that you need to buy a license certificate per database instance (based on DB-ID) for .<br/>
+                Predicted price in that case of license fee would be approx. 200$ for lifetime license per database instance after a trial period of 30 days.
 
                 <h3>Function volume</h3>
                 Until now Panorama-Sampler offers replacement for the follwing AWR views:
