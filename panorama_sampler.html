@@ -40,18 +40,24 @@
                         </ul>
                     </li>
                     <li>Access to GUI-function "Panorama-Sampler config" is protected by this master-password</li>
+                    <li>You may use different master-passwords at Panorama-server startup if this makes sense for you. This results in one configuration-set per master-password.</li>
                 </ul>
 
-                <h4>Configure Panorama-Sampler for workload recording on your database instance</h4>
+                <h4>Configure data sources for sampling with Panorama-Sampler</h4>
 
                 <h5>To activate sampling for your database, add it at function "Panorama-Sampler config" in menu "Spec. additions" and configure:</h5>
                 <ul>
                     <li>TNS-Alias resp. host, port, SID/service-name</li>
                     <li>user/password for the schema containing Panorama's tables for workload recording</li>
                     <li>Schema name if workload tables should be created in different schema than used for connection. Important e.g. for CDB where you need to login with system account to sample workload of all PDBs</li>
-                    <li>cycle in minutes for snapshots</li>
-                    <li>retention in days for housekeeping</li>
-                    <li>Minimum values for executions and runtime as precondition for SQLs to be recorded in SQL history</li>
+                    <li>For each of the four topics AWR/ASH, size evolution, cache-usage and blocking locks you can define separately:
+                        <ul>
+                            <li>Activate or deactivate sampling</li>
+                            <li>Period between snapshots</li>
+                            <li>Retention time before housekeeping</li>
+                            <li>Further topic specific settings</li>
+                        </ul>
+                    </li>
                 </ul>
                 <h5>The configured connection user needs the the following grants to work:</h5>
                 <ul>
@@ -66,7 +72,8 @@
                 Reason for need of possible anonymous PL/SQL is: you may not select from V$-tables from inside PL/SQL-packages because this right is based on role SELECT_CATALOG_ROLE and roles are not propagated to PL/SQL objects.
 
                 <h4>Choose access on Panorama-Sampler's data in Panorama's web client application</h4>
-                During logon to a database with Panorama you can choose one of three options how Panorama gets access to historic workload info for this database:
+                Panorama client automatically recognizes existence of Panorama-Sampler data during logon and offers you to choose this data.
+                You can choose one of three options how Panorama gets access to historic workload info for this database:
                 <ul>
                     <li>Use Oracle's AWR data which requires Enterprise Edition and licensing of Diagnostics Pack for that database</li>
                     <li>Use workload data recorded by Panorama's own sampling engine</li>
