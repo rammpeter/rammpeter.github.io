@@ -26,8 +26,8 @@
       <file leaf-file-name="panorama.html" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/panorama.html">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="484">
-              <caret line="89" column="0" lean-forward="false" selection-start-line="89" selection-start-column="0" selection-end-line="89" selection-end-column="0" />
+            <state relative-caret-position="195">
+              <caret line="13" column="85" lean-forward="false" selection-start-line="13" selection-start-column="85" selection-end-line="13" selection-end-column="85" />
               <folding>
                 <element signature="n#style#0;n#div#0;n#div#0;n#body#0;n#html#0;n#!!top" expanded="true" />
                 <element signature="n#style#0;n#div#1;n#div#0;n#body#0;n#html#0;n#!!top" expanded="true" />
@@ -461,14 +461,7 @@
       <workItem from="1512381613198" duration="2358000" />
       <workItem from="1512455922486" duration="2403000" />
       <workItem from="1512914261309" duration="609000" />
-      <workItem from="1513332421001" duration="1355000" />
-    </task>
-    <task id="LOCAL-00111" summary="Speaker-references">
-      <created>1468935996778</created>
-      <option name="number" value="00111" />
-      <option name="presentableId" value="LOCAL-00111" />
-      <option name="project" value="LOCAL" />
-      <updated>1468935996779</updated>
+      <workItem from="1513332421001" duration="2268000" />
     </task>
     <task id="LOCAL-00112" summary="Switch to jetty">
       <created>1470237496163</created>
@@ -806,11 +799,18 @@
       <option name="project" value="LOCAL" />
       <updated>1512454828872</updated>
     </task>
-    <option name="localTasksCounter" value="160" />
+    <task id="LOCAL-00160" summary="Connections">
+      <created>1513340448908</created>
+      <option name="number" value="00160" />
+      <option name="presentableId" value="LOCAL-00160" />
+      <option name="project" value="LOCAL" />
+      <updated>1513340448914</updated>
+    </task>
+    <option name="localTasksCounter" value="161" />
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="148033000" />
+    <option name="totallyTimeSpent" value="148946000" />
   </component>
   <component name="TodoView">
     <todo-panel id="selected-file">
@@ -862,7 +862,6 @@
     <option name="myLimit" value="2678400000" />
   </component>
   <component name="VcsManagerConfiguration">
-    <MESSAGE value="Tuning pack required" />
     <MESSAGE value="Dragnet SQLs in submenu" />
     <MESSAGE value="Speaker-references" />
     <MESSAGE value="Switch to jetty" />
@@ -887,7 +886,8 @@
     <MESSAGE value="Menu functions generated" />
     <MESSAGE value="Doku" />
     <MESSAGE value="docker" />
-    <option name="LAST_COMMIT_MESSAGE" value="docker" />
+    <MESSAGE value="Connections" />
+    <option name="LAST_COMMIT_MESSAGE" value="Connections" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager />
@@ -1512,8 +1512,8 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/panorama.html">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="484">
-          <caret line="89" column="0" lean-forward="false" selection-start-line="89" selection-start-column="0" selection-end-line="89" selection-end-column="0" />
+        <state relative-caret-position="195">
+          <caret line="13" column="85" lean-forward="false" selection-start-line="13" selection-start-column="85" selection-end-line="13" selection-end-column="85" />
           <folding>
             <element signature="n#style#0;n#div#0;n#div#0;n#body#0;n#html#0;n#!!top" expanded="true" />
             <element signature="n#style#0;n#div#1;n#div#0;n#body#0;n#html#0;n#!!top" expanded="true" />
