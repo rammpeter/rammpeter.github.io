@@ -72,9 +72,21 @@
 
                 <h4>Customize your installation</h4>
                 <ul>
-                    <li>Panorama stores encrypted session connect data and usage log in your local filesystem.<br/>
-                        You can control the directory for this files by setting the environment variable <pre style="display: inline;">PANORAMA_VAR_HOME</pre> to your target directory.<br/>
-                        Without defining <pre style="display: inline;">PANORAMA_VAR_HOME</pre> you will lose your saved connection info at restart of Panorama server.
+                    <li>Environment variables that are evaluated by Panorama-Server:
+                        <ul>
+                            <li><pre style="display: inline;">PANORAMA_VAR_HOME</pre>: Panorama stores encrypted session connect data and usage log in your local filesystem.<br/>
+                                You can control the directory for this files by setting the environment variable <pre style="display: inline;">PANORAMA_VAR_HOME</pre> to your target directory.<br/>
+                                Without defining <pre style="display: inline;">PANORAMA_VAR_HOME</pre> you will lose your saved connection info at restart of Panorama server.
+                            </li>
+                            <li><pre style="display: inline;">MAX_CONNECTION_POOL_SIZE</pre>: This setting allows you to define the maximum number of connections in Panorama's connection pool<br/>
+                                If you don't set this the default is max. 100 connections.
+                                That means:
+                                <ul>
+                                    <li>Up to 100 different database connections are cached for reuse in Panorama even if they are inactive.</li>
+                                    <li>Maximum 100 concurrent client requests can be served at the same time limited by the connection number.</li>
+                                </ul>
+                            </li>
+                        </ul>
                     </li>
                     <li>You can specify the following additional Java-options executing <pre style="display: inline;">java &lt;options&gt; -jar Panorama.war</pre>:
                         <ul>
