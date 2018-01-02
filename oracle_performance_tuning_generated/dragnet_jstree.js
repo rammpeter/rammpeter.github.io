@@ -145,6 +145,10 @@
   "id": "0_10",
   "text": "11. Possibly expensive TABLE ACCESS BY INDEX ROWID with additional filter predicates on table",
   "state": { "opened": false }
+, "icon":"images/application-monitor.png"},{
+  "id": "0_11",
+  "text": "12. Possibly missing NOT NULL constraint, although there are no NULL values in column",
+  "state": { "opened": false }
 , "icon":"images/application-monitor.png"} ]},{
   "id": "1",
   "text": "2. Detection of SQL with problematic execution plan",
@@ -331,11 +335,11 @@
   "state": { "opened": false }
 , "icon":"images/application-monitor.png"},{
   "id": "2_7",
-  "text": "8. Concurrency on memory, latches: insufficient cached sequences",
+  "text": "8. Concurrency on memory, latches: insufficient cached sequences from DBA_Sequences",
   "state": { "opened": false }
 , "icon":"images/application-monitor.png"},{
   "id": "2_8",
-  "text": "9. Concurrency on memory, latches: Overview over usage of sequences",
+  "text": "9. Concurrency on memory, latches: Overview over usage of sequences by SQLs",
   "state": { "opened": false }
 , "icon":"images/application-monitor.png"},{
   "id": "2_9",

@@ -38,6 +38,10 @@ class Generator
     def self.object_sizes_exists?
       true
     end
+
+    def self.panorama_table_exists?(table_name)
+      true
+    end  
   end
 
   module MenuHelper::EngineConfig
