@@ -60,8 +60,8 @@
       <file leaf-file-name="panorama_sampler.html" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/panorama_sampler.html">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="424">
-              <caret line="96" column="47" lean-forward="true" selection-start-line="96" selection-start-column="47" selection-end-line="96" selection-end-column="47" />
+            <state relative-caret-position="-447">
+              <caret line="51" column="215" lean-forward="false" selection-start-line="51" selection-start-column="212" selection-end-line="51" selection-end-column="215" />
               <folding>
                 <element signature="n#style#0;n#div#0;n#body#0;n#html#0;n#!!top" expanded="true" />
                 <element signature="n#style#0;n#div#0;n#div#0;n#body#0;n#html#0;n#!!top" expanded="true" />
@@ -458,14 +458,11 @@
       <workItem from="1516372964269" duration="583000" />
       <workItem from="1516560032531" duration="595000" />
       <workItem from="1516806218866" duration="597000" />
-      <workItem from="1517229109643" duration="638000" />
-    </task>
-    <task id="LOCAL-00118" summary="grant OEM_MONITOR">
-      <created>1479809142434</created>
-      <option name="number" value="00118" />
-      <option name="presentableId" value="LOCAL-00118" />
-      <option name="project" value="LOCAL" />
-      <updated>1479809142435</updated>
+      <workItem from="1517229109643" duration="1252000" />
+      <workItem from="1517827854941" duration="697000" />
+      <workItem from="1518214027411" duration="1182000" />
+      <workItem from="1518439343827" duration="1196000" />
+      <workItem from="1519144973108" duration="813000" />
     </task>
     <task id="LOCAL-00119" summary="JCE">
       <created>1479812811511</created>
@@ -803,11 +800,18 @@
       <option name="project" value="LOCAL" />
       <updated>1515431578377</updated>
     </task>
-    <option name="localTasksCounter" value="167" />
+    <task id="LOCAL-00167" summary="Sampler-Doku">
+      <created>1517314978909</created>
+      <option name="number" value="00167" />
+      <option name="presentableId" value="LOCAL-00167" />
+      <option name="project" value="LOCAL" />
+      <updated>1517314978909</updated>
+    </task>
+    <option name="localTasksCounter" value="168" />
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="161916000" />
+    <option name="totallyTimeSpent" value="166418000" />
   </component>
   <component name="TodoView">
     <todo-panel id="selected-file">
@@ -822,7 +826,7 @@
     <frame x="50" y="23" width="1630" height="1027" extended-state="0" />
     <editor active="true" />
     <layout>
-      <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.20340051" sideWeight="0.5" order="0" side_tool="false" content_ui="combo" />
+      <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.21347608" sideWeight="0.5" order="0" side_tool="false" content_ui="combo" />
       <window_info id="TODO" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.32939914" sideWeight="0.5" order="6" side_tool="false" content_ui="tabs" />
       <window_info id="Docker" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="false" weight="0.33" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
       <window_info id="Event Log" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="8" side_tool="true" content_ui="tabs" />
@@ -860,7 +864,6 @@
     <option name="myLimit" value="2678400000" />
   </component>
   <component name="VcsManagerConfiguration">
-    <MESSAGE value="Docu enhancements" />
     <MESSAGE value="grant OEM_MONITOR" />
     <MESSAGE value="One pass login" />
     <MESSAGE value="JCE" />
@@ -885,7 +888,8 @@
     <MESSAGE value="Job" />
     <MESSAGE value="Diagnostics pack" />
     <MESSAGE value="Sampler" />
-    <option name="LAST_COMMIT_MESSAGE" value="Sampler" />
+    <MESSAGE value="Sampler-Doku" />
+    <option name="LAST_COMMIT_MESSAGE" value="Sampler-Doku" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager />
@@ -1381,8 +1385,8 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/panorama_sampler.html">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="424">
-          <caret line="96" column="47" lean-forward="true" selection-start-line="96" selection-start-column="47" selection-end-line="96" selection-end-column="47" />
+        <state relative-caret-position="-447">
+          <caret line="51" column="215" lean-forward="false" selection-start-line="51" selection-start-column="212" selection-end-line="51" selection-end-column="215" />
           <folding>
             <element signature="n#style#0;n#div#0;n#body#0;n#html#0;n#!!top" expanded="true" />
             <element signature="n#style#0;n#div#0;n#div#0;n#body#0;n#html#0;n#!!top" expanded="true" />
