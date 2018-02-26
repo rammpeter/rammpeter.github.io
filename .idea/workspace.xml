@@ -1,10 +1,12 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ChangeListManager">
-    <list default="true" id="a44be585-1d70-46dc-8663-cadff6f53192" name="Default" comment="">
-      <change beforePath="" afterPath="$PROJECT_DIR$/images/choose_management_pack.png" />
+    <list default="true" id="a44be585-1d70-46dc-8663-cadff6f53192" name="Default" comment="Sampler-Doku">
+      <change beforePath="" afterPath="$PROJECT_DIR$/Oracle_performance_analysis_with_Panorama.adoc" />
+      <change beforePath="" afterPath="$PROJECT_DIR$/Oracle_performance_analysis_with_Panorama.html" />
+      <change beforePath="" afterPath="$PROJECT_DIR$/images/table.png" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
-      <change beforePath="$PROJECT_DIR$/panorama_sampler.html" afterPath="$PROJECT_DIR$/panorama_sampler.html" />
+      <change beforePath="$PROJECT_DIR$/index.html" afterPath="$PROJECT_DIR$/index.html" />
     </list>
     <ignored path="rammpeter.github.io.iws" />
     <ignored path=".idea/workspace.xml" />
@@ -27,7 +29,7 @@
       <file leaf-file-name="panorama.html" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/panorama.html">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="180">
+            <state relative-caret-position="0">
               <caret line="12" column="134" lean-forward="false" selection-start-line="12" selection-start-column="107" selection-end-line="12" selection-end-column="134" />
               <folding />
             </state>
@@ -58,46 +60,29 @@
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="panorama_sampler.html" pinned="false" current-in-tab="true">
-        <entry file="file://$PROJECT_DIR$/panorama_sampler.html">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="564">
-              <caret line="84" column="59" lean-forward="true" selection-start-line="84" selection-start-column="59" selection-end-line="84" selection-end-column="59" />
-              <folding>
-                <element signature="n#style#0;n#div#0;n#body#0;n#html#0;n#!!top" expanded="true" />
-                <element signature="n#style#0;n#div#0;n#div#0;n#body#0;n#html#0;n#!!top" expanded="true" />
-                <element signature="n#style#0;n#div#1;n#div#0;n#body#0;n#html#0;n#!!top" expanded="true" />
-                <element signature="n#style#0;n#div#0;n#div#0;n#div#1;n#div#0;n#body#0;n#html#0;n#!!top" expanded="true" />
-                <element signature="n#style#0;n#pre#0;n#li#0;n#ul#4;n#div#0;n#div#0;n#div#1;n#div#0;n#body#0;n#html#0;n#!!top" expanded="true" />
-                <element signature="n#style#0;n#pre#0;n#li#2;n#ul#4;n#div#0;n#div#0;n#div#1;n#div#0;n#body#0;n#html#0;n#!!top" expanded="true" />
-                <element signature="n#style#0;n#pre#0;n#li#3;n#ul#4;n#div#0;n#div#0;n#div#1;n#div#0;n#body#0;n#html#0;n#!!top" expanded="true" />
-                <element signature="n#style#0;n#pre#0;n#div#0;n#div#0;n#div#1;n#div#0;n#body#0;n#html#0;n#!!top" expanded="true" />
-                <element signature="n#style#0;n#span#0;n#div#0;n#div#0;n#div#1;n#div#0;n#body#0;n#html#0;n#!!top" expanded="true" />
-              </folding>
+      <file leaf-file-name="Oracle_performance_analysis_with_Panorama.adoc" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/Oracle_performance_analysis_with_Panorama.adoc">
+          <provider selected="true" editor-type-id="split-provider[text-editor;AsciiDocPreviewEditor]">
+            <state split_layout="SPLIT">
+              <first_editor relative-caret-position="225">
+                <caret line="15" column="71" lean-forward="false" selection-start-line="15" selection-start-column="71" selection-end-line="15" selection-end-column="71" />
+                <folding />
+              </first_editor>
+              <second_editor />
             </state>
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="index.html" pinned="false" current-in-tab="false">
+      <file leaf-file-name="index.html" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/index.html">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="2505">
-              <caret line="167" column="72" lean-forward="false" selection-start-line="167" selection-start-column="72" selection-end-line="167" selection-end-column="72" />
+            <state relative-caret-position="767">
+              <caret line="182" column="0" lean-forward="false" selection-start-line="182" selection-start-column="0" selection-end-line="182" selection-end-column="0" />
               <folding>
                 <element signature="n#style#0;n#span#0;n#td#1;n#tr#0;n#table#0;n#div#0;n#td#0;n#tr#0;n#table#0;n#body#0;n#html#0;n#!!top" expanded="true" />
-                <marker date="1502263358000" expanded="true" signature="4896:4907" ph="..." />
-                <marker date="1502263358000" expanded="true" signature="5048:5061" ph="..." />
+                <marker date="1519665514888" expanded="true" signature="4896:4907" ph="..." />
+                <marker date="1519665514888" expanded="true" signature="5048:5061" ph="..." />
               </folding>
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="default.css" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/default.css">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="225">
-              <caret line="15" column="22" lean-forward="false" selection-start-line="15" selection-start-column="22" selection-end-line="15" selection-end-column="22" />
-              <folding />
             </state>
           </provider>
         </entry>
@@ -134,10 +119,14 @@
         <option value="$PROJECT_DIR$/SlickGrid_Extended_Demo.html" />
         <option value="$PROJECT_DIR$/default.css" />
         <option value="$PROJECT_DIR$/panorama_download.html" />
-        <option value="$PROJECT_DIR$/index.html" />
         <option value="$PROJECT_DIR$/start.html" />
         <option value="$PROJECT_DIR$/panorama.html" />
         <option value="$PROJECT_DIR$/panorama_sampler.html" />
+        <option value="$PROJECT_DIR$/asciidoc/Oracle_performance_analysis_with_Panorama.txt" />
+        <option value="$PROJECT_DIR$/asciidoc/Oracle_performance_analysis_with_Panorama.adoc" />
+        <option value="$PROJECT_DIR$/panorama_introduction.html" />
+        <option value="$PROJECT_DIR$/Oracle_performance_analysis_with_Panorama.adoc" />
+        <option value="$PROJECT_DIR$/index.html" />
       </list>
     </option>
   </component>
@@ -148,10 +137,10 @@
     <sorting>DEFINITION_ORDER</sorting>
   </component>
   <component name="ProjectFrameBounds">
-    <option name="x" value="50" />
-    <option name="y" value="23" />
-    <option name="width" value="1630" />
-    <option name="height" value="1027" />
+    <option name="x" value="103" />
+    <option name="y" value="135" />
+    <option name="width" value="2395" />
+    <option name="height" value="1167" />
   </component>
   <component name="ProjectLevelVcsManager" settingsEditedManually="true" />
   <component name="ProjectReloadState">
@@ -172,6 +161,7 @@
       <foldersAlwaysOnTop value="true" />
     </navigator>
     <panes>
+      <pane id="Scratches" />
       <pane id="Scope" />
       <pane id="ProjectPane">
         <subPane>
@@ -189,7 +179,6 @@
           <select />
         </subPane>
       </pane>
-      <pane id="Scratches" />
     </panes>
   </component>
   <component name="PropertiesComponent">
@@ -202,12 +191,13 @@
     <property name="settings.editor.selected.configurable" value="org.jetbrains.plugins.ruby.settings.RubyModuleStructureConfigurable" />
   </component>
   <component name="RecentsManager">
-    <key name="MoveFile.RECENT_KEYS">
-      <recent name="$PROJECT_DIR$/images" />
-    </key>
     <key name="CopyFile.RECENT_KEYS">
       <recent name="$PROJECT_DIR$" />
       <recent name="$PROJECT_DIR$/images" />
+    </key>
+    <key name="MoveFile.RECENT_KEYS">
+      <recent name="$PROJECT_DIR$/images" />
+      <recent name="$PROJECT_DIR$" />
     </key>
   </component>
   <component name="RunDashboard">
@@ -370,6 +360,7 @@
   <component name="ShelveChangesManager" show_recycled="false">
     <option name="remove_strategy" value="false" />
   </component>
+  <component name="SpringUtil" SPRING_PRE_LOADER_OPTION="true" />
   <component name="SvnConfiguration" myUseAcceleration="nothing">
     <configuration />
   </component>
@@ -464,14 +455,9 @@
       <workItem from="1517827854941" duration="697000" />
       <workItem from="1518214027411" duration="1182000" />
       <workItem from="1518439343827" duration="1196000" />
-      <workItem from="1519144973108" duration="2270000" />
-    </task>
-    <task id="LOCAL-00120" summary="One pass login">
-      <created>1481136399854</created>
-      <option name="number" value="00120" />
-      <option name="presentableId" value="LOCAL-00120" />
-      <option name="project" value="LOCAL" />
-      <updated>1481136399854</updated>
+      <workItem from="1519144973108" duration="2525000" />
+      <workItem from="1519652601716" duration="1454000" />
+      <workItem from="1519655184917" duration="10312000" />
     </task>
     <task id="LOCAL-00121" summary="JCE">
       <created>1481612035910</created>
@@ -809,11 +795,18 @@
       <option name="project" value="LOCAL" />
       <updated>1519157211813</updated>
     </task>
-    <option name="localTasksCounter" value="169" />
+    <task id="LOCAL-00169" summary="Sampler-Doku">
+      <created>1519158716604</created>
+      <option name="number" value="00169" />
+      <option name="presentableId" value="LOCAL-00169" />
+      <option name="project" value="LOCAL" />
+      <updated>1519158716604</updated>
+    </task>
+    <option name="localTasksCounter" value="170" />
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="167875000" />
+    <option name="totallyTimeSpent" value="179896000" />
   </component>
   <component name="TodoView">
     <todo-panel id="selected-file">
@@ -825,10 +818,10 @@
     </todo-panel>
   </component>
   <component name="ToolWindowManager">
-    <frame x="50" y="23" width="1630" height="1027" extended-state="0" />
+    <frame x="103" y="135" width="2395" height="1167" extended-state="0" />
     <editor active="true" />
     <layout>
-      <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.21347608" sideWeight="0.5" order="0" side_tool="false" content_ui="combo" />
+      <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.21504462" sideWeight="0.5" order="0" side_tool="false" content_ui="combo" />
       <window_info id="TODO" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.32939914" sideWeight="0.5" order="6" side_tool="false" content_ui="tabs" />
       <window_info id="Docker" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="false" weight="0.33" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
       <window_info id="Event Log" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="8" side_tool="true" content_ui="tabs" />
@@ -898,37 +891,14 @@
     <watches-manager />
   </component>
   <component name="editorHistoryManager">
-    <entry file="file://$PROJECT_DIR$/default.css">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="225">
-          <caret line="15" column="22" lean-forward="false" selection-start-line="15" selection-start-column="22" selection-end-line="15" selection-end-column="22" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/panorama.html">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="810">
-          <caret line="54" column="184" lean-forward="false" selection-start-line="54" selection-start-column="64" selection-end-line="54" selection-end-column="184" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/panorama_download.html">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="15">
-          <caret line="1" column="68" lean-forward="false" selection-start-line="1" selection-start-column="68" selection-end-line="1" selection-end-column="68" />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/index.html">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="2610">
           <caret line="174" column="8" lean-forward="false" selection-start-line="174" selection-start-column="8" selection-end-line="174" selection-end-column="8" />
           <folding>
             <element signature="n#style#0;n#span#0;n#td#1;n#tr#0;n#table#0;n#div#0;n#td#0;n#tr#0;n#table#0;n#body#0;n#html#0;n#!!top" expanded="true" />
-            <marker date="1502263358000" expanded="true" signature="4896:4907" ph="..." />
-            <marker date="1502263358000" expanded="true" signature="5048:5061" ph="..." />
+            <marker date="1519665514888" expanded="true" signature="4896:4907" ph="..." />
+            <marker date="1519665514888" expanded="true" signature="5048:5061" ph="..." />
           </folding>
         </state>
       </provider>
@@ -980,8 +950,8 @@
           <caret line="174" column="8" lean-forward="false" selection-start-line="174" selection-start-column="8" selection-end-line="174" selection-end-column="8" />
           <folding>
             <element signature="n#style#0;n#span#0;n#td#1;n#tr#0;n#table#0;n#div#0;n#td#0;n#tr#0;n#table#0;n#body#0;n#html#0;n#!!top" expanded="true" />
-            <marker date="1502263358000" expanded="true" signature="4896:4907" ph="..." />
-            <marker date="1502263358000" expanded="true" signature="5048:5061" ph="..." />
+            <marker date="1519665514888" expanded="true" signature="4896:4907" ph="..." />
+            <marker date="1519665514888" expanded="true" signature="5048:5061" ph="..." />
           </folding>
         </state>
       </provider>
@@ -1033,8 +1003,8 @@
           <caret line="174" column="8" lean-forward="false" selection-start-line="174" selection-start-column="8" selection-end-line="174" selection-end-column="8" />
           <folding>
             <element signature="n#style#0;n#span#0;n#td#1;n#tr#0;n#table#0;n#div#0;n#td#0;n#tr#0;n#table#0;n#body#0;n#html#0;n#!!top" expanded="true" />
-            <marker date="1502263358000" expanded="true" signature="4896:4907" ph="..." />
-            <marker date="1502263358000" expanded="true" signature="5048:5061" ph="..." />
+            <marker date="1519665514888" expanded="true" signature="4896:4907" ph="..." />
+            <marker date="1519665514888" expanded="true" signature="5048:5061" ph="..." />
           </folding>
         </state>
       </provider>
@@ -1086,8 +1056,8 @@
           <caret line="174" column="8" lean-forward="false" selection-start-line="174" selection-start-column="8" selection-end-line="174" selection-end-column="8" />
           <folding>
             <element signature="n#style#0;n#span#0;n#td#1;n#tr#0;n#table#0;n#div#0;n#td#0;n#tr#0;n#table#0;n#body#0;n#html#0;n#!!top" expanded="true" />
-            <marker date="1502263358000" expanded="true" signature="4896:4907" ph="..." />
-            <marker date="1502263358000" expanded="true" signature="5048:5061" ph="..." />
+            <marker date="1519665514888" expanded="true" signature="4896:4907" ph="..." />
+            <marker date="1519665514888" expanded="true" signature="5048:5061" ph="..." />
           </folding>
         </state>
       </provider>
@@ -1139,8 +1109,8 @@
           <caret line="174" column="8" lean-forward="false" selection-start-line="174" selection-start-column="8" selection-end-line="174" selection-end-column="8" />
           <folding>
             <element signature="n#style#0;n#span#0;n#td#1;n#tr#0;n#table#0;n#div#0;n#td#0;n#tr#0;n#table#0;n#body#0;n#html#0;n#!!top" expanded="true" />
-            <marker date="1502263358000" expanded="true" signature="4896:4907" ph="..." />
-            <marker date="1502263358000" expanded="true" signature="5048:5061" ph="..." />
+            <marker date="1519665514888" expanded="true" signature="4896:4907" ph="..." />
+            <marker date="1519665514888" expanded="true" signature="5048:5061" ph="..." />
           </folding>
         </state>
       </provider>
@@ -1200,8 +1170,8 @@
           <caret line="174" column="8" lean-forward="false" selection-start-line="174" selection-start-column="8" selection-end-line="174" selection-end-column="8" />
           <folding>
             <element signature="n#style#0;n#span#0;n#td#1;n#tr#0;n#table#0;n#div#0;n#td#0;n#tr#0;n#table#0;n#body#0;n#html#0;n#!!top" expanded="true" />
-            <marker date="1502263358000" expanded="true" signature="4896:4907" ph="..." />
-            <marker date="1502263358000" expanded="true" signature="5048:5061" ph="..." />
+            <marker date="1519665514888" expanded="true" signature="4896:4907" ph="..." />
+            <marker date="1519665514888" expanded="true" signature="5048:5061" ph="..." />
           </folding>
         </state>
       </provider>
@@ -1245,8 +1215,8 @@
           <caret line="174" column="8" lean-forward="false" selection-start-line="174" selection-start-column="8" selection-end-line="174" selection-end-column="8" />
           <folding>
             <element signature="n#style#0;n#span#0;n#td#1;n#tr#0;n#table#0;n#div#0;n#td#0;n#tr#0;n#table#0;n#body#0;n#html#0;n#!!top" expanded="true" />
-            <marker date="1502263358000" expanded="true" signature="4896:4907" ph="..." />
-            <marker date="1502263358000" expanded="true" signature="5048:5061" ph="..." />
+            <marker date="1519665514888" expanded="true" signature="4896:4907" ph="..." />
+            <marker date="1519665514888" expanded="true" signature="5048:5061" ph="..." />
           </folding>
         </state>
       </provider>
@@ -1298,8 +1268,8 @@
           <caret line="174" column="8" lean-forward="false" selection-start-line="174" selection-start-column="8" selection-end-line="174" selection-end-column="8" />
           <folding>
             <element signature="n#style#0;n#span#0;n#td#1;n#tr#0;n#table#0;n#div#0;n#td#0;n#tr#0;n#table#0;n#body#0;n#html#0;n#!!top" expanded="true" />
-            <marker date="1502263358000" expanded="true" signature="4896:4907" ph="..." />
-            <marker date="1502263358000" expanded="true" signature="5048:5061" ph="..." />
+            <marker date="1519665514888" expanded="true" signature="4896:4907" ph="..." />
+            <marker date="1519665514888" expanded="true" signature="5048:5061" ph="..." />
           </folding>
         </state>
       </provider>
@@ -1340,18 +1310,6 @@
         <state />
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/index.html">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="2505">
-          <caret line="167" column="72" lean-forward="false" selection-start-line="167" selection-start-column="72" selection-end-line="167" selection-end-column="72" />
-          <folding>
-            <element signature="n#style#0;n#span#0;n#td#1;n#tr#0;n#table#0;n#div#0;n#td#0;n#tr#0;n#table#0;n#body#0;n#html#0;n#!!top" expanded="true" />
-            <marker date="1502263358000" expanded="true" signature="4896:4907" ph="..." />
-            <marker date="1502263358000" expanded="true" signature="5048:5061" ph="..." />
-          </folding>
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/panorama_download.html">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="15">
@@ -1369,11 +1327,36 @@
         <state />
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/default.css">
+    <entry file="file://$PROJECT_DIR$/panorama.html">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="225">
-          <caret line="15" column="22" lean-forward="false" selection-start-line="15" selection-start-column="22" selection-end-line="15" selection-end-column="22" />
+        <state relative-caret-position="0">
+          <caret line="12" column="134" lean-forward="false" selection-start-line="12" selection-start-column="107" selection-end-line="12" selection-end-column="134" />
           <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/asciidoc/Oracle_performance_analysis_with_Panorama.html">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="-129">
+          <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/panorama_sampler.html">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="30">
+          <caret line="2" column="0" lean-forward="true" selection-start-line="0" selection-start-column="0" selection-end-line="142" selection-end-column="0" />
+          <folding>
+            <element signature="n#style#0;n#div#0;n#body#0;n#html#0;n#!!top" expanded="true" />
+            <element signature="n#style#0;n#div#0;n#div#0;n#body#0;n#html#0;n#!!top" expanded="true" />
+            <element signature="n#style#0;n#div#1;n#div#0;n#body#0;n#html#0;n#!!top" expanded="true" />
+            <element signature="n#style#0;n#div#0;n#div#0;n#div#1;n#div#0;n#body#0;n#html#0;n#!!top" expanded="true" />
+            <element signature="n#style#0;n#pre#0;n#li#0;n#ul#4;n#div#0;n#div#0;n#div#1;n#div#0;n#body#0;n#html#0;n#!!top" expanded="true" />
+            <element signature="n#style#0;n#pre#0;n#li#2;n#ul#4;n#div#0;n#div#0;n#div#1;n#div#0;n#body#0;n#html#0;n#!!top" expanded="true" />
+            <element signature="n#style#0;n#pre#0;n#li#3;n#ul#4;n#div#0;n#div#0;n#div#1;n#div#0;n#body#0;n#html#0;n#!!top" expanded="true" />
+            <element signature="n#style#0;n#pre#0;n#div#0;n#div#0;n#div#1;n#div#0;n#body#0;n#html#0;n#!!top" expanded="true" />
+            <element signature="n#style#0;n#span#0;n#div#0;n#div#0;n#div#1;n#div#0;n#body#0;n#html#0;n#!!top" expanded="true" />
+          </folding>
         </state>
       </provider>
     </entry>
@@ -1385,28 +1368,47 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/panorama.html">
+    <entry file="file://$PROJECT_DIR$/default.css">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="180">
-          <caret line="12" column="134" lean-forward="false" selection-start-line="12" selection-start-column="107" selection-end-line="12" selection-end-column="134" />
+        <state relative-caret-position="285">
+          <caret line="19" column="1" lean-forward="false" selection-start-line="19" selection-start-column="1" selection-end-line="19" selection-end-column="1" />
           <folding />
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/panorama_sampler.html">
+    <entry file="file://$PROJECT_DIR$/panorama_introduction.html">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="564">
-          <caret line="84" column="59" lean-forward="true" selection-start-line="84" selection-start-column="59" selection-end-line="84" selection-end-column="59" />
+        <state relative-caret-position="270">
+          <caret line="18" column="76" lean-forward="false" selection-start-line="18" selection-start-column="30" selection-end-line="18" selection-end-column="76" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/Oracle_performance_analysis_with_Panorama.adoc">
+      <provider editor-type-id="text-editor">
+        <state relative-caret-position="180">
+          <caret line="12" column="69" lean-forward="true" selection-start-line="12" selection-start-column="69" selection-end-line="12" selection-end-column="69" />
+          <folding />
+        </state>
+      </provider>
+      <provider selected="true" editor-type-id="split-provider[text-editor;AsciiDocPreviewEditor]">
+        <state split_layout="SPLIT">
+          <first_editor relative-caret-position="225">
+            <caret line="15" column="71" lean-forward="false" selection-start-line="15" selection-start-column="71" selection-end-line="15" selection-end-column="71" />
+            <folding />
+          </first_editor>
+          <second_editor />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/index.html">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="767">
+          <caret line="182" column="0" lean-forward="false" selection-start-line="182" selection-start-column="0" selection-end-line="182" selection-end-column="0" />
           <folding>
-            <element signature="n#style#0;n#div#0;n#body#0;n#html#0;n#!!top" expanded="true" />
-            <element signature="n#style#0;n#div#0;n#div#0;n#body#0;n#html#0;n#!!top" expanded="true" />
-            <element signature="n#style#0;n#div#1;n#div#0;n#body#0;n#html#0;n#!!top" expanded="true" />
-            <element signature="n#style#0;n#div#0;n#div#0;n#div#1;n#div#0;n#body#0;n#html#0;n#!!top" expanded="true" />
-            <element signature="n#style#0;n#pre#0;n#li#0;n#ul#4;n#div#0;n#div#0;n#div#1;n#div#0;n#body#0;n#html#0;n#!!top" expanded="true" />
-            <element signature="n#style#0;n#pre#0;n#li#2;n#ul#4;n#div#0;n#div#0;n#div#1;n#div#0;n#body#0;n#html#0;n#!!top" expanded="true" />
-            <element signature="n#style#0;n#pre#0;n#li#3;n#ul#4;n#div#0;n#div#0;n#div#1;n#div#0;n#body#0;n#html#0;n#!!top" expanded="true" />
-            <element signature="n#style#0;n#pre#0;n#div#0;n#div#0;n#div#1;n#div#0;n#body#0;n#html#0;n#!!top" expanded="true" />
-            <element signature="n#style#0;n#span#0;n#div#0;n#div#0;n#div#1;n#div#0;n#body#0;n#html#0;n#!!top" expanded="true" />
+            <element signature="n#style#0;n#span#0;n#td#1;n#tr#0;n#table#0;n#div#0;n#td#0;n#tr#0;n#table#0;n#body#0;n#html#0;n#!!top" expanded="true" />
+            <marker date="1519665514888" expanded="true" signature="4896:4907" ph="..." />
+            <marker date="1519665514888" expanded="true" signature="5048:5061" ph="..." />
           </folding>
         </state>
       </provider>

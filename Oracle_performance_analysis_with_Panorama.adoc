@@ -1,0 +1,139 @@
+= Performance analysis of Oracle-DB with Panorama: Introduction =
+Author: Peter Ramm ( Peter@ramm-oberhermsdorf.de )
+:Author Initials: PR
+:toc:
+:icons:
+:imagesdir: ./images
+:numbered:
+:sectnumlevels: 6
+:website: http://rammpeter.github.io
+
+
+
+.Panorama
+**********************************************************************
+Panorama is my swiss army knife for performance analysis and troubleshooting on Oracle databases.
+To find more about Panorama including download link, blog etc. look at http://rammpeter.github.io/panorama.html
+**********************************************************************
+
+
+== Introduction into usage of Panorama ==
+Detailled preconditions for operation and usage of Panorama are described here: http://rammpeter.github.io/panorama.html
+
+
+=== Conditions for DB-user for usage with Panorama ===
+* Basically, the system privilege SELECT ANY DICTIONARY is required for the DB user used to log in to Panorama
+* To use Oracle's own ready-made AWR and ASH reports as well as the SQL Monitoring plug-in, as of DB Release 11.4, the system privilege OEM_MONITOR is also required
+
+=== Control / usage of Panorama-GUI ===
+==== Globally ====
+* System-wide contextual information by MouseOver hints are often offered
+* Details of displayed values can be triggered by clicking on hyperlinks
+* The detailing / subsequent steps in the workflow will usualy be continued from top to bottom under the previous browser content
+* The triggering of links in earlier steps of the workflow (earlier in the history of the triggered actions) deletes the underlying block in the browser and replaces it with the result of the current action
+
+==== Tables ====
+* The table display is sorted by clicking on the column header
+* Sort by multiple columns can be done by successive sorting of individual columns
+* Other functions can be accessed via the context menu (right mouse button):
+** Column-neutral functions
+*** Show a search-filter row in the table with the possibility of filtering the table by the values of each displayed column
+*** Export of the table contents to Excel via CSV file
+*** Change the line height between one-line and full view of the field contents
+** Column-related functions
+*** Display of the column sum, number of different values
+*** Display of the field content in popup window (facilitates copy & paste of a field content)
+*** Showing and hiding the graphical representation of the column values in diagram (only if table rows have a time reference)
+* Table header can contains icons:
+** Show search filter (left side)
+** pin this table (prevent it from overwriting by parent reload, right side)
+
+image::table.png[]
+
+== Essential analysis ways ==
+
+=== Ad hoc analysis of the operating status of a DB system ===
+
+==== Identification of problematic database sessions via session list ====
+
+==== Determination of problematic SQL statements ====
+
+==== Analysis of concurrency issues (e.g., blocking locks) ====
+
+===== Analysis of blocking DML locks =====
+
+====== Analysis of blocking DML locks via gv$Lock ======
+
+====== Analysis of blocking DML locks via gv$Session ======
+
+==== Use of the DB cache by objects ====
+
+=== Retrospective analysis of the operating status of a DB system in a specific period ===
+
+==== Retrospective analysis of active DB sessions via Active Session History (ASH) ====
+
+==== Retrospective analysis of executed SQLs via Active Workload Repository (AWR) ====
+
+==== Retrospective analysis of concurrency problems ====
+
+===== Retrospective analysis of concurrency problems via Active Session History (ASH) =====
+
+===== Retrospective analysis of concurrency problems by recordings of Panorama-Sampler =====
+
+==== Retroactive evaluation of DB objects with possibly problematic behavior ====
+
+==== Retrospective analysis of DB cache utilization by objects via recording by Panorama-Sampler ====
+
+=== Evaluate the configuration of the DB system ===
+
+==== View the current DB configuration via initialization parameters ====
+
+==== Evaluate the memory configuration of the DB system ====
+
+==== Evaluation of sufficient dimensioning of the redo log files ====
+
+=== Evaluate / scan the DB system for potential performance antipatterns ===
+
+
+== Requirements for application design for optimal performance ==
+
+=== Tag DB sessions via DBMS_Application_Info ===
+
+=== Use of binding variables ===
+
+
+== Influencing the execution plan of critical SQLs ==
+
+=== Ensure up-to-date and realistic object analysis data ===
+
+=== Act directly on the execution plan of SQLs without changing the application code ===
+
+==== Fix execution plans to a concrete plan by SQL Plan Baseline ====
+
+===== Use of better past execution plans from AWR history per SQL plan baseline =====
+
+
+===== Fix an execution plan from the current SGA as an SQL plan baseline =====
+
+==== Specification of optimizer hints via SQL Profiles ====
+
+==== Specification of optimizer hints via SQL Patch ====
+
+==== Dynamically changing the SQL text via SQL Translation ====
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
