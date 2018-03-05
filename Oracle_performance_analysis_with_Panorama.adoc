@@ -16,6 +16,7 @@ Panorama is my swiss army knife for performance analysis and troubleshooting on 
 To find more about Panorama including download link, blog etc. look at http://rammpeter.github.io/panorama.html
 **********************************************************************
 
+TIP: This page is not yet completed and still under construction.
 
 == Introduction into usage of Panorama ==
 Detailled preconditions for operation and usage of Panorama are described here: http://rammpeter.github.io/panorama.html
