@@ -1,11 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ChangeListManager">
-    <list default="true" id="a44be585-1d70-46dc-8663-cadff6f53192" name="Default" comment="Asciidoc-Introduction">
-      <change beforePath="" afterPath="$PROJECT_DIR$/images/2018-Datenbank-180x180-Speaker.jpg" />
+    <list default="true" id="a44be585-1d70-46dc-8663-cadff6f53192" name="Default" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
-      <change beforePath="$PROJECT_DIR$/index.html" afterPath="$PROJECT_DIR$/index.html" />
-      <change beforePath="$PROJECT_DIR$/start.html" afterPath="$PROJECT_DIR$/start.html" />
+      <change beforePath="$PROJECT_DIR$/panorama.html" afterPath="$PROJECT_DIR$/panorama.html" />
     </list>
     <ignored path="rammpeter.github.io.iws" />
     <ignored path=".idea/workspace.xml" />
@@ -25,11 +23,11 @@
   </component>
   <component name="FileEditorManager">
     <leaf SIDE_TABS_SIZE_LIMIT_KEY="300">
-      <file leaf-file-name="panorama.html" pinned="false" current-in-tab="false">
+      <file leaf-file-name="panorama.html" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/panorama.html">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="180">
-              <caret line="12" column="134" lean-forward="false" selection-start-line="12" selection-start-column="107" selection-end-line="12" selection-end-column="134" />
+            <state relative-caret-position="871">
+              <caret line="173" column="56" lean-forward="false" selection-start-line="173" selection-start-column="56" selection-end-line="173" selection-end-column="56" />
               <folding />
             </state>
           </provider>
@@ -53,7 +51,7 @@
         <entry file="file://$PROJECT_DIR$/start.html">
           <provider selected="true" editor-type-id="text-editor">
             <state relative-caret-position="540">
-              <caret line="36" column="7" lean-forward="true" selection-start-line="36" selection-start-column="7" selection-end-line="36" selection-end-column="7" />
+              <caret line="36" column="7" lean-forward="false" selection-start-line="36" selection-start-column="7" selection-end-line="36" selection-end-column="7" />
               <folding />
             </state>
           </provider>
@@ -72,7 +70,7 @@
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="index.html" pinned="false" current-in-tab="true">
+      <file leaf-file-name="index.html" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/index.html">
           <provider selected="true" editor-type-id="text-editor">
             <state relative-caret-position="90">
@@ -81,6 +79,18 @@
                 <element signature="n#style#0;n#span#0;n#td#1;n#tr#0;n#table#0;n#div#0;n#td#0;n#tr#0;n#table#0;n#body#0;n#html#0;n#!!top" expanded="true" />
                 <marker date="1520259208087" expanded="true" signature="4943:4954" ph="..." />
                 <marker date="1520259208087" expanded="true" signature="5095:5108" ph="..." />
+              </folding>
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="panorama_content.html" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/panorama_content.html">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="0">
+              <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
+              <folding>
+                <element signature="n#style#0;n#body#0;n#html#0;n#!!top" expanded="true" />
               </folding>
             </state>
           </provider>
@@ -118,7 +128,6 @@
         <option value="$PROJECT_DIR$/SlickGrid_Extended_Demo.html" />
         <option value="$PROJECT_DIR$/default.css" />
         <option value="$PROJECT_DIR$/panorama_download.html" />
-        <option value="$PROJECT_DIR$/panorama.html" />
         <option value="$PROJECT_DIR$/panorama_sampler.html" />
         <option value="$PROJECT_DIR$/asciidoc/Oracle_performance_analysis_with_Panorama.txt" />
         <option value="$PROJECT_DIR$/asciidoc/Oracle_performance_analysis_with_Panorama.adoc" />
@@ -126,6 +135,7 @@
         <option value="$PROJECT_DIR$/Oracle_performance_analysis_with_Panorama.adoc" />
         <option value="$PROJECT_DIR$/start.html" />
         <option value="$PROJECT_DIR$/index.html" />
+        <option value="$PROJECT_DIR$/panorama.html" />
       </list>
     </option>
   </component>
@@ -136,10 +146,10 @@
     <sorting>DEFINITION_ORDER</sorting>
   </component>
   <component name="ProjectFrameBounds">
-    <option name="x" value="40" />
-    <option name="y" value="413" />
-    <option name="width" value="1784" />
-    <option name="height" value="1027" />
+    <option name="x" value="93" />
+    <option name="y" value="156" />
+    <option name="width" value="2138" />
+    <option name="height" value="1250" />
   </component>
   <component name="ProjectLevelVcsManager" settingsEditedManually="true" />
   <component name="ProjectReloadState">
@@ -160,6 +170,7 @@
       <foldersAlwaysOnTop value="true" />
     </navigator>
     <panes>
+      <pane id="Scope" />
       <pane id="ProjectPane">
         <subPane>
           <expand>
@@ -182,7 +193,6 @@
           <select />
         </subPane>
       </pane>
-      <pane id="Scope" />
       <pane id="Scratches" />
     </panes>
   </component>
@@ -467,14 +477,8 @@
       <workItem from="1519749270328" duration="64000" />
       <workItem from="1519990810741" duration="223000" />
       <workItem from="1519991054204" duration="38000" />
-      <workItem from="1519991102653" duration="3606000" />
-    </task>
-    <task id="LOCAL-00123" summary="CLASSPATH-Hint">
-      <created>1483520896975</created>
-      <option name="number" value="00123" />
-      <option name="presentableId" value="LOCAL-00123" />
-      <option name="project" value="LOCAL" />
-      <updated>1483520896975</updated>
+      <workItem from="1519991102653" duration="5570000" />
+      <workItem from="1520416012924" duration="1963000" />
     </task>
     <task id="LOCAL-00124" summary="CLASSPATH-Hint">
       <created>1483523163439</created>
@@ -812,11 +816,18 @@
       <option name="project" value="LOCAL" />
       <updated>1520258430113</updated>
     </task>
-    <option name="localTasksCounter" value="172" />
+    <task id="LOCAL-00172" summary="expires, speaker">
+      <created>1520259226253</created>
+      <option name="number" value="00172" />
+      <option name="presentableId" value="LOCAL-00172" />
+      <option name="project" value="LOCAL" />
+      <updated>1520259226253</updated>
+    </task>
+    <option name="localTasksCounter" value="173" />
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="187045000" />
+    <option name="totallyTimeSpent" value="190972000" />
   </component>
   <component name="TodoView">
     <todo-panel id="selected-file">
@@ -828,10 +839,10 @@
     </todo-panel>
   </component>
   <component name="ToolWindowManager">
-    <frame x="40" y="413" width="1784" height="1027" extended-state="0" />
+    <frame x="93" y="156" width="2138" height="1250" extended-state="0" />
     <editor active="true" />
     <layout>
-      <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.20723307" sideWeight="0.5" order="0" side_tool="false" content_ui="combo" />
+      <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.17414123" sideWeight="0.5" order="0" side_tool="false" content_ui="combo" />
       <window_info id="TODO" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.32939914" sideWeight="0.5" order="6" side_tool="false" content_ui="tabs" />
       <window_info id="Docker" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="false" weight="0.33" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
       <window_info id="Event Log" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="8" side_tool="true" content_ui="tabs" />
@@ -869,7 +880,6 @@
     <option name="myLimit" value="2678400000" />
   </component>
   <component name="VcsManagerConfiguration">
-    <MESSAGE value="One pass login" />
     <MESSAGE value="JCE" />
     <MESSAGE value="CLASSPATH-Hint" />
     <MESSAGE value="Docker image" />
@@ -894,25 +904,14 @@
     <MESSAGE value="Sampler" />
     <MESSAGE value="Sampler-Doku" />
     <MESSAGE value="Asciidoc-Introduction" />
-    <option name="LAST_COMMIT_MESSAGE" value="Asciidoc-Introduction" />
+    <MESSAGE value="expires, speaker" />
+    <option name="LAST_COMMIT_MESSAGE" value="expires, speaker" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager />
     <watches-manager />
   </component>
   <component name="editorHistoryManager">
-    <entry file="file://$PROJECT_DIR$/index.html">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="2610">
-          <caret line="174" column="8" lean-forward="false" selection-start-line="174" selection-start-column="8" selection-end-line="174" selection-end-column="8" />
-          <folding>
-            <element signature="n#style#0;n#span#0;n#td#1;n#tr#0;n#table#0;n#div#0;n#td#0;n#tr#0;n#table#0;n#body#0;n#html#0;n#!!top" expanded="true" />
-            <marker date="1520259208087" expanded="true" signature="4943:4954" ph="..." />
-            <marker date="1520259208087" expanded="true" signature="5095:5108" ph="..." />
-          </folding>
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/default.css">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="225">
@@ -1241,14 +1240,6 @@
         <state />
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/panorama.html">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="180">
-          <caret line="12" column="134" lean-forward="false" selection-start-line="12" selection-start-column="107" selection-end-line="12" selection-end-column="134" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/asciidoc/Oracle_performance_analysis_with_Panorama.html" />
     <entry file="file://$PROJECT_DIR$/panorama_sampler.html">
       <provider selected="true" editor-type-id="text-editor">
@@ -1266,6 +1257,12 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/panorama_introduction.html" />
     <entry file="file://$PROJECT_DIR$/Oracle_performance_analysis_with_Panorama.adoc">
+      <provider editor-type-id="text-editor">
+        <state relative-caret-position="180">
+          <caret line="12" column="69" lean-forward="true" selection-start-line="12" selection-start-column="69" selection-end-line="12" selection-end-column="69" />
+          <folding />
+        </state>
+      </provider>
       <provider selected="true" editor-type-id="split-provider[text-editor;AsciiDocPreviewEditor]">
         <state split_layout="SPLIT">
           <first_editor relative-caret-position="270">
@@ -1275,17 +1272,11 @@
           <second_editor />
         </state>
       </provider>
-      <provider editor-type-id="text-editor">
-        <state relative-caret-position="180">
-          <caret line="12" column="69" lean-forward="true" selection-start-line="12" selection-start-column="69" selection-end-line="12" selection-end-column="69" />
-          <folding />
-        </state>
-      </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/start.html">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="540">
-          <caret line="36" column="7" lean-forward="true" selection-start-line="36" selection-start-column="7" selection-end-line="36" selection-end-column="7" />
+          <caret line="36" column="7" lean-forward="false" selection-start-line="36" selection-start-column="7" selection-end-line="36" selection-end-column="7" />
           <folding />
         </state>
       </provider>
@@ -1299,6 +1290,24 @@
             <marker date="1520259208087" expanded="true" signature="4943:4954" ph="..." />
             <marker date="1520259208087" expanded="true" signature="5095:5108" ph="..." />
           </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/panorama_content.html">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="0">
+          <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
+          <folding>
+            <element signature="n#style#0;n#body#0;n#html#0;n#!!top" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/panorama.html">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="871">
+          <caret line="173" column="56" lean-forward="false" selection-start-line="173" selection-start-column="56" selection-end-line="173" selection-end-column="56" />
+          <folding />
         </state>
       </provider>
     </entry>
