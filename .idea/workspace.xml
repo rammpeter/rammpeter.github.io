@@ -3,7 +3,7 @@
   <component name="ChangeListManager">
     <list default="true" id="a44be585-1d70-46dc-8663-cadff6f53192" name="Default" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
-      <change beforePath="$PROJECT_DIR$/panorama.html" afterPath="$PROJECT_DIR$/panorama.html" />
+      <change beforePath="$PROJECT_DIR$/panorama_sampler.html" afterPath="$PROJECT_DIR$/panorama_sampler.html" />
     </list>
     <ignored path="rammpeter.github.io.iws" />
     <ignored path=".idea/workspace.xml" />
@@ -23,11 +23,32 @@
   </component>
   <component name="FileEditorManager">
     <leaf SIDE_TABS_SIZE_LIMIT_KEY="300">
-      <file leaf-file-name="panorama.html" pinned="false" current-in-tab="true">
+      <file leaf-file-name="panorama.html" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/panorama.html">
           <provider selected="true" editor-type-id="text-editor">
             <state relative-caret-position="871">
               <caret line="173" column="56" lean-forward="false" selection-start-line="173" selection-start-column="56" selection-end-line="173" selection-end-column="56" />
+              <folding>
+                <element signature="e#5826#5832#0" expanded="true" />
+                <element signature="e#5838#5844#0" expanded="true" />
+                <element signature="e#6003#6009#0" expanded="true" />
+                <element signature="e#6015#6021#0" expanded="true" />
+                <element signature="e#15707#15713#0" expanded="true" />
+                <element signature="e#15719#15725#0" expanded="true" />
+                <element signature="e#15953#15959#0" expanded="true" />
+                <element signature="e#15965#15971#0" expanded="true" />
+                <element signature="e#17694#17700#0" expanded="true" />
+                <element signature="e#17706#17712#0" expanded="true" />
+              </folding>
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="panorama_sampler.html" pinned="false" current-in-tab="true">
+        <entry file="file://$PROJECT_DIR$/panorama_sampler.html">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="226">
+              <caret line="97" column="48" lean-forward="false" selection-start-line="97" selection-start-column="48" selection-end-line="97" selection-end-column="48" />
               <folding />
             </state>
           </provider>
@@ -128,7 +149,6 @@
         <option value="$PROJECT_DIR$/SlickGrid_Extended_Demo.html" />
         <option value="$PROJECT_DIR$/default.css" />
         <option value="$PROJECT_DIR$/panorama_download.html" />
-        <option value="$PROJECT_DIR$/panorama_sampler.html" />
         <option value="$PROJECT_DIR$/asciidoc/Oracle_performance_analysis_with_Panorama.txt" />
         <option value="$PROJECT_DIR$/asciidoc/Oracle_performance_analysis_with_Panorama.adoc" />
         <option value="$PROJECT_DIR$/panorama_introduction.html" />
@@ -136,6 +156,7 @@
         <option value="$PROJECT_DIR$/start.html" />
         <option value="$PROJECT_DIR$/index.html" />
         <option value="$PROJECT_DIR$/panorama.html" />
+        <option value="$PROJECT_DIR$/panorama_sampler.html" />
       </list>
     </option>
   </component>
@@ -146,10 +167,10 @@
     <sorting>DEFINITION_ORDER</sorting>
   </component>
   <component name="ProjectFrameBounds">
-    <option name="x" value="93" />
-    <option name="y" value="156" />
-    <option name="width" value="2138" />
-    <option name="height" value="1250" />
+    <option name="x" value="54" />
+    <option name="y" value="23" />
+    <option name="width" value="1626" />
+    <option name="height" value="1027" />
   </component>
   <component name="ProjectLevelVcsManager" settingsEditedManually="true" />
   <component name="ProjectReloadState">
@@ -478,14 +499,7 @@
       <workItem from="1519990810741" duration="223000" />
       <workItem from="1519991054204" duration="38000" />
       <workItem from="1519991102653" duration="5570000" />
-      <workItem from="1520416012924" duration="1963000" />
-    </task>
-    <task id="LOCAL-00124" summary="CLASSPATH-Hint">
-      <created>1483523163439</created>
-      <option name="number" value="00124" />
-      <option name="presentableId" value="LOCAL-00124" />
-      <option name="project" value="LOCAL" />
-      <updated>1483523163439</updated>
+      <workItem from="1520416012924" duration="2707000" />
     </task>
     <task id="LOCAL-00125" summary="CLASSPATH-Hint">
       <created>1483523200784</created>
@@ -823,11 +837,18 @@
       <option name="project" value="LOCAL" />
       <updated>1520259226253</updated>
     </task>
-    <option name="localTasksCounter" value="173" />
+    <task id="LOCAL-00173" summary="connection timeout">
+      <created>1520499345028</created>
+      <option name="number" value="00173" />
+      <option name="presentableId" value="LOCAL-00173" />
+      <option name="project" value="LOCAL" />
+      <updated>1520499345028</updated>
+    </task>
+    <option name="localTasksCounter" value="174" />
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="190972000" />
+    <option name="totallyTimeSpent" value="191716000" />
   </component>
   <component name="TodoView">
     <todo-panel id="selected-file">
@@ -839,10 +860,10 @@
     </todo-panel>
   </component>
   <component name="ToolWindowManager">
-    <frame x="93" y="156" width="2138" height="1250" extended-state="0" />
+    <frame x="54" y="23" width="1626" height="1027" extended-state="0" />
     <editor active="true" />
     <layout>
-      <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.17414123" sideWeight="0.5" order="0" side_tool="false" content_ui="combo" />
+      <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.23042929" sideWeight="0.5" order="0" side_tool="false" content_ui="combo" />
       <window_info id="TODO" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.32939914" sideWeight="0.5" order="6" side_tool="false" content_ui="tabs" />
       <window_info id="Docker" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="false" weight="0.33" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
       <window_info id="Event Log" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="8" side_tool="true" content_ui="tabs" />
@@ -880,7 +901,6 @@
     <option name="myLimit" value="2678400000" />
   </component>
   <component name="VcsManagerConfiguration">
-    <MESSAGE value="JCE" />
     <MESSAGE value="CLASSPATH-Hint" />
     <MESSAGE value="Docker image" />
     <MESSAGE value="New dropbox download location" />
@@ -905,7 +925,8 @@
     <MESSAGE value="Sampler-Doku" />
     <MESSAGE value="Asciidoc-Introduction" />
     <MESSAGE value="expires, speaker" />
-    <option name="LAST_COMMIT_MESSAGE" value="expires, speaker" />
+    <MESSAGE value="connection timeout" />
+    <option name="LAST_COMMIT_MESSAGE" value="connection timeout" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager />
@@ -930,7 +951,18 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="810">
           <caret line="54" column="184" lean-forward="false" selection-start-line="54" selection-start-column="64" selection-end-line="54" selection-end-column="184" />
-          <folding />
+          <folding>
+            <element signature="e#5826#5832#0" expanded="true" />
+            <element signature="e#5838#5844#0" expanded="true" />
+            <element signature="e#6003#6009#0" expanded="true" />
+            <element signature="e#6015#6021#0" expanded="true" />
+            <element signature="e#15707#15713#0" expanded="true" />
+            <element signature="e#15719#15725#0" expanded="true" />
+            <element signature="e#15953#15959#0" expanded="true" />
+            <element signature="e#15965#15971#0" expanded="true" />
+            <element signature="e#17694#17700#0" expanded="true" />
+            <element signature="e#17706#17712#0" expanded="true" />
+          </folding>
         </state>
       </provider>
     </entry>
@@ -971,7 +1003,18 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="810">
           <caret line="54" column="184" lean-forward="false" selection-start-line="54" selection-start-column="64" selection-end-line="54" selection-end-column="184" />
-          <folding />
+          <folding>
+            <element signature="e#5826#5832#0" expanded="true" />
+            <element signature="e#5838#5844#0" expanded="true" />
+            <element signature="e#6003#6009#0" expanded="true" />
+            <element signature="e#6015#6021#0" expanded="true" />
+            <element signature="e#15707#15713#0" expanded="true" />
+            <element signature="e#15719#15725#0" expanded="true" />
+            <element signature="e#15953#15959#0" expanded="true" />
+            <element signature="e#15965#15971#0" expanded="true" />
+            <element signature="e#17694#17700#0" expanded="true" />
+            <element signature="e#17706#17712#0" expanded="true" />
+          </folding>
         </state>
       </provider>
     </entry>
@@ -1012,7 +1055,18 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="1740">
           <caret line="116" column="0" lean-forward="false" selection-start-line="116" selection-start-column="0" selection-end-line="116" selection-end-column="0" />
-          <folding />
+          <folding>
+            <element signature="e#5826#5832#0" expanded="true" />
+            <element signature="e#5838#5844#0" expanded="true" />
+            <element signature="e#6003#6009#0" expanded="true" />
+            <element signature="e#6015#6021#0" expanded="true" />
+            <element signature="e#15707#15713#0" expanded="true" />
+            <element signature="e#15719#15725#0" expanded="true" />
+            <element signature="e#15953#15959#0" expanded="true" />
+            <element signature="e#15965#15971#0" expanded="true" />
+            <element signature="e#17694#17700#0" expanded="true" />
+            <element signature="e#17706#17712#0" expanded="true" />
+          </folding>
         </state>
       </provider>
     </entry>
@@ -1053,7 +1107,18 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="1740">
           <caret line="116" column="0" lean-forward="false" selection-start-line="116" selection-start-column="0" selection-end-line="116" selection-end-column="0" />
-          <folding />
+          <folding>
+            <element signature="e#5826#5832#0" expanded="true" />
+            <element signature="e#5838#5844#0" expanded="true" />
+            <element signature="e#6003#6009#0" expanded="true" />
+            <element signature="e#6015#6021#0" expanded="true" />
+            <element signature="e#15707#15713#0" expanded="true" />
+            <element signature="e#15719#15725#0" expanded="true" />
+            <element signature="e#15953#15959#0" expanded="true" />
+            <element signature="e#15965#15971#0" expanded="true" />
+            <element signature="e#17694#17700#0" expanded="true" />
+            <element signature="e#17706#17712#0" expanded="true" />
+          </folding>
         </state>
       </provider>
     </entry>
@@ -1101,7 +1166,18 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="1740">
           <caret line="116" column="0" lean-forward="false" selection-start-line="116" selection-start-column="0" selection-end-line="116" selection-end-column="0" />
-          <folding />
+          <folding>
+            <element signature="e#5826#5832#0" expanded="true" />
+            <element signature="e#5838#5844#0" expanded="true" />
+            <element signature="e#6003#6009#0" expanded="true" />
+            <element signature="e#6015#6021#0" expanded="true" />
+            <element signature="e#15707#15713#0" expanded="true" />
+            <element signature="e#15719#15725#0" expanded="true" />
+            <element signature="e#15953#15959#0" expanded="true" />
+            <element signature="e#15965#15971#0" expanded="true" />
+            <element signature="e#17694#17700#0" expanded="true" />
+            <element signature="e#17706#17712#0" expanded="true" />
+          </folding>
         </state>
       </provider>
     </entry>
@@ -1142,7 +1218,18 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="2100">
           <caret line="140" column="47" lean-forward="false" selection-start-line="140" selection-start-column="47" selection-end-line="140" selection-end-column="47" />
-          <folding />
+          <folding>
+            <element signature="e#5826#5832#0" expanded="true" />
+            <element signature="e#5838#5844#0" expanded="true" />
+            <element signature="e#6003#6009#0" expanded="true" />
+            <element signature="e#6015#6021#0" expanded="true" />
+            <element signature="e#15707#15713#0" expanded="true" />
+            <element signature="e#15719#15725#0" expanded="true" />
+            <element signature="e#15953#15959#0" expanded="true" />
+            <element signature="e#15965#15971#0" expanded="true" />
+            <element signature="e#17694#17700#0" expanded="true" />
+            <element signature="e#17706#17712#0" expanded="true" />
+          </folding>
         </state>
       </provider>
     </entry>
@@ -1176,7 +1263,18 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="2100">
           <caret line="140" column="47" lean-forward="false" selection-start-line="140" selection-start-column="47" selection-end-line="140" selection-end-column="47" />
-          <folding />
+          <folding>
+            <element signature="e#5826#5832#0" expanded="true" />
+            <element signature="e#5838#5844#0" expanded="true" />
+            <element signature="e#6003#6009#0" expanded="true" />
+            <element signature="e#6015#6021#0" expanded="true" />
+            <element signature="e#15707#15713#0" expanded="true" />
+            <element signature="e#15719#15725#0" expanded="true" />
+            <element signature="e#15953#15959#0" expanded="true" />
+            <element signature="e#15965#15971#0" expanded="true" />
+            <element signature="e#17694#17700#0" expanded="true" />
+            <element signature="e#17706#17712#0" expanded="true" />
+          </folding>
         </state>
       </provider>
     </entry>
@@ -1241,13 +1339,6 @@
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/asciidoc/Oracle_performance_analysis_with_Panorama.html" />
-    <entry file="file://$PROJECT_DIR$/panorama_sampler.html">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="30">
-          <caret line="2" column="0" lean-forward="true" selection-start-line="0" selection-start-column="0" selection-end-line="142" selection-end-column="0" />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/default.css">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="285">
@@ -1307,6 +1398,25 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="871">
           <caret line="173" column="56" lean-forward="false" selection-start-line="173" selection-start-column="56" selection-end-line="173" selection-end-column="56" />
+          <folding>
+            <element signature="e#5826#5832#0" expanded="true" />
+            <element signature="e#5838#5844#0" expanded="true" />
+            <element signature="e#6003#6009#0" expanded="true" />
+            <element signature="e#6015#6021#0" expanded="true" />
+            <element signature="e#15707#15713#0" expanded="true" />
+            <element signature="e#15719#15725#0" expanded="true" />
+            <element signature="e#15953#15959#0" expanded="true" />
+            <element signature="e#15965#15971#0" expanded="true" />
+            <element signature="e#17694#17700#0" expanded="true" />
+            <element signature="e#17706#17712#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/panorama_sampler.html">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="226">
+          <caret line="97" column="48" lean-forward="false" selection-start-line="97" selection-start-column="48" selection-end-line="97" selection-end-column="48" />
           <folding />
         </state>
       </provider>
