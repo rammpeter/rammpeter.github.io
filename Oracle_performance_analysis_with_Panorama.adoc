@@ -75,6 +75,30 @@ image::table.png[]
 
 ==== Retrospective analysis of executed SQLs via Active Workload Repository (AWR) ====
 
+==== Evaluation of recorded SQL monitoring reports ====
+SQL-Monitoring records individual executions of an SQL statement in detail if they fulfill one of the following prerequisites:
+
+- Execution with parallel query
+- CPU- or I/O-activity for more than 5 seconds
+- Optimizer-hint `MONITOR` in SQL statement
+
+Starting with Oracle 12.1, the short-living detailed monitoring reports from gv$SQL_Monitoring are also available within the AWR retention period via DBA_Hist_Reports and DBA_Hist_Reports_Details.
+
+The precondition for using the monitoring reports is licensing of the tuning pack for the Enterprise Edition.
+
+The SQL monitor reports existing for the respective object (SQL / DB session) and period can be called in Panorama via the button "SQL Monitor" from:
+
+- SQL detail view from SGA
+- historic SQL detail view
+- current session detail view
+
+image::sql-monitor-list.png[]
+
+Clicking on the report ID opens the Database Activity Report known from the Enterprise Manager for this SQL execution in a new browser tab.
+If an internet connection is possible for the browser, it will be displayed as an active Flash page, otherwise as a static HTML page.
+
+image::sql-monitor-report.png[]
+
 ==== Retrospective analysis of concurrency problems ====
 
 ===== Retrospective analysis of concurrency problems via Active Session History (ASH) =====
@@ -99,8 +123,24 @@ image::table.png[]
 == Requirements for application design for optimal performance ==
 
 === Tag DB sessions via DBMS_Application_Info ===
+The DB allows the tagging of DB sessions with context information about modules and action (64 characters each).
+This information on modules and action are recorded in various histories (including in ASH and SQL statistics) and allow the subsequent assignment of the various tracks in the DB to the subject context.
+
+The information is set by calling:
+
+`DBMS_Application_Info.Set_Module(module, action);`
+
+It is advisable to anchor the placement of modules and action deep in the technical infrastructure of the application in order to obtain a complete tagging, e.g. to ensure at the beginning of transactions or request processing.
+
+In particular, when using connection pools, with only sporadic setting of modules and action, there is the risk that subsequent activities on a reused session of the pool with respect to modules / action remain assigned to a random predecessor activity of this session.
 
 === Use of binding variables ===
+
+=== Efficient use of PL / SQL in SQL statements ===
+
+==== Pragma UDF for preventing context switches ====
+
+==== Direct addressing of package constants instead of package functions ====
 
 
 == Influencing the execution plan of critical SQLs ==
