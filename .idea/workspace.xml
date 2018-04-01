@@ -3,6 +3,7 @@
   <component name="ChangeListManager">
     <list default="true" id="a44be585-1d70-46dc-8663-cadff6f53192" name="Default" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
+      <change beforePath="$PROJECT_DIR$/Oracle_performance_analysis_with_Panorama.adoc" afterPath="$PROJECT_DIR$/Oracle_performance_analysis_with_Panorama.adoc" />
       <change beforePath="$PROJECT_DIR$/panorama_sampler.html" afterPath="$PROJECT_DIR$/panorama_sampler.html" />
     </list>
     <ignored path="rammpeter.github.io.iws" />
@@ -26,20 +27,9 @@
       <file leaf-file-name="panorama.html" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/panorama.html">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="871">
+            <state relative-caret-position="2595">
               <caret line="173" column="56" lean-forward="false" selection-start-line="173" selection-start-column="56" selection-end-line="173" selection-end-column="56" />
-              <folding>
-                <element signature="e#5826#5832#0" expanded="true" />
-                <element signature="e#5838#5844#0" expanded="true" />
-                <element signature="e#6003#6009#0" expanded="true" />
-                <element signature="e#6015#6021#0" expanded="true" />
-                <element signature="e#15707#15713#0" expanded="true" />
-                <element signature="e#15719#15725#0" expanded="true" />
-                <element signature="e#15953#15959#0" expanded="true" />
-                <element signature="e#15965#15971#0" expanded="true" />
-                <element signature="e#17694#17700#0" expanded="true" />
-                <element signature="e#17706#17712#0" expanded="true" />
-              </folding>
+              <folding />
             </state>
           </provider>
         </entry>
@@ -47,8 +37,8 @@
       <file leaf-file-name="panorama_sampler.html" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/panorama_sampler.html">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="226">
-              <caret line="97" column="48" lean-forward="false" selection-start-line="97" selection-start-column="48" selection-end-line="97" selection-end-column="48" />
+            <state relative-caret-position="228">
+              <caret line="89" column="100" lean-forward="true" selection-start-line="89" selection-start-column="100" selection-end-line="89" selection-end-column="100" />
               <folding />
             </state>
           </provider>
@@ -82,8 +72,8 @@
         <entry file="file://$PROJECT_DIR$/Oracle_performance_analysis_with_Panorama.adoc">
           <provider selected="true" editor-type-id="split-provider[text-editor;AsciiDocPreviewEditor]">
             <state split_layout="SPLIT">
-              <first_editor relative-caret-position="270">
-                <caret line="18" column="1" lean-forward="false" selection-start-line="18" selection-start-column="1" selection-end-line="18" selection-end-column="1" />
+              <first_editor relative-caret-position="655">
+                <caret line="103" column="68" lean-forward="false" selection-start-line="87" selection-start-column="0" selection-end-line="103" selection-end-column="68" />
                 <folding />
               </first_editor>
               <second_editor />
@@ -152,10 +142,10 @@
         <option value="$PROJECT_DIR$/asciidoc/Oracle_performance_analysis_with_Panorama.txt" />
         <option value="$PROJECT_DIR$/asciidoc/Oracle_performance_analysis_with_Panorama.adoc" />
         <option value="$PROJECT_DIR$/panorama_introduction.html" />
-        <option value="$PROJECT_DIR$/Oracle_performance_analysis_with_Panorama.adoc" />
         <option value="$PROJECT_DIR$/start.html" />
         <option value="$PROJECT_DIR$/index.html" />
         <option value="$PROJECT_DIR$/panorama.html" />
+        <option value="$PROJECT_DIR$/Oracle_performance_analysis_with_Panorama.adoc" />
         <option value="$PROJECT_DIR$/panorama_sampler.html" />
       </list>
     </option>
@@ -166,10 +156,10 @@
     <detection-done>true</detection-done>
     <sorting>DEFINITION_ORDER</sorting>
   </component>
-  <component name="ProjectFrameBounds">
-    <option name="x" value="54" />
+  <component name="ProjectFrameBounds" extendedState="6">
+    <option name="x" value="39" />
     <option name="y" value="23" />
-    <option name="width" value="1626" />
+    <option name="width" value="1639" />
     <option name="height" value="1027" />
   </component>
   <component name="ProjectLevelVcsManager" settingsEditedManually="true" />
@@ -191,6 +181,7 @@
       <foldersAlwaysOnTop value="true" />
     </navigator>
     <panes>
+      <pane id="Scratches" />
       <pane id="Scope" />
       <pane id="ProjectPane">
         <subPane>
@@ -204,17 +195,10 @@
               <item name="rammpeter.github.io" type="462c0819:PsiDirectoryNode" />
               <item name="images" type="462c0819:PsiDirectoryNode" />
             </path>
-            <path>
-              <item name="rammpeter.github.io" type="b2602c69:ProjectViewProjectNode" />
-              <item name="rammpeter.github.io" type="462c0819:PsiDirectoryNode" />
-              <item name="images" type="462c0819:PsiDirectoryNode" />
-              <item name="icons" type="462c0819:PsiDirectoryNode" />
-            </path>
           </expand>
           <select />
         </subPane>
       </pane>
-      <pane id="Scratches" />
     </panes>
   </component>
   <component name="PropertiesComponent">
@@ -227,13 +211,13 @@
     <property name="settings.editor.selected.configurable" value="org.jetbrains.plugins.ruby.settings.RubyModuleStructureConfigurable" />
   </component>
   <component name="RecentsManager">
-    <key name="CopyFile.RECENT_KEYS">
-      <recent name="$PROJECT_DIR$" />
-      <recent name="$PROJECT_DIR$/images" />
-    </key>
     <key name="MoveFile.RECENT_KEYS">
       <recent name="$PROJECT_DIR$/images" />
       <recent name="$PROJECT_DIR$" />
+    </key>
+    <key name="CopyFile.RECENT_KEYS">
+      <recent name="$PROJECT_DIR$" />
+      <recent name="$PROJECT_DIR$/images" />
     </key>
   </component>
   <component name="RunDashboard">
@@ -499,14 +483,11 @@
       <workItem from="1519990810741" duration="223000" />
       <workItem from="1519991054204" duration="38000" />
       <workItem from="1519991102653" duration="5570000" />
-      <workItem from="1520416012924" duration="2707000" />
-    </task>
-    <task id="LOCAL-00125" summary="CLASSPATH-Hint">
-      <created>1483523200784</created>
-      <option name="number" value="00125" />
-      <option name="presentableId" value="LOCAL-00125" />
-      <option name="project" value="LOCAL" />
-      <updated>1483523200784</updated>
+      <workItem from="1520416012924" duration="5062000" />
+      <workItem from="1520942601347" duration="614000" />
+      <workItem from="1521031061915" duration="20315000" />
+      <workItem from="1522139376775" duration="599000" />
+      <workItem from="1522141026854" duration="672000" />
     </task>
     <task id="LOCAL-00126" summary="Docker image">
       <created>1485610661466</created>
@@ -844,11 +825,18 @@
       <option name="project" value="LOCAL" />
       <updated>1520499345028</updated>
     </task>
-    <option name="localTasksCounter" value="174" />
+    <task id="LOCAL-00174" summary="DBA_Hist_IOStat_Filetype">
+      <created>1520776790627</created>
+      <option name="number" value="00174" />
+      <option name="presentableId" value="LOCAL-00174" />
+      <option name="project" value="LOCAL" />
+      <updated>1520776790627</updated>
+    </task>
+    <option name="localTasksCounter" value="175" />
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="191716000" />
+    <option name="totallyTimeSpent" value="216271000" />
   </component>
   <component name="TodoView">
     <todo-panel id="selected-file">
@@ -860,20 +848,20 @@
     </todo-panel>
   </component>
   <component name="ToolWindowManager">
-    <frame x="54" y="23" width="1626" height="1027" extended-state="0" />
+    <frame x="39" y="23" width="1639" height="1027" extended-state="6" />
     <editor active="true" />
     <layout>
-      <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.23042929" sideWeight="0.5" order="0" side_tool="false" content_ui="combo" />
+      <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.20914215" sideWeight="0.5" order="0" side_tool="false" content_ui="combo" />
       <window_info id="TODO" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.32939914" sideWeight="0.5" order="6" side_tool="false" content_ui="tabs" />
       <window_info id="Docker" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="false" weight="0.33" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
       <window_info id="Event Log" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="8" side_tool="true" content_ui="tabs" />
       <window_info id="Database" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
-      <window_info id="Run" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
       <window_info id="Version Control" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.3288889" sideWeight="0.5" order="9" side_tool="false" content_ui="tabs" />
+      <window_info id="Run" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
       <window_info id="Structure" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.24905184" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
       <window_info id="Terminal" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="11" side_tool="false" content_ui="tabs" />
-      <window_info id="Debug" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.4" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
       <window_info id="Favorites" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="2" side_tool="true" content_ui="tabs" />
+      <window_info id="Debug" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.4" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
       <window_info id="Changes" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
       <window_info id="Cvs" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.25" sideWeight="0.5" order="4" side_tool="false" content_ui="tabs" />
       <window_info id="Messages" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="10" side_tool="false" content_ui="tabs" />
@@ -901,7 +889,6 @@
     <option name="myLimit" value="2678400000" />
   </component>
   <component name="VcsManagerConfiguration">
-    <MESSAGE value="CLASSPATH-Hint" />
     <MESSAGE value="Docker image" />
     <MESSAGE value="New dropbox download location" />
     <MESSAGE value="fix perm space error" />
@@ -926,7 +913,8 @@
     <MESSAGE value="Asciidoc-Introduction" />
     <MESSAGE value="expires, speaker" />
     <MESSAGE value="connection timeout" />
-    <option name="LAST_COMMIT_MESSAGE" value="connection timeout" />
+    <MESSAGE value="DBA_Hist_IOStat_Filetype" />
+    <option name="LAST_COMMIT_MESSAGE" value="DBA_Hist_IOStat_Filetype" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager />
@@ -951,18 +939,7 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="810">
           <caret line="54" column="184" lean-forward="false" selection-start-line="54" selection-start-column="64" selection-end-line="54" selection-end-column="184" />
-          <folding>
-            <element signature="e#5826#5832#0" expanded="true" />
-            <element signature="e#5838#5844#0" expanded="true" />
-            <element signature="e#6003#6009#0" expanded="true" />
-            <element signature="e#6015#6021#0" expanded="true" />
-            <element signature="e#15707#15713#0" expanded="true" />
-            <element signature="e#15719#15725#0" expanded="true" />
-            <element signature="e#15953#15959#0" expanded="true" />
-            <element signature="e#15965#15971#0" expanded="true" />
-            <element signature="e#17694#17700#0" expanded="true" />
-            <element signature="e#17706#17712#0" expanded="true" />
-          </folding>
+          <folding />
         </state>
       </provider>
     </entry>
@@ -1003,18 +980,7 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="810">
           <caret line="54" column="184" lean-forward="false" selection-start-line="54" selection-start-column="64" selection-end-line="54" selection-end-column="184" />
-          <folding>
-            <element signature="e#5826#5832#0" expanded="true" />
-            <element signature="e#5838#5844#0" expanded="true" />
-            <element signature="e#6003#6009#0" expanded="true" />
-            <element signature="e#6015#6021#0" expanded="true" />
-            <element signature="e#15707#15713#0" expanded="true" />
-            <element signature="e#15719#15725#0" expanded="true" />
-            <element signature="e#15953#15959#0" expanded="true" />
-            <element signature="e#15965#15971#0" expanded="true" />
-            <element signature="e#17694#17700#0" expanded="true" />
-            <element signature="e#17706#17712#0" expanded="true" />
-          </folding>
+          <folding />
         </state>
       </provider>
     </entry>
@@ -1055,18 +1021,7 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="1740">
           <caret line="116" column="0" lean-forward="false" selection-start-line="116" selection-start-column="0" selection-end-line="116" selection-end-column="0" />
-          <folding>
-            <element signature="e#5826#5832#0" expanded="true" />
-            <element signature="e#5838#5844#0" expanded="true" />
-            <element signature="e#6003#6009#0" expanded="true" />
-            <element signature="e#6015#6021#0" expanded="true" />
-            <element signature="e#15707#15713#0" expanded="true" />
-            <element signature="e#15719#15725#0" expanded="true" />
-            <element signature="e#15953#15959#0" expanded="true" />
-            <element signature="e#15965#15971#0" expanded="true" />
-            <element signature="e#17694#17700#0" expanded="true" />
-            <element signature="e#17706#17712#0" expanded="true" />
-          </folding>
+          <folding />
         </state>
       </provider>
     </entry>
@@ -1107,18 +1062,7 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="1740">
           <caret line="116" column="0" lean-forward="false" selection-start-line="116" selection-start-column="0" selection-end-line="116" selection-end-column="0" />
-          <folding>
-            <element signature="e#5826#5832#0" expanded="true" />
-            <element signature="e#5838#5844#0" expanded="true" />
-            <element signature="e#6003#6009#0" expanded="true" />
-            <element signature="e#6015#6021#0" expanded="true" />
-            <element signature="e#15707#15713#0" expanded="true" />
-            <element signature="e#15719#15725#0" expanded="true" />
-            <element signature="e#15953#15959#0" expanded="true" />
-            <element signature="e#15965#15971#0" expanded="true" />
-            <element signature="e#17694#17700#0" expanded="true" />
-            <element signature="e#17706#17712#0" expanded="true" />
-          </folding>
+          <folding />
         </state>
       </provider>
     </entry>
@@ -1166,18 +1110,7 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="1740">
           <caret line="116" column="0" lean-forward="false" selection-start-line="116" selection-start-column="0" selection-end-line="116" selection-end-column="0" />
-          <folding>
-            <element signature="e#5826#5832#0" expanded="true" />
-            <element signature="e#5838#5844#0" expanded="true" />
-            <element signature="e#6003#6009#0" expanded="true" />
-            <element signature="e#6015#6021#0" expanded="true" />
-            <element signature="e#15707#15713#0" expanded="true" />
-            <element signature="e#15719#15725#0" expanded="true" />
-            <element signature="e#15953#15959#0" expanded="true" />
-            <element signature="e#15965#15971#0" expanded="true" />
-            <element signature="e#17694#17700#0" expanded="true" />
-            <element signature="e#17706#17712#0" expanded="true" />
-          </folding>
+          <folding />
         </state>
       </provider>
     </entry>
@@ -1218,18 +1151,7 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="2100">
           <caret line="140" column="47" lean-forward="false" selection-start-line="140" selection-start-column="47" selection-end-line="140" selection-end-column="47" />
-          <folding>
-            <element signature="e#5826#5832#0" expanded="true" />
-            <element signature="e#5838#5844#0" expanded="true" />
-            <element signature="e#6003#6009#0" expanded="true" />
-            <element signature="e#6015#6021#0" expanded="true" />
-            <element signature="e#15707#15713#0" expanded="true" />
-            <element signature="e#15719#15725#0" expanded="true" />
-            <element signature="e#15953#15959#0" expanded="true" />
-            <element signature="e#15965#15971#0" expanded="true" />
-            <element signature="e#17694#17700#0" expanded="true" />
-            <element signature="e#17706#17712#0" expanded="true" />
-          </folding>
+          <folding />
         </state>
       </provider>
     </entry>
@@ -1263,18 +1185,7 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="2100">
           <caret line="140" column="47" lean-forward="false" selection-start-line="140" selection-start-column="47" selection-end-line="140" selection-end-column="47" />
-          <folding>
-            <element signature="e#5826#5832#0" expanded="true" />
-            <element signature="e#5838#5844#0" expanded="true" />
-            <element signature="e#6003#6009#0" expanded="true" />
-            <element signature="e#6015#6021#0" expanded="true" />
-            <element signature="e#15707#15713#0" expanded="true" />
-            <element signature="e#15719#15725#0" expanded="true" />
-            <element signature="e#15953#15959#0" expanded="true" />
-            <element signature="e#15965#15971#0" expanded="true" />
-            <element signature="e#17694#17700#0" expanded="true" />
-            <element signature="e#17706#17712#0" expanded="true" />
-          </folding>
+          <folding />
         </state>
       </provider>
     </entry>
@@ -1328,16 +1239,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/images/download.png">
-      <provider selected="true" editor-type-id="images">
-        <state />
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/images/docker.png">
-      <provider selected="true" editor-type-id="images">
-        <state />
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/asciidoc/Oracle_performance_analysis_with_Panorama.html" />
     <entry file="file://$PROJECT_DIR$/default.css">
       <provider selected="true" editor-type-id="text-editor">
@@ -1347,21 +1248,22 @@
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/panorama_introduction.html" />
-    <entry file="file://$PROJECT_DIR$/Oracle_performance_analysis_with_Panorama.adoc">
-      <provider editor-type-id="text-editor">
-        <state relative-caret-position="180">
-          <caret line="12" column="69" lean-forward="true" selection-start-line="12" selection-start-column="69" selection-end-line="12" selection-end-column="69" />
+    <entry file="file://$PROJECT_DIR$/panorama.html">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="2595">
+          <caret line="173" column="56" lean-forward="false" selection-start-line="173" selection-start-column="56" selection-end-line="173" selection-end-column="56" />
           <folding />
         </state>
       </provider>
-      <provider selected="true" editor-type-id="split-provider[text-editor;AsciiDocPreviewEditor]">
-        <state split_layout="SPLIT">
-          <first_editor relative-caret-position="270">
-            <caret line="18" column="1" lean-forward="false" selection-start-line="18" selection-start-column="1" selection-end-line="18" selection-end-column="1" />
-            <folding />
-          </first_editor>
-          <second_editor />
-        </state>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/images/download.png">
+      <provider selected="true" editor-type-id="images">
+        <state />
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/images/docker.png">
+      <provider selected="true" editor-type-id="images">
+        <state />
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/start.html">
@@ -1394,29 +1296,27 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/panorama.html">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="871">
-          <caret line="173" column="56" lean-forward="false" selection-start-line="173" selection-start-column="56" selection-end-line="173" selection-end-column="56" />
-          <folding>
-            <element signature="e#5826#5832#0" expanded="true" />
-            <element signature="e#5838#5844#0" expanded="true" />
-            <element signature="e#6003#6009#0" expanded="true" />
-            <element signature="e#6015#6021#0" expanded="true" />
-            <element signature="e#15707#15713#0" expanded="true" />
-            <element signature="e#15719#15725#0" expanded="true" />
-            <element signature="e#15953#15959#0" expanded="true" />
-            <element signature="e#15965#15971#0" expanded="true" />
-            <element signature="e#17694#17700#0" expanded="true" />
-            <element signature="e#17706#17712#0" expanded="true" />
-          </folding>
+    <entry file="file://$PROJECT_DIR$/Oracle_performance_analysis_with_Panorama.adoc">
+      <provider selected="true" editor-type-id="split-provider[text-editor;AsciiDocPreviewEditor]">
+        <state split_layout="SPLIT">
+          <first_editor relative-caret-position="655">
+            <caret line="103" column="68" lean-forward="false" selection-start-line="87" selection-start-column="0" selection-end-line="103" selection-end-column="68" />
+            <folding />
+          </first_editor>
+          <second_editor />
+        </state>
+      </provider>
+      <provider editor-type-id="text-editor">
+        <state relative-caret-position="180">
+          <caret line="12" column="69" lean-forward="true" selection-start-line="12" selection-start-column="69" selection-end-line="12" selection-end-column="69" />
+          <folding />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/panorama_sampler.html">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="226">
-          <caret line="97" column="48" lean-forward="false" selection-start-line="97" selection-start-column="48" selection-end-line="97" selection-end-column="48" />
+        <state relative-caret-position="228">
+          <caret line="89" column="100" lean-forward="true" selection-start-line="89" selection-start-column="100" selection-end-line="89" selection-end-column="100" />
           <folding />
         </state>
       </provider>
