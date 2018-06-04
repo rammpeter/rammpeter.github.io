@@ -80,7 +80,10 @@
                         <ul>
                             <li><pre style="display: inline;">PANORAMA_VAR_HOME</pre>: Panorama stores encrypted session connect data and usage log in your local filesystem.<br/>
                                 You can control the directory for this files by setting the environment variable <pre style="display: inline;">PANORAMA_VAR_HOME</pre> to your target directory.<br/>
-                                Without defining <pre style="display: inline;">PANORAMA_VAR_HOME</pre> you will lose your saved connection info at restart of Panorama server.
+                                Without defining <pre style="display: inline;">PANORAMA_VAR_HOME</pre> it will use a subdir 'Panorama' at your systems default temporary directory.
+                            </li>
+                            <li><pre style="display: inline;">PANORAMA_LOG_SQL=true</pre>: Write the complete text of each executed SQL-Statement to log output.<br/>
+                                This helps to reproduce how Panorama gets information
                             </li>
                             <li><pre style="display: inline;">MAX_CONNECTION_POOL_SIZE</pre>: This setting allows you to define the maximum number of connections in Panorama's connection pool<br/>
                                 If you don't set this the default is max. 100 connections.
