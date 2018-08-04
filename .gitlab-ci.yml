@@ -15,4 +15,4 @@ generate_asciidoc:
   script:
     - gem install asciidoctor
     - ./generate_adoc_html.sh
-    -- git status
+    - git status
