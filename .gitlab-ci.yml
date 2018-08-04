@@ -4,6 +4,7 @@ stages:
   - deploy
 
 before_script:
+  - ls -lisa
   - ruby -v
   - which ruby
 
@@ -24,7 +25,7 @@ generate_content:
   tags:
     - ruby
   script:
-    - ./generate_content.sh
+    - ./generate_content_html.sh
   artifacts:
     paths:
       - panorama_content_generated.html
