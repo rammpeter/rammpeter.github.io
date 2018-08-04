@@ -10,7 +10,7 @@ else
   git clone https://github.com/rammpeter/Panorama_Gem
 fi
 
-./generate_content_html.rb
+ruby generate_content_html.rb
 
 
 
