@@ -56,8 +56,8 @@
       <file leaf-file-name=".gitlab-ci.yml" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/.gitlab-ci.yml">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="195">
-              <caret line="13" column="9" lean-forward="true" selection-start-line="13" selection-start-column="9" selection-end-line="13" selection-end-column="9" />
+            <state relative-caret-position="255">
+              <caret line="17" column="17" selection-start-line="17" selection-start-column="17" selection-end-line="17" selection-end-column="17" />
             </state>
           </provider>
         </entry>
@@ -374,21 +374,7 @@
       <workItem from="1529994249477" duration="317000" />
       <workItem from="1531652822525" duration="2158000" />
       <workItem from="1532349690474" duration="1183000" />
-      <workItem from="1533383010825" duration="88000" />
-    </task>
-    <task id="LOCAL-00136" summary="Panorama-Sampler, SELECT ANY TABLE">
-      <created>1503676740213</created>
-      <option name="number" value="00136" />
-      <option name="presentableId" value="LOCAL-00136" />
-      <option name="project" value="LOCAL" />
-      <updated>1503676740213</updated>
-    </task>
-    <task id="LOCAL-00137" summary="Panorama-Sampler">
-      <created>1504260010536</created>
-      <option name="number" value="00137" />
-      <option name="presentableId" value="LOCAL-00137" />
-      <option name="project" value="LOCAL" />
-      <updated>1504260010537</updated>
+      <workItem from="1533383010825" duration="638000" />
     </task>
     <task id="LOCAL-00138" summary="Panorama-Sampler image">
       <created>1504615612206</created>
@@ -719,11 +705,25 @@
       <option name="project" value="LOCAL" />
       <updated>1533046792280</updated>
     </task>
-    <option name="localTasksCounter" value="185" />
+    <task id="LOCAL-00185" summary="Fix gitlab pipeline">
+      <created>1533383113348</created>
+      <option name="number" value="00185" />
+      <option name="presentableId" value="LOCAL-00185" />
+      <option name="project" value="LOCAL" />
+      <updated>1533383113350</updated>
+    </task>
+    <task id="LOCAL-00186" summary="Fix gitlab pipeline: asciidoctor">
+      <created>1533383653961</created>
+      <option name="number" value="00186" />
+      <option name="presentableId" value="LOCAL-00186" />
+      <option name="project" value="LOCAL" />
+      <updated>1533383653961</updated>
+    </task>
+    <option name="localTasksCounter" value="187" />
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="261644000" />
+    <option name="totallyTimeSpent" value="262194000" />
   </component>
   <component name="TodoView">
     <todo-panel id="selected-file">
@@ -777,8 +777,6 @@
     <option name="myLimit" value="2678400000" />
   </component>
   <component name="VcsManagerConfiguration">
-    <MESSAGE value="Panorama-Sampler license" />
-    <MESSAGE value="Panorama-Sampler Doku" />
     <MESSAGE value="/dev/urandom" />
     <MESSAGE value="Next panorama sampler functions" />
     <MESSAGE value="Menu functions generated" />
@@ -802,7 +800,9 @@
     <MESSAGE value="jquery 2.1.4" />
     <MESSAGE value="Use permanent subdir Panorama at your systems default temporary directory if not setting PANORAMA_VAR_HOME" />
     <MESSAGE value="New sampler table for DBA_Hist_Memory_Resize_Ops" />
-    <option name="LAST_COMMIT_MESSAGE" value="New sampler table for DBA_Hist_Memory_Resize_Ops" />
+    <MESSAGE value="Fix gitlab pipeline" />
+    <MESSAGE value="Fix gitlab pipeline: asciidoctor" />
+    <option name="LAST_COMMIT_MESSAGE" value="Fix gitlab pipeline: asciidoctor" />
   </component>
   <component name="editorHistoryManager">
     <entry file="file://$PROJECT_DIR$/panorama_sampler.html">
@@ -1207,8 +1207,8 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/.gitlab-ci.yml">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="195">
-          <caret line="13" column="9" lean-forward="true" selection-start-line="13" selection-start-column="9" selection-end-line="13" selection-end-column="9" />
+        <state relative-caret-position="255">
+          <caret line="17" column="17" selection-start-line="17" selection-start-column="17" selection-end-line="17" selection-end-column="17" />
         </state>
       </provider>
     </entry>
