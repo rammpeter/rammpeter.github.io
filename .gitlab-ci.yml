@@ -10,4 +10,7 @@ before_script:
 
 generate_asciidoc:
   stage: build
-  script: ./generate_adoc-html.sh
+  script:
+    - pwd
+    - ls -l
+    - ./generate_adoc_html.sh

@@ -2,8 +2,8 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="a44be585-1d70-46dc-8663-cadff6f53192" name="Default" comment="">
+      <change beforePath="$PROJECT_DIR$/.gitlab-ci.yml" beforeDir="false" afterPath="$PROJECT_DIR$/.gitlab-ci.yml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/panorama_sampler.html" beforeDir="false" afterPath="$PROJECT_DIR$/panorama_sampler.html" afterDir="false" />
     </list>
     <ignored path="rammpeter.github.io.iws" />
     <ignored path=".idea/workspace.xml" />
@@ -26,7 +26,7 @@
       <file leaf-file-name="panorama.html" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/panorama.html">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="15">
+            <state relative-caret-position="1230">
               <caret line="82" column="114" selection-start-line="82" selection-start-column="114" selection-end-line="82" selection-end-column="114" />
               <folding>
                 <element signature="e#5826#5832#0" expanded="true" />
@@ -44,11 +44,20 @@
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="panorama_sampler.html" pinned="false" current-in-tab="true">
+      <file leaf-file-name="panorama_sampler.html" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/panorama_sampler.html">
           <provider selected="true" editor-type-id="text-editor">
             <state relative-caret-position="172">
               <caret line="104" column="47" lean-forward="true" selection-start-line="104" selection-start-column="47" selection-end-line="104" selection-end-column="47" />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name=".gitlab-ci.yml" pinned="false" current-in-tab="true">
+        <entry file="file://$PROJECT_DIR$/.gitlab-ci.yml">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="195">
+              <caret line="13" column="9" lean-forward="true" selection-start-line="13" selection-start-column="9" selection-end-line="13" selection-end-column="9" />
             </state>
           </provider>
         </entry>
@@ -149,6 +158,7 @@
         <option value="$PROJECT_DIR$/index.html" />
         <option value="$PROJECT_DIR$/panorama.html" />
         <option value="$PROJECT_DIR$/panorama_sampler.html" />
+        <option value="$PROJECT_DIR$/.gitlab-ci.yml" />
       </list>
     </option>
   </component>
@@ -163,7 +173,7 @@
   </component>
   <component name="ProjectFrameBounds">
     <option name="x" value="99" />
-    <option name="y" value="23" />
+    <option name="y" value="162" />
     <option name="width" value="1517" />
     <option name="height" value="888" />
   </component>
@@ -176,6 +186,7 @@
       <foldersAlwaysOnTop value="true" />
     </navigator>
     <panes>
+      <pane id="Scope" />
       <pane id="ProjectPane">
         <subPane>
           <expand>
@@ -187,7 +198,6 @@
           <select />
         </subPane>
       </pane>
-      <pane id="Scope" />
     </panes>
   </component>
   <component name="PropertiesComponent">
@@ -363,14 +373,8 @@
       <workItem from="1529496789984" duration="605000" />
       <workItem from="1529994249477" duration="317000" />
       <workItem from="1531652822525" duration="2158000" />
-      <workItem from="1532349690474" duration="534000" />
-    </task>
-    <task id="LOCAL-00135" summary="Panorama-Sampler, Docker">
-      <created>1503588221381</created>
-      <option name="number" value="00135" />
-      <option name="presentableId" value="LOCAL-00135" />
-      <option name="project" value="LOCAL" />
-      <updated>1503588221381</updated>
+      <workItem from="1532349690474" duration="1183000" />
+      <workItem from="1533383010825" duration="88000" />
     </task>
     <task id="LOCAL-00136" summary="Panorama-Sampler, SELECT ANY TABLE">
       <created>1503676740213</created>
@@ -708,11 +712,18 @@
       <option name="project" value="LOCAL" />
       <updated>1528138299992</updated>
     </task>
-    <option name="localTasksCounter" value="184" />
+    <task id="LOCAL-00184" summary="New sampler table for DBA_Hist_Memory_Resize_Ops">
+      <created>1533046792280</created>
+      <option name="number" value="00184" />
+      <option name="presentableId" value="LOCAL-00184" />
+      <option name="project" value="LOCAL" />
+      <updated>1533046792280</updated>
+    </task>
+    <option name="localTasksCounter" value="185" />
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="260907000" />
+    <option name="totallyTimeSpent" value="261644000" />
   </component>
   <component name="TodoView">
     <todo-panel id="selected-file">
@@ -724,10 +735,10 @@
     </todo-panel>
   </component>
   <component name="ToolWindowManager">
-    <frame x="99" y="23" width="1517" height="888" extended-state="0" />
+    <frame x="99" y="162" width="1517" height="888" extended-state="0" />
     <editor active="true" />
     <layout>
-      <window_info active="true" content_ui="combo" id="Project" order="0" visible="true" weight="0.2" />
+      <window_info active="true" content_ui="combo" id="Project" order="0" visible="true" weight="0.20271187" />
       <window_info anchor="bottom" id="TODO" order="6" weight="0.32939914" />
       <window_info anchor="bottom" id="Docker" order="7" show_stripe_button="false" />
       <window_info anchor="bottom" id="Event Log" order="8" side_tool="true" />
@@ -766,7 +777,6 @@
     <option name="myLimit" value="2678400000" />
   </component>
   <component name="VcsManagerConfiguration">
-    <MESSAGE value="Panorama-Sampler image" />
     <MESSAGE value="Panorama-Sampler license" />
     <MESSAGE value="Panorama-Sampler Doku" />
     <MESSAGE value="/dev/urandom" />
@@ -791,18 +801,10 @@
     <MESSAGE value="privacy" />
     <MESSAGE value="jquery 2.1.4" />
     <MESSAGE value="Use permanent subdir Panorama at your systems default temporary directory if not setting PANORAMA_VAR_HOME" />
-    <option name="LAST_COMMIT_MESSAGE" value="Use permanent subdir Panorama at your systems default temporary directory if not setting PANORAMA_VAR_HOME" />
+    <MESSAGE value="New sampler table for DBA_Hist_Memory_Resize_Ops" />
+    <option name="LAST_COMMIT_MESSAGE" value="New sampler table for DBA_Hist_Memory_Resize_Ops" />
   </component>
   <component name="editorHistoryManager">
-    <entry file="file://$PROJECT_DIR$/panorama_content.html">
-      <provider selected="true" editor-type-id="text-editor">
-        <state>
-          <folding>
-            <element signature="n#style#0;n#body#0;n#html#0;n#!!top" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/panorama_sampler.html">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="1515">
@@ -1128,17 +1130,17 @@
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/Oracle_performance_analysis_with_Panorama.adoc">
-      <provider editor-type-id="text-editor">
-        <state relative-caret-position="180">
-          <caret line="12" column="69" lean-forward="true" selection-start-line="12" selection-start-column="69" selection-end-line="12" selection-end-column="69" />
-        </state>
-      </provider>
       <provider selected="true" editor-type-id="split-provider[text-editor;AsciiDocPreviewEditor]">
         <state split_layout="SPLIT">
           <first_editor relative-caret-position="1545">
             <caret line="103" column="68" selection-start-line="87" selection-end-line="103" selection-end-column="68" />
           </first_editor>
           <second_editor />
+        </state>
+      </provider>
+      <provider editor-type-id="text-editor">
+        <state relative-caret-position="180">
+          <caret line="12" column="69" lean-forward="true" selection-start-line="12" selection-start-column="69" selection-end-line="12" selection-end-column="69" />
         </state>
       </provider>
     </entry>
@@ -1179,7 +1181,7 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/panorama.html">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="15">
+        <state relative-caret-position="1230">
           <caret line="82" column="114" selection-start-line="82" selection-start-column="114" selection-end-line="82" selection-end-column="114" />
           <folding>
             <element signature="e#5826#5832#0" expanded="true" />
@@ -1200,6 +1202,13 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="172">
           <caret line="104" column="47" lean-forward="true" selection-start-line="104" selection-start-column="47" selection-end-line="104" selection-end-column="47" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/.gitlab-ci.yml">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="195">
+          <caret line="13" column="9" lean-forward="true" selection-start-line="13" selection-start-column="9" selection-end-line="13" selection-end-column="9" />
         </state>
       </provider>
     </entry>
