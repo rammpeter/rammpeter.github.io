@@ -18,3 +18,4 @@ generate_asciidoc:
   artifacts:
     paths:
       - Oracle_performance_analysis_with_Panorama_from_adoc.html
+      - images/
