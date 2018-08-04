@@ -15,9 +15,5 @@ generate_asciidoc:
   script:
     - gem install asciidoctor
     - ./generate_adoc_html.sh
-    - git status
-    - git stage Oracle_performance_analysis_with_Panorama.html
-    - echo "CI_COMMIT_REF_NAME = $CI_COMMIT_REF_NAME"
-    - echo "GIT_ACCESS_USER = $GIT_ACCESS_USER"
-    - echo "GIT_ACCESS_PASSWORD = $GIT_ACCESS_PASSWORD"
-    - echo "GIT_ACCESS_EMAIL = $GIT_ACCESS_EMAIL"
+  artifacts:
+    - Oracle_performance_analysis_with_Panorama_from_adoc.html

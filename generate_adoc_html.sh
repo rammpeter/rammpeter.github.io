@@ -1,3 +1,3 @@
 echo "AsciiDoc -> html"
-asciidoctor Oracle_performance_analysis_with_Panorama.adoc
+asciidoctor -o Oracle_performance_analysis_with_Panorama_from_adoc.html Oracle_performance_analysis_with_Panorama.adoc
 
