@@ -10,7 +10,8 @@ before_script:
 
 generate_asciidoc:
   stage: build
+  tags:
+    - ruby
   script:
-    - pwd
-    - ls -l
+    - gem install asciidoctor
     - ./generate_adoc_html.sh
