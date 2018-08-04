@@ -2,11 +2,13 @@
 For columns of large tables with less DISTINCT-values meaning can be questioned.<br/>
 May be it their value is redundant to other columns of that table. In this case you can extract this column as separate master-data table with n:1-relation (normalization).<br/>
 <pre style='background-color: #FFFFCC;'>SELECT /* DB-Tools Ramm Spalten mit wenig Distinct-Values */
-                             c.Owner, c.Table_Name, c.Column_Name, t.Num_Rows, c.Num_Nulls, c.Num_Distinct,
-                             ROUND((c.Avg_Col_Len*(Num_Rows-Num_Nulls)+Num_Nulls)/(1024*1024),2) Megabyte
+                             c.Owner, c.Table_Name, c.Column_Name, t.Num_Rows, c.Num_Nulls, c.Num_Distinct, c.Avg_Col_Len,
+                             ROUND((c.Avg_Col_Len*(Num_Rows-Num_Nulls)+Num_Nulls)/(1024*1024),2) Megabyte_Column
                       FROM   DBA_Tab_Columns c
                       JOIN   DBA_Tables t ON t.Owner = c.Owner AND t.Table_Name = c.Table_Name
-                      WHERE  NVL(c.Num_Distinct,0) != 0
-                      AND    NVL(t.Num_Rows,0) > :P1
+                      WHERE  NVL(c.Num_Distinct,0) > 0
+                      AND    NVL(c.Num_Distinct,0) <= :P1
+                      AND    (c.Num_Nulls > 0 OR UPPER(:P2) = 'YES')
+                      AND    NVL(t.Num_Rows,0) > :P3
                       AND    c.Owner NOT IN ('SYS', 'SYSTEM', 'WMSYS')
-                      ORDER BY c.Num_Distinct, t.Num_Rows DESC NULLS LAST</pre><div>Parameter :P1: Minimum number of rows in table for consideration in selection</div>
+                      ORDER BY c.Num_Distinct, t.Num_Rows DESC NULLS LAST</pre><div>Parameter :P1: Maximum number of distinct values of column for consideration in selection</div><div>Parameter :P2: Also consider columns with NULL-values for this selection? (YES/NO)</div><div>Parameter :P3: Minimum number of rows in table for consideration in selection</div>

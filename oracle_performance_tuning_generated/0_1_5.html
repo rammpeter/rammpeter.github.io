@@ -1,38 +1,46 @@
-<h3>Coverage of foreign-key relations by indexes (detection of potentially unnecessary indexes)</h3>
-Protection of existing foreign key constraint by index on referencing column may be unnecessary if:<br/>
-- there are no physical deletes on referenced table<br/>
-- full table scan on referencing table is acceptable during delete on referenced table<br/>
-- possible shared lock issues on referencing table due to not existing index are no problem<br/>
-Especially for references from large tables to small master data tables often there's no use for the effort of indexing referencing column.<br/>
-Due to the poor selectivity such indexes are mostly not useful for access optimization.<pre style='background-color: #FFFFCC;'>SELECT /* DB-Tools Ramm Unnoetige Indizes auf Ref-Constraint*/
-                           ri.Rows_Origin, ri.Owner, ri.Table_Name, ri.Index_Name, p.Constraint_Name, ri.Column_Name,
-                           pi.Num_Rows Rows_Target, ri.Position, pi.Table_Name Target_Table, pi.Index_Name Target_Index
-                    FROM   (SELECT /*+ NO_MERGE */
-                                   r.Owner, r.Table_Name, r.Constraint_Name, rc.Column_Name, rc.Position, ric.Index_Name,
-                                   r.R_Owner, r.R_Constraint_Name, ri.Num_Rows Rows_Origin
-                            FROM   DBA_Constraints r,
-                                   DBA_Cons_Columns rc,         -- Spalten des Foreign Key
-                                   DBA_Ind_Columns ric,         -- passende Spalten eines Index
-                                   DBA_Indexes ri
-                            WHERE  r.Constraint_Type  = 'R'
-                            AND    rc.Owner           = r.Owner
-                            AND    rc.Constraint_Name = r.Constraint_Name
-                            AND    ric.Table_Owner    = r.Owner
-                            AND    ric.Table_Name     = r.Table_Name
-                            AND    ric.Column_Name    = rc.Column_Name
-                            AND    ric.Column_Position= rc.Position
-                            AND    ri.Owner           = ric.Index_Owner
-                            AND    ri.Index_Name      = ric.Index_Name
-                           ) ri,                      -- Indizierte Foreign Key-Constraints
-                           DBA_Constraints p,         -- referenzierter PKey-Constraint
-                           DBA_Indexes     pi         -- referenzierter PKey-Index
-                    WHERE  p.Owner            = ri.R_Owner
-                    AND    p.Constraint_Name  = ri.R_Constraint_Name
-                    AND    pi.Owner           = p.Owner
-                    AND    pi.Index_Name      = p.Index_Name
-                    AND    pi.Num_Rows < :P1                -- Begrenzung auf kleine referenzierte Tabellen
-                    AND    ri.Rows_Origin > :P2        -- Mindestgroesse fuer referenzierende Tabelle
-                    AND    (SELECT Count(*) FROM DBA_Constraints ri
-                            WHERE  ri.r_owner = p.Owner AND ri.R_Constraint_Name=p.Constraint_Name
-                           ) < :P3                      -- Begrenzung auf Anzahl referenzierende Tabellen
-                    ORDER BY Rows_Origin DESC NULLS LAST</pre><div>Parameter :P1: Max. number of rows in referenced table</div><div>Parameter :P2: Minimun number of rows in referencing table</div><div>Parameter :P3: Max. number of referencing tables (with large number there may be problems with FullTableScan during delete on master table)</div>
+<h3>Detection of indexes with unnecessary columns because of pure selectivity</h3>
+For multi-column indexes with high selectivity of single columns often additional columns in index don't  improve selectivity of that index.<br/>
+Additional columns with low selectivity are useful only if:<br/>
+- they essentially improve selectivity of whole index<br/>
+- they allow index-only data access without accessing table itself<br/>
+Without these reasons additional columns with low selectivity may be removed from index.<br/>
+This selection already suppresses indexes used for elimination of 'table access by rowid'.<pre style='background-color: #FFFFCC;'>SELECT /* DB-Tools Ramm: low selectivity */ *
+                        FROM
+                               (
+                                SELECT /*+ NO_MERGE USE_HASH(i ms io) */
+                                       i.Owner, i.Table_Name, i.Index_Name, i.Num_Rows,
+                                       seg.MBytes "MBytes",
+                                       ms.Column_Name "Max. selective column", ms.Max_Num_Distinct,
+                                       ROUND(ms.Max_Num_Distinct / i.Num_Rows, 2) "Max. selectivity",
+                                       tc.Column_Name "Min. selective column", tc.Num_Distinct "Min. num. distinct"
+                                FROM   DBA_Indexes i
+                                JOIN   (SELECT /*+ NO_MERGE USE_HASH(ic tc ) */ /* Max. Selektivit‰t einer Spalte eines Index */
+                                               ic.Index_Owner, ic.Index_Name, MAX(tc.Num_Distinct) Max_Num_Distinct,
+                                               MAX(ic.Column_Name) KEEP (DENSE_RANK LAST ORDER BY tc.Num_Distinct) Column_Name
+                                        FROM   (SELECT /*+ NO_MERGE */ Index_Owner, Index_Name, Table_Owner, Table_Name, Column_Name FROM DBA_Ind_Columns) ic
+                                        JOIN   (SELECT /*+ NO_MERGE */ Owner, Table_Name, Column_Name, Num_Distinct FROM DBA_Tab_Columns
+                                               ) tc ON tc.Owner = ic.Table_Owner AND tc.Table_Name = ic.Table_Name AND tc.Column_Name = ic.Column_Name
+                                        GROUP BY ic.Index_Owner, ic.Index_Name
+                                       ) ms ON ms.Index_Owner = i.Owner AND ms.Index_Name = i.Index_Name
+                                JOIN   DBA_Ind_Columns ic ON ic.Index_Owner = i.Owner AND ic.Index_Name = i.Index_Name
+                                JOIN   DBA_Tab_Columns tc ON tc.Owner = ic.Table_Owner AND tc.Table_Name = ic.Table_Name AND tc.Column_Name = ic.Column_Name
+                                LEFT OUTER JOIN (SELECT /*+ NO_MERGE */ /* SQL mit Zugriff auf Index ohne Zugriff auf Table existieren */ i.Owner, i.Index_Name
+                                                 FROM   DBA_Indexes i
+                                                 JOIN   GV$SQL_Plan p1 ON p1.Object_Owner = i.Owner AND p1.Object_Name = i.Index_Name
+                                                 LEFT OUTER JOIN   GV$SQL_Plan p2 ON p2.Inst_ID = p1.Inst_ID AND p2.SQL_ID = p1.SQL_ID AND p2.Plan_Hash_Value = p1.Plan_Hash_Value
+                                                                                  AND p2.Object_Owner = i.Table_Owner AND p2.Object_Name = i.Table_Name
+                                                 WHERE p2.Inst_ID IS NULL AND P2.SQL_ID IS NULL AND p2.Plan_Hash_Value IS NULL
+                                                 AND   i.UniqueNess = 'NONUNIQUE'
+                                                 GROUP BY i.Owner, i.Index_Name
+                                                ) io ON io.Owner = i.Owner AND io.Index_Name = i.Index_Name
+                                LEFT OUTER JOIN (SELECT Owner, Segment_Name, ROUND(SUM(bytes)/(1024*1024),1) MBytes FROM DBA_Segments GROUP BY Owner, Segment_Name
+                                                ) seg ON seg.Owner = i.Owner AND seg.Segment_Name = i.Index_Name
+                                WHERE  i.Num_Rows IS NOT NULL AND i.Num_Rows > 0
+                                AND    ms.Max_Num_Distinct > i.Num_Rows/:P1   -- Ein Feld mit gen∏gend groﬂer Selektivit‰t existiert im Index
+                                AND    tc.Column_Name != ms.Column_Name     -- Spalte mit hoechster Selektivit‰t ausblenden
+                                AND    i.UniqueNess = 'NONUNIQUE'
+                                AND    io.Owner IS NULL AND io.Index_Name IS NULL -- keine Zugriffe, bei denen alle Felder aus Index kommen und kein TableAccess nˆtig wird
+                               ) o
+                        WHERE  o.Owner NOT IN ('SYS', 'OLAPSYS', 'SYSMAN', 'WMSYS', 'CTXSYS')
+                        AND    Num_Rows > :P2
+                        ORDER BY Max_Num_Distinct / Num_Rows DESC NULLS LAST</pre><div>Parameter :P1: Number of DISTINCT-values of index column with largest selectivity is > 1/x to the number of rows on index</div><div>Parameter :P2: Minimum number of rows of index for consideration in selection</div>

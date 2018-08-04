@@ -4,7 +4,6 @@ stages:
   - deploy
 
 before_script:
-  - ls -l
   - ruby -v
   - which ruby
 
@@ -19,3 +18,13 @@ generate_asciidoc:
     paths:
       - Oracle_performance_analysis_with_Panorama_from_adoc.html
       - images/
+
+generate_content:
+  stage: build
+  tags:
+    - ruby
+  script:
+    - ./generate_content.sh
+  artifacts:
+    paths:
+      - panorama_content_generated.html

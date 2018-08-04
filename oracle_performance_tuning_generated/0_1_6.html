@@ -1,28 +1,38 @@
-<h3>Indexes on partitioned tables with same columns like partition keys</h3>
-If an index on partitioned table indexes the same columns like partition key and partitioning itself is selective enough by partition pruning<br/>
-than this index can be removed<pre style='background-color: #FFFFCC;'>SELECT x.Owner, x.Index_Name, x.Table_Owner, x.Table_Name, x.Uniqueness, x.Index_Partitioned, x.Num_Rows, x.Distinct_Keys, x.Partition_Columns, x.Table_Partitions, x.MBytes
-                    FROM   (
-                            SELECT i.Owner, i.Index_Name, i.Table_Owner, i.Table_Name, i.Uniqueness, i.Partitioned Index_Partitioned, i.Num_Rows, i.Distinct_Keys,
-                                   COUNT(DISTINCT pc.Column_Name) Partition_Columns, COUNT(ic.Column_Name) Matching_Index_Columns,
-                                   (SELECT COUNT(*) FROM DBA_Ind_Columns ici WHERE ici.Index_Owner = i.Owner AND ici.Index_Name = i.Index_Name) Total_Index_Columns,
-                                   (SELECT COUNT(*)
-                                    FROM   DBA_Tab_Partitions tp
-                                    WHERE  tp.Table_Owner = i.Table_Owner
-                                    AND    tp.Table_Name  = i.Table_Name
-                                   ) Table_Partitions,
-                                   (SELECT  ROUND(SUM(bytes)/(1024*1024),1) MBytes
-                                    FROM   DBA_SEGMENTS s
-                                    WHERE  s.SEGMENT_NAME = i.Index_Name
-                                    AND    s.Owner        = i.Owner
-                                   ) MBytes
-                            FROM   DBA_Indexes i
-                            JOIN   DBA_Part_Key_Columns pc ON pc.Owner = i.Table_Owner AND pc.Name = i.Table_Name AND pc.Object_Type = 'TABLE'
-                            LEFT OUTER JOIN DBA_Ind_Columns ic ON  ic.Index_Owner = i.Owner AND ic.Index_Name = i.Index_Name AND ic.Column_Name = pc.Column_Name AND ic.Column_Position = pc.Column_Position
-                            WHERE  i.Owner NOT IN ('SYSTEM', 'SYS')
-                            AND    i.Uniqueness != 'UNIQUE'
-                            GROUP BY i.Owner, i.Index_Name, i.Table_Owner, i.Table_Name, i.Uniqueness, i.Partitioned,  i.Num_Rows, i.Distinct_Keys
-                           ) x
-                    WHERE Partition_Columns      = Matching_Index_Columns
-                    AND   Matching_Index_Columns = Total_Index_Columns      -- keine weiteren Spalten des Index
-                    ORDER BY x.Distinct_Keys / DECODE(Table_Partitions, 0, 1, Table_Partitions), x.Num_Rows DESC
-                    </pre>
+<h3>Coverage of foreign-key relations by indexes (detection of potentially unnecessary indexes)</h3>
+Protection of existing foreign key constraint by index on referencing column may be unnecessary if:<br/>
+- there are no physical deletes on referenced table<br/>
+- full table scan on referencing table is acceptable during delete on referenced table<br/>
+- possible shared lock issues on referencing table due to not existing index are no problem<br/>
+Especially for references from large tables to small master data tables often there's no use for the effort of indexing referencing column.<br/>
+Due to the poor selectivity such indexes are mostly not useful for access optimization.<pre style='background-color: #FFFFCC;'>SELECT /* DB-Tools Ramm Unnoetige Indizes auf Ref-Constraint*/
+                           ri.Rows_Origin, ri.Owner, ri.Table_Name, ri.Index_Name, p.Constraint_Name, ri.Column_Name,
+                           pi.Num_Rows Rows_Target, ri.Position, pi.Table_Name Target_Table, pi.Index_Name Target_Index
+                    FROM   (SELECT /*+ NO_MERGE */
+                                   r.Owner, r.Table_Name, r.Constraint_Name, rc.Column_Name, rc.Position, ric.Index_Name,
+                                   r.R_Owner, r.R_Constraint_Name, ri.Num_Rows Rows_Origin
+                            FROM   DBA_Constraints r,
+                                   DBA_Cons_Columns rc,         -- Spalten des Foreign Key
+                                   DBA_Ind_Columns ric,         -- passende Spalten eines Index
+                                   DBA_Indexes ri
+                            WHERE  r.Constraint_Type  = 'R'
+                            AND    rc.Owner           = r.Owner
+                            AND    rc.Constraint_Name = r.Constraint_Name
+                            AND    ric.Table_Owner    = r.Owner
+                            AND    ric.Table_Name     = r.Table_Name
+                            AND    ric.Column_Name    = rc.Column_Name
+                            AND    ric.Column_Position= rc.Position
+                            AND    ri.Owner           = ric.Index_Owner
+                            AND    ri.Index_Name      = ric.Index_Name
+                           ) ri,                      -- Indizierte Foreign Key-Constraints
+                           DBA_Constraints p,         -- referenzierter PKey-Constraint
+                           DBA_Indexes     pi         -- referenzierter PKey-Index
+                    WHERE  p.Owner            = ri.R_Owner
+                    AND    p.Constraint_Name  = ri.R_Constraint_Name
+                    AND    pi.Owner           = p.Owner
+                    AND    pi.Index_Name      = p.Index_Name
+                    AND    pi.Num_Rows < :P1                -- Begrenzung auf kleine referenzierte Tabellen
+                    AND    ri.Rows_Origin > :P2        -- Mindestgroesse fuer referenzierende Tabelle
+                    AND    (SELECT Count(*) FROM DBA_Constraints ri
+                            WHERE  ri.r_owner = p.Owner AND ri.R_Constraint_Name=p.Constraint_Name
+                           ) < :P3                      -- Begrenzung auf Anzahl referenzierende Tabellen
+                    ORDER BY Rows_Origin DESC NULLS LAST</pre><div>Parameter :P1: Max. number of rows in referenced table</div><div>Parameter :P2: Minimun number of rows in referencing table</div><div>Parameter :P3: Max. number of referencing tables (with large number there may be problems with FullTableScan during delete on master table)</div>

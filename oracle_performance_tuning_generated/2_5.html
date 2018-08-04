@@ -1,13 +1,37 @@
 <h3>Objekt statistics: Check on up-to-date analyze info (Indexes)</h3>
-For cost based optimizer object statistics should be sufficient up-to-date<pre style='background-color: #FFFFCC;'>SELECT /* DB-TOoLs Ramm Indizes without e.g. with old statistics */ i.Owner, i.Table_Name, i.Index_Name, i.Num_Rows, i.Last_Analyzed
-                      FROM   DBA_Indexes i
-                      JOIN   DBA_Tables t ON t.Owner = i.Table_Owner AND t.Table_Name = i.Table_Name
-                      JOIN   (SELECT /*+ NO_MERGE */ Owner, Segment_Name, SUM(Bytes)/(1024*1024) MBytes FROM DBA_Segments GROUP BY Owner, Segment_Name) s ON s.Owner = i.Owner AND s.Segment_Name = i.Index_Name
-                      WHERE  (i.Last_Analyzed IS NULL OR i.Last_Analyzed < SYSDATE-:P1)
-                      AND    i.Owner NOT IN ('SYS', 'SYSTEM', 'OUTLN', 'PERFSTAT', 'PATCH', 'NOALYZE', 'EXFSYS', 'SERVER', 'FLAGENT',
-                                           'DB_MONITORING', 'DBSNMP', 'WMSYS', 'DBMSXSTATS', 'SYSMAN', 'TOOL', 'AFARIA', 'MONITOR', 'XDB', 'MDSYS', 'ORDSYS',
-                                           'CTXSYS', 'TSMSYS')
-                      AND    i.Owner NOT LIKE 'DBA%'
-                      AND    i.Owner NOT LIKE 'PATROL%'
-                      AND    t.Temporary = 'N'
-                      ORDER BY s.MBytes DESC</pre><div>Parameter :P1: If analyze info exists: minimun age for consideration in selection</div>
+For cost based optimizer object statistics should be sufficient up-to-date<pre style='background-color: #FFFFCC;'>SELECT x.*
+                    FROM   (
+                            SELECT i.Owner, i.Table_Name, i.Index_Name, NULL Partition_Name, NULL SubPartition_Name, i.Num_Rows, i.Last_Analyzed,
+                                   ROUND(s.MBytes,2) MBytes
+                            FROM   DBA_Indexes i
+                            JOIN   DBA_Tables t ON t.Owner = i.Table_Owner AND t.Table_Name = i.Table_Name
+                            LEFT OUTER JOIN (SELECT /*+ NO_MERGE */ Owner, Segment_Name, SUM(Bytes)/(1024*1024) MBytes
+                                             FROM   DBA_Segments
+                                             GROUP BY Owner, Segment_Name
+                                            ) s ON s.Owner = i.Owner AND s.Segment_Name = i.Index_Name
+                            WHERE  t.Temporary = 'N'
+                            UNION ALL
+                            SELECT ip.Index_Owner Owner, i.Table_Name, ip.Index_Name, ip.Partition_Name, NULL SubPartition_Name, ip.Num_Rows, ip.Last_Analyzed,
+                                   ROUND(s.MBytes,2) MBytes
+                            FROM   DBA_Ind_Partitions ip
+                            JOIN   DBA_Indexes i ON i.Owner = ip.Index_Owner AND i.Index_Name = ip.Index_Name
+                            LEFT OUTER JOIN (SELECT /*+ NO_MERGE */ Owner, Segment_Name, Partition_Name, SUM(Bytes)/(1024*1024) MBytes
+                                             FROM   DBA_Segments
+                                             GROUP BY Owner, Segment_Name, Partition_Name
+                                            ) s ON s.Owner = ip.Index_Owner AND s.Segment_Name = ip.Index_Name AND s.Partition_Name = ip.Partition_Name
+                            UNION ALL
+                            SELECT ip.Index_Owner Owner, i.Table_Name, ip.Index_Name, ip.Partition_Name, ip.SubPartition_Name, ip.Num_Rows, ip.Last_Analyzed,
+                                   ROUND(s.MBytes,2) MBytes
+                            FROM   DBA_Ind_SubPartitions ip
+                            JOIN   DBA_Indexes i ON i.Owner = ip.Index_Owner AND i.Index_Name = ip.Index_Name
+                            LEFT OUTER JOIN (SELECT /*+ NO_MERGE */ Owner, Segment_Name, Partition_Name, SUM(Bytes)/(1024*1024) MBytes
+                                             FROM   DBA_Segments
+                                             GROUP BY Owner, Segment_Name, Partition_Name
+                                            ) s ON s.Owner = ip.Index_Owner AND s.Segment_Name = ip.Index_Name AND s.Partition_Name = ip.SubPartition_Name
+                           ) x
+                    WHERE  x.Owner NOT IN ('SYS', 'SYSTEM', 'OUTLN', 'PERFSTAT', 'PATCH', 'EXFSYS', 'FLAGENT',
+                                         'DBSNMP', 'WMSYS', 'DBMSXSTATS', 'SYSMAN', 'AFARIA',
+                                         'XDB', 'MDSYS', 'ORDSYS', 'DMSYS', 'CTXSYS', 'TSMSYS')
+                    AND   (Last_Analyzed IS NULL OR Last_Analyzed < SYSDATE-:P1)
+                    ORDER BY x.MBytes DESC NULLS LAST
+                    </pre><div>Parameter :P1: If analyze info exists: minimun age for consideration in selection</div>

@@ -55,19 +55,23 @@
   "state": { "opened": false }
 , "icon":"images/application-monitor.png"},{
   "id": "0_1_3",
-  "text": "4. Detection of unused indexes by system monitoring",
+  "text": "4. Detection of unused indexes by MONITORING USAGE",
   "state": { "opened": false }
 , "icon":"images/application-monitor.png"},{
   "id": "0_1_4",
-  "text": "5. Detection of indexes with unnecessary columns because of pure selectivity",
+  "text": "5. Detection of indexes without MONITORING USAGE",
   "state": { "opened": false }
 , "icon":"images/application-monitor.png"},{
   "id": "0_1_5",
-  "text": "6. Coverage of foreign-key relations by indexes (detection of potentially unnecessary indexes)",
+  "text": "6. Detection of indexes with unnecessary columns because of pure selectivity",
   "state": { "opened": false }
 , "icon":"images/application-monitor.png"},{
   "id": "0_1_6",
-  "text": "7. Indexes on partitioned tables with same columns like partition keys",
+  "text": "7. Coverage of foreign-key relations by indexes (detection of potentially unnecessary indexes)",
+  "state": { "opened": false }
+, "icon":"images/application-monitor.png"},{
+  "id": "0_1_7",
+  "text": "8. Indexes on partitioned tables with same columns like partition keys",
   "state": { "opened": false }
 , "icon":"images/application-monitor.png"} ]},{
   "id": "0_2",
@@ -91,7 +95,7 @@
   "state": { "opened": false }
 , "children": [{
   "id": "0_3_0",
-  "text": "1. Detection of unused tables",
+  "text": "1. Detection of tables never accessed by SELECT statements",
   "state": { "opened": false }
 , "icon":"images/application-monitor.png"},{
   "id": "0_3_1",
@@ -116,6 +120,10 @@
 , "icon":"images/application-monitor.png"},{
   "id": "0_3_6",
   "text": "7. Dropped tables in recycle bin",
+  "state": { "opened": false }
+, "icon":"images/application-monitor.png"},{
+  "id": "0_3_7",
+  "text": "8. CHAR-columns filled with unnecessary blanks",
   "state": { "opened": false }
 , "icon":"images/application-monitor.png"} ]},{
   "id": "0_4",
@@ -419,19 +427,27 @@
   "state": { "opened": false }
 , "children": [{
   "id": "5_0",
-  "text": "1. Views with cascading dependiencies (multiple hierarchy)",
+  "text": "1. Potential in DB-Views",
   "state": { "opened": false }
 , "children": [{
   "id": "5_0_0",
+  "text": "1. Views with cascading dependiencies (multiple hierarchy)",
+  "state": { "opened": false }
+, "children": [{
+  "id": "5_0_0_0",
   "text": "1. Cascading views (views with dependency from other views)",
   "state": { "opened": false }
 , "icon":"images/application-monitor.png"},{
-  "id": "5_0_1",
+  "id": "5_0_0_1",
   "text": "2. SQLs using Cascading views (views with dependency from other views), evaluation of current SGA",
   "state": { "opened": false }
 , "icon":"images/application-monitor.png"},{
-  "id": "5_0_2",
+  "id": "5_0_0_2",
   "text": "3. SQLs using Cascading views (views with dependency from other views), evaluation of AWH History",
+  "state": { "opened": false }
+, "icon":"images/application-monitor.png"} ]},{
+  "id": "5_0_1",
+  "text": "2. Views with ORDER BY in View-SQL",
   "state": { "opened": false }
 , "icon":"images/application-monitor.png"} ]},{
   "id": "5_1",
@@ -476,6 +492,14 @@
 , "icon":"images/application-monitor.png"},{
   "id": "6_1",
   "text": "2. Identification of probably unused PL/SQL-objects",
+  "state": { "opened": false }
+, "icon":"images/application-monitor.png"} ]},{
+  "id": "7",
+  "text": "8. Instance-setup and instance-tuning",
+  "state": { "opened": false }
+, "children": [{
+  "id": "7_0",
+  "text": "1. Inconsistent dependency timestamps between dependcy and parent object",
   "state": { "opened": false }
 , "icon":"images/application-monitor.png"} ]} ]
           }

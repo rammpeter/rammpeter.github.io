@@ -1,35 +1,23 @@
-<h3>SQLs using Cascading views (views with dependency from other views), evaluation of current SGA</h3>
-Views with dependencies from other views (possibly with multilevel dependency hierarchy) have the risk<br/>
-to select data from unnecessesary objects which are not relevant for executing SQL statement.<br/>
-This way the optimizer is not able to detect irrelevant parts of view neither to remove this parts from execution plan.<br/>
-Sensible architecture pattern is, to use views only in one dimension without further dependencies from other views.<br/>
---- Selection may take some time ---<br/>
-<pre style='background-color: #FFFFCC;'>WITH ViewDep AS ( -- Alle
-                                      SELECT /*+ NO_MERGE */
-                                             *
-                                      FROM dba_dependencies
-                                      WHERE  Type='VIEW' AND Referenced_Type='VIEW'
-                                      AND    Owner NOT IN ('SYS', 'SYSTEM', 'CTXSYS', 'XDB', 'WMSYS', 'EXFSYS', 'DBSNMP')
-                                      AND   Owner NOT LIKE 'APEX%'
-                                      ),
-                           Views AS ( SELECT /*+ NO_MERGE MATERIALIZE */ level Dependency_Depth, CONNECT_BY_ROOT Owner Root_Owner, CONNECT_BY_ROOT Name Root_View_Name,
-                                             LOWER(CONNECT_BY_ROOT Owner)||'.'||CONNECT_BY_ROOT Name Considered_View,
-                                             LOWER(Owner)||'.'||Name Referencing_View,
-                                             LOWER(Referenced_Owner)||'.'||Referenced_Name Referenced_View
-                                      FROM   ViewDep
-                                      CONNECT BY NOCYCLE PRIOR Referenced_Owner=Owner AND PRIOR Referenced_Name=Name
-                                    )
-                      SELECT /*+ NO_MERGE MATERIALIZE */ s.Inst_ID, s.SQL_ID, ROUND(s.Elapsed_Time/1000000,2) Elapsed_Time_Secs, Executions,
-                             v.Dependency_Depth, v.Considered_View, v.Referencing_View, v.Referenced_View,
-                             SUBSTR(s.SQL_FullText,1,1000) SQL_Text
-                      FROM   gv$SQLArea s
-                      CROSS JOIN Views v
-                      WHERE /*+ ORDERED_PREDICATES */
-                            s.Command_Type IN (2,3,6,7) -- Insert/Update/Delete/SELECT
-                      AND   UPPER(s.SQL_FullText) LIKE '%'||v.Root_View_Name||'%'
-                      AND   (    REGEXP_LIKE(SQL_FullText, '[ ,.]'||Root_View_Name||'[ ,.]', 'im')
-                              OR REGEXP_LIKE(SQL_FullText, '[ ,.]'||Root_View_Name||'$', 'im')
-                              OR REGEXP_LIKE(SQL_FullText, '^'||Root_View_Name||'[ ,.]', 'im')
-                            )
-                      ORDER BY s.Elapsed_Time DESC
-            </pre>
+<h3>Views with ORDER BY in View-SQL</h3>
+Sorting of SQL result within views often is unnecessary because it is not known in view how the calling SQL processes the result.<br/>
+Sorting should be placed in calling SQL instead of view if necessary.<br/>
+Selection is PL/SQL-Code so you have to execute it outside Panorama.<br/>
+<pre style='background-color: #FFFFCC;'>SET SERVEROUTPUT ON;
+
+DECLARE
+  Res CLOB;
+BEGIN
+  DBMS_OUTPUT.ENABLE(10000000);
+  DBMS_OUTPUT.PUT_LINE('Check Views for ORDER BY');
+  FOR REC IN (SELECT Owner, View_Name FROM DBA_Views WHERE  Owner NOT IN ('SYS', 'SYSTEM', 'DBSNMP', 'WMSYS', 'CTXSYS', 'XDB', 'PUBLIC', 'OUTLN')) LOOP
+    BEGIN
+      Res := DBMS_METADATA.GET_DDL(object_type => 'VIEW', name => Rec.view_name, schema => Rec.owner);
+      IF DBMS_LOB.Instr(UPPER(Res), 'ORDER BY') > 0 THEN
+        DBMS_OUTPUT.PUT_LINE('View-Text contains ORDER BY: owner='||Rec.Owner||', View='||Rec.View_Name);
+      END IF;
+    EXCEPTION
+      WHEN OTHERS THEN RAISE_APPLICATION_ERROR(-20999, 'Error '||SQLERRM||' getting DDL for owner='||Rec.Owner||', View='||Rec.View_Name);
+    END;
+  END LOOP;
+END;
+/</pre>

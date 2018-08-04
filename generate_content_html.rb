@@ -1,6 +1,6 @@
 #!/usr/bin/ruby
 
-$LOAD_PATH << '../Panorama_Gem/app/helpers'
+$LOAD_PATH << 'Panorama_Gem/app/helpers'
 
 require 'menu_extension_helper.rb'
 require 'menu_helper.rb'
@@ -94,11 +94,12 @@ class Generator
     menu_entries << "</table>\n"
     menu_entries << "</body></html>"
 
-    filename = "panorama_content.html"
+    filename = "panorama_content_generated.html"
     File.open(filename, 'w') do|file|
       file.write(menu_entries)
     end
-    system("git add #{filename}")
+    # not more needed for GitLpb pipeline
+    # system("git add #{filename}")
 
   rescue Exception => e
     puts("Exception beim Schreiben in #{filename}: #{e.message}")
