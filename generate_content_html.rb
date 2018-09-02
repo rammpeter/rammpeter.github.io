@@ -34,6 +34,10 @@ class Generator
     []
   end
 
+  def get_cached_panorama_object_sizes_exists
+    true
+  end
+
   module MenuHelper::PanoramaSamplerStructureCheck
     def self.object_sizes_exists?
       true
