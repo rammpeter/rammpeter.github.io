@@ -51,6 +51,7 @@
                         <li>"SELECT ANY DICTIONARY" as default grant for access on DBA_xxx-views</li>
                         <li>Starting with Oracle 11.2.0.4 you also need the grant "OEM_MONITOR" to generate Oracle's builtin AWR-reports and ASH-reports</li>
                         <li>For getting results from DBMS_METADATA.GET_DDL you need the SELECT_CATALOG_ROLE</li>
+                        <li>For getting results from DBMS_PERF (Perfmance Hub report) you need the role EM_EXPRESS_BASIC</li>
                     </ul>
                     <li>Several functions of Panorama are functional only if either:</li>
                     <ul>
@@ -134,10 +135,10 @@
   -d rammpeter/panorama</pre>
 
                 Startup of application in docker container may require one or two minutes.
-                Your docker container is up and running if this last two lines appear in log calling <pre style="display: inline;">docker logs panorama</pre>
+                Your docker container is up and running if this two lines appear in log calling <pre style="display: inline;">docker logs panorama</pre>
                 <pre>
-2017-08-24 17:17:18.024:INFO:oejs.ServerConnector:main: Started ServerConnector@6a83bd10{HTTP/1.1}{0.0.0.0:8080}
-2017-08-24 17:17:18.024:INFO:oejs.Server:main: Started @137606ms
+> INFO:oejs.ServerConnector:main: Started ServerConnector@6a83bd10{HTTP/1.1}{0.0.0.0:8080}
+> INFO:oejs.Server:main: Started @137606ms
                 </pre>
 
                 <h3>How to get help?</h3>
