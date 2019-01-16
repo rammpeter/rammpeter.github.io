@@ -134,17 +134,21 @@
                 </ul>
 
                 <h3>Limitations compared to AWR</h3>
-                <h4>Sampling of active sessions</h4>
-                <ul>
-                    <li>Plan-line-ID and operation are not recorded because of missing source in v$-views</li>
-                    <li>Only top level SQL is recorded as listed by v$Session.sql_id</li>
-                    <li>I/O-Requests and amount read/written is not recorded because sampling from v$SesStat is too slow for one sample per second</li>
-                </ul>
-                <h4>Sampling of segment statistics</h4>
-                <ul>
-                    <li>'gc cr blocks served', 'gc current blocks served' and 'chain row excess' are not available from v$SegStat</li>
-                </ul>
-
+                    <h4>Sampling of active sessions</h4>
+                    <ul>
+                        <li>Plan-line-ID and operation are not recorded because of missing source in v$-views</li>
+                        <li>Only top level SQL is recorded as listed by v$Session.sql_id</li>
+                        <li>I/O-Requests and amount read/written is not recorded because sampling from v$SesStat is too slow for one sample per second</li>
+                    </ul>
+                    <h4>Sampling of segment statistics</h4>
+                    <ul>
+                        <li>'gc cr blocks served', 'gc current blocks served' and 'chain row excess' are not available from v$SegStat</li>
+                    </ul>
+                <h3>Monitoring health status of Panorama-Sampler</h3>
+                    There is a monitoring service available at <pre style="display: inline;">http://&lt;your&nbsp;server&nbsp;ip&gt;:8080/Panorama/panorama_sampler/monitor_sampler_status</pre>.<br/>
+                    It returns a JSON buffer with a list of configured data sources with ID, name, timestamp of last successfull connect, timestamp of last error and error message.<br/>
+                    The http return status depends from the existence of a still persisting error in any of the configured datasources (OK = 200, Error = 500).<br/>
+                    You can use this service for observation with monitoring tools like Zabbix, Nagios. Icinga etc. .
             </div>
         </div>
         <div style="clear: both;"></div>
