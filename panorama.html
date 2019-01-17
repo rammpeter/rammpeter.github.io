@@ -208,6 +208,13 @@
                             <li>Solution: Start Panorama with non-blocking entropy generator by option <pre style="display: inline;">java.security.egd=file:/dev/urandom</pre><li>
                             <li>If using the embedded Jetty app-server then type <pre style="display: inline;">java -Djava.security.egd=file:/dev/urandom -jar Panorama.war</pre></li>
                             <li>If using Tomcat then set <pre style="display: inline;">export CATALINA_OPTS=-Djava.security.egd=file:/dev/urandom</pre> before starting Tomcat</li>
+                            <li>On Read Hat Linux and clones (Oracle Linux etc.) you can install rng-tools instead of using /dev/urandom like described <a href="https://developers.redhat.com/blog/2017/10/05/entropy-rhel-based-cloud-instances/">here</a>:
+                                <ul>
+                                    <li>yum install -y rng-tools</li>
+                                    <li>systemctl enable rngd.service</li>
+                                    <li>systemctl start rngd.service</li>
+                                </ul>
+                            </li>
                         </ul>
                     </li>
                 </ul>
