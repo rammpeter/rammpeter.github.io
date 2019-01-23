@@ -7,20 +7,20 @@ Author: Peter Ramm ( Peter@ramm-oberhermsdorf.de )
 :imagesdir: ./images
 :numbered:
 :sectnumlevels: 6
-:website: http://rammpeter.github.io
+:website: https://rammpeter.github.io
 
 
 
 .Panorama
 **********************************************************************
 Panorama is my swiss army knife for performance analysis and troubleshooting on Oracle databases.
-To find more about Panorama including download link, blog etc. look at http://rammpeter.github.io/panorama.html
+To find more about Panorama including download link, blog etc. look at https://rammpeter.github.io/panorama.html
 **********************************************************************
 
 TIP: This page is not yet completed and still under construction.
 
 == Introduction into usage of Panorama ==
-Detailled preconditions for operation and usage of Panorama are described here: http://rammpeter.github.io/panorama.html
+Detailled preconditions for operation and usage of Panorama are described here: https://rammpeter.github.io/panorama.html
 
 
 === Conditions for DB-user for usage with Panorama ===

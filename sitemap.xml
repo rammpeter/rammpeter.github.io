@@ -1,27 +1,47 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   <url>
-    <loc>http://rammpeter.github.io/</loc>
+    <loc>https://rammpeter.github.io/</loc>
   </url>
 
   <url>
-    <loc>http://rammpeter.github.io/index.html</loc>
+    <loc>https://rammpeter.github.io/index.html</loc>
   </url>
 
   <url>
-    <loc>http://rammpeter.github.io/panorama.html</loc>
+    <loc>https://rammpeter.github.io/start.html</loc>
   </url>
 
   <url>
-    <loc>http://rammpeter.github.io/oracle_performance_tuning.html</loc>
+    <loc>https://rammpeter.github.io/panorama.html</loc>
   </url>
 
   <url>
-    <loc>http://rammpeter.github.io/slickgrid_extended.html</loc>
+    <loc>https://rammpeter.github.io/panorama_sampler.html</loc>
   </url>
 
   <url>
-    <loc>http://rammpeter.github.io/SlickGrid_Extended_Demo.html</loc>
+    <loc>https://rammpeter.github.io/oracle_performance_tuning.html</loc>
+  </url>
+
+  <url>
+    <loc>https://rammpeter.github.io/Oracle_performance_analysis_with_Panorama.html</loc>
+  </url>
+
+  <url>
+    <loc>https://rammpeter.github.io/slickgrid_extended.html</loc>
+  </url>
+
+  <url>
+    <loc>https://rammpeter.github.io/SlickGrid_Extended_Demo.html</loc>
+  </url>
+
+  <url>
+    <loc>https://rammpeter.github.io/impressum.html</loc>
+  </url>
+
+  <url>
+    <loc>https://rammpeter.github.io/privacy.html</loc>
   </url>
 
 </urlset>
