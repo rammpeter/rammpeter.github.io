@@ -122,8 +122,7 @@
                 <br/>
 
                 <a name="docker"></a><h4>Customize your Docker container</h4>
-                Panorama is also available as docker image at dockerhub.com for immediate execution at your docker host.<br/>
-                To download and start Panorama immediately type:<br/>
+                To download and start Panorama as Docker container type:<br/>
                 <pre>docker run --name panorama -p8080:8080 -d rammpeter/panorama</pre>
                 You can customize your Docker container:
                 <ul>
@@ -237,11 +236,10 @@
                     <li>Panorama pools (reuses) DB-connections. You can view pooled connections at Panorama server via <pre style="display: inline;">http://&lt;your&nbsp;server&nbsp;ip&gt;:8080/Panorama/usage/connection_pool</pre></li>
                 </ul>
 
-                <a name="possible runtime problems"></a><h4>Possible runtime problems</h4>
+                <a name="possible runtime problems"></a><h4>Possible runtime problems with standalone application</h4>
                 <ul>
                     <li>
-                        You will lose your stored database connection info during restart if you don't set environment variable <pre style="display: inline;">PANORAMA_VAR_HOME</pre>
-                        Without defining environment variable <pre style="display: inline;">PANORAMA_VAR_HOME</pre> before starting Panorama you will lose your stored database connection info during restart because Jetty chooses a new temporary subdir for every startup.
+                        You will lose your stored database connection info during restart if you don't set environment variable <pre style="display: inline;">PANORAMA_VAR_HOME</pre> because Panorama will choose a new temporary subdir for every startup.
                     </li>
                     <li>
                         Beginning with Java8 u102 you need to install the "Java Cryptography Extension (JCE) Unlimited Strength Jurisdiction Policy Files for JDK/JRE 8" to use strong encryption with Panorama<b/>
@@ -272,6 +270,7 @@
                         </ul>
                     </li>
                 </ul>
+                <br/>To avoid such conditions I recommend running Panorama as Docker container.<br/>
                 <img src="images/Panorama_Overview.png"/>
                 <h3>At least</h3>
                 My request to americans: Please<br/>
