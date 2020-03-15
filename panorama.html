@@ -92,19 +92,31 @@
                 <a name="how to get it"></a><h3>How to get it?</h3>
                     <ul>
                         <li>You can use Panorama for free under the terms and conditions of <a href="http://www.gnu.org/licenses/gpl-3.0" target="_blank">GNU General Public License</a>.</li>
-                        <li><a href="panorama_download.html" target="_blank">Download Panorama application here (Panorama.war)</a>
-                        <li>Pull docker image from <a href="https://hub.docker.com/r/rammpeter/panorama" target="_blank">https://hub.docker.com/r/rammpeter/panorama</a></li>
+                        <li>Pull docker image from <a href="https://hub.docker.com/r/rammpeter/panorama" target="_blank">https://hub.docker.com/r/rammpeter/panorama</a> or </li>
+                        <li>Download Panorama application <a href="panorama_download.html" target="_blank">here (Panorama.war)</a>
                     </ul>
 
                 <a name="how to run it"></a><h3>How to run it?</h3>
                 <a name="start running quickly"></a><h4>Start running quickly</h4>
-                <ul>
-                    <li><a href="panorama_download.html" target="_blank">Download file Panorama.war</a></li>
-                    <li>Open a terminal window, navigate to the directory containing Panorama.war and type <pre>java -jar Panorama.war</pre> no matter if your are running Windows, Linux or Mac-OS</li>
-                    <li>This starts the embedded Jetty application server within one or two minutes, accessible at port 8080 via <pre style="display: inline;">http://&lt;your&nbsp;server&nbsp;ip&gt;:8080</pre></li>
-                    <li>Now you can connect to Panorama's login screen in your browser via <pre style="display: inline;">http://&lt;your&nbsp;server&nbsp;ip&gt;:8080/Panorama</pre></li>
-                </ul>
-
+                <table>
+                    <tr>
+                        <th>Docker container</th>
+                        <th>Standalone</th>
+                    </tr>
+                    <tr>
+                        <td>
+                            <pre>docker run --name panorama -p8080:8080 -d rammpeter/panorama</pre>
+                        </td>
+                        <td>
+                            <ul>
+                                <li><a href="panorama_download.html" target="_blank">Download file Panorama.war</a></li>
+                                <li>Open a terminal window, navigate to the directory containing Panorama.war and type <pre>java -jar Panorama.war</pre> no matter if your are running Windows, Linux or Mac-OS</li>
+                            </ul>
+                        </td>
+                    </tr>
+                </table>
+                This starts the application within one or two minutes. Now you can connect to Panorama's login screen in your browser via <pre style="display: inline;">http://&lt;your&nbsp;server&nbsp;ip&gt;:8080/Panorama</pre>
+                <br/>
                 <a name="customize"></a><h4>Customize your installation</h4>
                 <ul>
                     <li>Environment variables that are evaluated by Panorama-Server:
@@ -224,6 +236,7 @@
                 <a name="possible runtime problems"></a><h4>Possible runtime problems</h4>
                 <ul>
                     <li>
+                        You will lose your stored database connection info during restart if you don't set environment variable <pre style="display: inline;">PANORAMA_VAR_HOME</pre>
                         Without defining environment variable <pre style="display: inline;">PANORAMA_VAR_HOME</pre> before starting Panorama you will lose your stored database connection info during restart because Jetty chooses a new temporary subdir for every startup.
                     </li>
                     <li>
