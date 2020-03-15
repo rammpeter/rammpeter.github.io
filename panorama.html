@@ -1,6 +1,6 @@
 <html><head><meta content="text/html; charset=UTF-8" http-equiv="content-type" /></head>
-<body onload="window.location = 'https://rammpeter.github.io/index.html?target=panorama';">
-
+<!--<body onload="window.location = 'https://rammpeter.github.io/index.html?target=panorama';">
+-->
 <div style="position: relative;" xmlns="http://www.w3.org/1999/html">
     <div class="shadow opaque" style="width:100%; height: 100%; background-color: #99CC99; position:absolute; top:0px; left:0px; z-index:1;">
     </div>
@@ -69,7 +69,7 @@
                 <a name="preconditions"></a><h3>Which preconditions are required?</h3>
                 <ul>
                     <li>
-                        Java runtime environment, version 7 or above to run Panorama application.<b/>
+                        Java runtime environment, version 7 or above to run Panorama application.<br/>
                         Beginning with Java 8 you may also need the <a href="http://www.oracle.com/technetwork/java/javase/downloads/jce8-download-2133166.html">Java Cryptography Extension Files</a> installed.
                     </li>
                     <li>Web browser with ES6-support to access Panorama-GUI (Firefox, Chrome, Safari, Edge)</li>
@@ -98,7 +98,7 @@
 
                 <a name="how to run it"></a><h3>How to run it?</h3>
                 <a name="start running quickly"></a><h4>Start running quickly</h4>
-                <table>
+                <table  border="1">
                     <tr>
                         <th>Docker container</th>
                         <th>Standalone</th>
@@ -106,9 +106,9 @@
                     <tr>
                         <td>
                             <pre>docker run \
-                                --name panorama \
-                                -p8080:8080 -d \
-                                rammpeter/panorama</pre>
+  --name panorama \
+  -p8080:8080 -d \
+  rammpeter/panorama</pre>
                         </td>
                         <td>
                             <ul>
@@ -117,10 +117,41 @@
                             </ul>
                         </td>
                     </tr>
-                </table>
+                </table><br/>
                 This starts the application within one or two minutes. Now you can connect to Panorama's login screen in your browser via <pre style="display: inline;">http://&lt;your&nbsp;server&nbsp;ip&gt;:8080/Panorama</pre>
                 <br/>
-                <a name="customize"></a><h4>Customize your installation</h4>
+
+                <a name="docker"></a><h4>Customize your Docker container</h4>
+                Panorama is also available as docker image at dockerhub.com for immediate execution at your docker host.<br/>
+                To download and start Panorama immediately type:<br/>
+                <pre>docker run --name panorama -p8080:8080 -d rammpeter/panorama</pre>
+                You can customize your Docker container:
+                <ul>
+                    <li>Mount your host's tnsnames.ora at $TNS_ADMIN/tnsnames.ora into the container in folder /etc and tell it Panorama by setting $TNS_ADMIN in container so Panorama can refer to your config:  <pre style="display: inline;">-v $TNS_ADMIN/tnsnames.ora:/etc/tnsnames.ora -e TNS_ADMIN=/etc</pre></li>
+                    <li>Mount directory for Panorama's config files (/var/opt/panorama) to a directory of your choice outside the container so the config persists even if container is rebuilded</li>
+                    <li>Set your timezone for Docker container (default is UTC): <pre style="display: inline;">-e TZ="Europe/Berlin"</pre></li>
+                    <li>Set maximum Java heap space memory usable for Panorama in megabytes (Default=1024):<pre style="display: inline;">-e MAX_JAVA_HEAP_SPACE_MB=1024</pre>  </li>
+                </ul>
+                Example:
+                <pre>docker run --name panorama -p8080:8080 \
+  -v $TNS_ADMIN/tnsnames.ora:/etc/tnsnames.ora \
+  -v /var/opt/my_panorama_config:/var/opt/panorama \
+  -e TNS_ADMIN=/etc -e TZ="Europe/Berlin" \
+  -e MAX_JAVA_HEAP_SPACE_MB=1024 \
+  -d rammpeter/panorama</pre>
+
+                Startup of application in docker container may require one or two minutes.
+                Your docker container is up and running if this two lines appear in log calling <pre style="display: inline;">docker logs panorama</pre>
+                <pre>
+> INFO:oejs.ServerConnector:main: Started ServerConnector@6a83bd10{HTTP/1.1}{0.0.0.0:8080}
+> INFO:oejs.Server:main: Started @137606ms
+                </pre>
+
+                <h5>Running docker-container with SSL-encrypted https-access </h5>
+                This <a href="https://rammpeter.blogspot.com/2019/03/panorama-configure-https-access-to.html" target="_blank">blog post</a> describes how to configure Panorama and Nginx with docker-compose for SSL-encryption.
+
+
+                <a name="customize"></a><h4>Customize your standalone installation</h4>
                 <ul>
                     <li>Environment variables that are evaluated by Panorama-Server:
                         <ul>
@@ -153,36 +184,6 @@
                     <li>Panorama.war can also be run as web archive in any Java JEE application server or web container like Tomcat, Glassfish, JBoss etc. .<br>
                         For production use with SSL encrypted https-connections I personally use Tomcat.</li>
                 </ul>
-
-
-                <a name="docker"></a><h4>Run in Docker container</h4>
-                Panorama is also available as docker image at dockerhub.com for immediate execution at your docker host.<br/>
-                To download and start Panorama immediately type:<br/>
-                <pre>docker run --name panorama -p8080:8080 -d rammpeter/panorama</pre>
-                You can customize your Docker container:
-                <ul>
-                    <li>Mount your host's tnsnames.ora at $TNS_ADMIN/tnsnames.ora into the container in folder /etc and tell it Panorama by setting $TNS_ADMIN in container so Panorama can refer to your config:  <pre style="display: inline;">-v $TNS_ADMIN/tnsnames.ora:/etc/tnsnames.ora -e TNS_ADMIN=/etc</pre></li>
-                    <li>Mount directory for Panorama's config files (/var/opt/panorama) to a directory of your choice outside the container so the config persists even if container is rebuilded</li>
-                    <li>Set your timezone for Docker container (default is UTC): <pre style="display: inline;">-e TZ="Europe/Berlin"</pre></li>
-                    <li>Set maximum Java heap space memory usable for Panorama in megabytes (Default=1024):<pre style="display: inline;">-e MAX_JAVA_HEAP_SPACE_MB=1024</pre>  </li>
-                </ul>
-                Example:
-                <pre>docker run --name panorama -p8080:8080 \
-  -v $TNS_ADMIN/tnsnames.ora:/etc/tnsnames.ora \
-  -v /var/opt/my_panorama_config:/var/opt/panorama \
-  -e TNS_ADMIN=/etc -e TZ="Europe/Berlin" \
-  -e MAX_JAVA_HEAP_SPACE_MB=1024 \
-  -d rammpeter/panorama</pre>
-
-                Startup of application in docker container may require one or two minutes.
-                Your docker container is up and running if this two lines appear in log calling <pre style="display: inline;">docker logs panorama</pre>
-                <pre>
-> INFO:oejs.ServerConnector:main: Started ServerConnector@6a83bd10{HTTP/1.1}{0.0.0.0:8080}
-> INFO:oejs.Server:main: Started @137606ms
-                </pre>
-
-                <h5>Running docker-container with SSL-encrypted https-access </h5>
-                This <a href="https://rammpeter.blogspot.com/2019/03/panorama-configure-https-access-to.html" target="_blank">blog post</a> describes how to configure Panorama and Nginx with docker-compose for SSL-encryption.
 
                 <a name="run demo"></a><h4>Run demo installation</h4>
                 <ul>
