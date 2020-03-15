@@ -106,7 +106,6 @@
                     <tr>
                         <td>
                             <pre>docker run \
-  --name panorama \
   -p8080:8080 -d \
   rammpeter/panorama</pre>
                         </td>
@@ -123,7 +122,7 @@
 
                 <a name="docker"></a><h4>Customize your Docker container</h4>
                 To download and start Panorama as Docker container type:<br/>
-                <pre>docker run --name panorama -p8080:8080 -d rammpeter/panorama</pre>
+                <pre>docker run -p8080:8080 -d rammpeter/panorama</pre>
                 You can customize your Docker container:
                 <ul>
                     <li>Mount your host's tnsnames.ora at $TNS_ADMIN/tnsnames.ora into the container in folder /etc and tell it Panorama by setting $TNS_ADMIN in container so Panorama can refer to your config:  <pre style="display: inline;">-v $TNS_ADMIN/tnsnames.ora:/etc/tnsnames.ora -e TNS_ADMIN=/etc</pre></li>
