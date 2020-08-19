@@ -73,14 +73,17 @@
                         Beginning with Java 8 you may also need the <a href="http://www.oracle.com/technetwork/java/javase/downloads/jce8-download-2133166.html">Java Cryptography Extension Files</a> installed.
                     </li>
                     <li>Web browser with ES6-support to access Panorama-GUI (Firefox, Chrome, Safari, Edge)</li>
-                    <li>Your Oracle-User used for login with Panorama requires the following grants:</li>
-                    <ul>
-                        <li>"SELECT ANY DICTIONARY" as default grant for access on DBA_xxx-views</li>
-                        <li>Starting with Oracle 11.2.0.4 you also need the grant "OEM_MONITOR" to generate Oracle's builtin AWR-reports and ASH-reports</li>
-                        <li>For getting results from DBMS_METADATA.GET_DDL and for Autonomous Database in Oracle cloud you need the SELECT_CATALOG_ROLE</li>
-                        <li>For getting results from DBMS_PERF (Performance Hub report) you need the role EM_EXPRESS_BASIC</li>
-                        <li>For getting results from DBMS_SPACE.SPACE_USAGE you need the ANALYZE privilege on the object or the ANALYZE ANY privilege</li>
-                    </ul>
+                    <li>Your Oracle-User used for login with Panorama requires the following grants / privileges:
+                        <table  border="1">
+                            <tr><th>Grant</th>                  <th>Reason for grant</th></tr>
+                            <tr><td>SELECT ANY DICTIONARY</td>  <td>Default grant for access on DBA_xxx-views. This is the minimum requirement to run Panorama</td></tr>
+                            <tr><td>OEM_MONITOR</td>            <td>Starting with Oracle 11.2.0.4 you need this grant to generate Oracle's builtin AWR-reports and ASH-reports</td></tr>
+                            <tr><td>SELECT_CATALOG_ROLE</td>    <td>For getting results from DBMS_METADATA.GET_DDL and for Autonomous Database in Oracle cloud you need this role</tr>
+                            <tr><td>EM_EXPRESS_BASIC</td>       <td>For getting results from DBMS_PERF (Performance Hub report) you need this grant</td></tr>
+                            <tr><td>ANALYZE ANY</td>            <td>For getting results from DBMS_SPACE.SPACE_USAGE you need the ANALYZE privilege on the particular object or the ANALYZE ANY privilege</td></tr>
+                            <tr><td>SELECT ANY TRANSACTION</td> <td>This grant is needed for selection on Flashback_Transaction_Query</td></tr>
+                        </table>
+                    </li>
                     <li>Several functions of Panorama are functional only if either:</li>
                     <ul>
                         <li>Oracle's "Diagnostic Pack" is licensed for the connected Oracle-DB or</li>
