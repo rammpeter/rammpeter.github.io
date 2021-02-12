@@ -178,9 +178,11 @@
                         </td>
                     </tr>
                     <tr>
-                        <td><pre style="display: inline;">PANORAMA_LOG_SQL=true</pre></td>
-                        <td>Write the complete text of each executed SQL-Statement to log output.<br/>
-                            This helps to reproduce how Panorama gets information</td>
+                        <td><pre style="display: inline;">PANORAMA_LOG_LEVEL=debug|info|warn|error</pre></td>
+                        <td>Set the level for log output on stdout rsp. Docker log.<br/>
+                            Default log level is "info".<br/>
+                            Setting PANORAMA_LOG_LEVEL=debug enables the log output of each executed SQL-Statement.<br/>
+                            This helps to reproduce how Panorama gets information from database.</td>
                     </tr>
                     <tr>
                         <td><pre style="display: inline;">SECRET_KEY_BASE</pre></td>
