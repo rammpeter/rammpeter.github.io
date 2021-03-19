@@ -230,11 +230,11 @@
 
                 <a name="security"></a><h3>What about security?</h3>
                 <ul>
-                    <li>For production purposes you should run Panorama with SSL-encrypted web traffic (https). Easiest way for SSL connections is to run Panorama in a configured Tomcat etc. or use Nginx/Apache as proxy.</li>
-                    <li>Your oracle password is stored encrypted in server memory and will be decrypted shortly only for the process of establishing connection to your target database.<br/>
-                    The key used for this encryption consists of a server side key which is salted with a unique client key specific to your browser instance.<br/>
+                    <li>For production purposes you should run Panorama with SSL-encrypted web traffic (https). Easiest way for SSL connections is to run Panorama in a configured Tomcat etc. or use Nginx/Apache as reverse proxy.</li>
+                    <li>Your Oracle DB connection's password is stored encrypted in server memory and will be decrypted shortly only for the process of establishing connection to your target database.<br/>
+                    The key used for this encryption consists of the server side key (SECRET_KEY_BASE) which is salted with a unique client key specific to your browser instance.<br/>
                     This way only requests from your browser are able to reuse the stored connect info for reestablishing the database connection.</li>
-                    <li>If you retain your login info for further fast logins (checkbox 'Save logins' in statup dialog), this info is stored in local server file system completely encrypted the same way like passwords.</li>
+                    <li>If you retain your login info for further fast logins (checkbox 'Save logins' in statup dialog), this info is stored in local server file system at <pre style="display: inline;">PANORAMA_VAR_HOME</pre> completely encrypted the same way like passwords.</li>
                     <li>You should customize the server side key used for encryption by one of the following:
                         <ul>
                             <li>create a environment variable <pre style="display: inline;">SECRET_KEY_BASE</pre> with the key value.</li>
@@ -243,7 +243,11 @@
                         The key can contain all printable characters and should be at least 128 characters long.<br/>
                         Every change of the given key at server side leads to invalidation of all stored connection info.<br/><br/>
                         If no fixed key is given by <pre style="display: inline;">SECRET_KEY_BASE</pre> or <pre style="display: inline;">SECRET_KEY_BASE_FILE</pre> than a system generated key is used for encryption.<br/>
-                        This system generated key is created new each time the application starts, so this way stored configuration is not more valid after restart!
+                        This system generated key is stored in the folder declared by <pre style="display: inline;">PANORAMA_VAR_HOME</pre>.
+                    </li>
+                    <li>
+                        Caution: If you don't set a value for <pre style="display: inline;">PANORAMA_VAR_HOME</pre> than your systems temporary folder is used to store the encyryption key base as well as the saved encrypted login credentials.<br/>
+                        That means this information may be lost at OS or container restart!
                     </li>
                 </ul>
 
