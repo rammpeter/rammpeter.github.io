@@ -32,7 +32,9 @@
 
                 <ul>
                     <li>You enable Panorama-Sampler if you start Panorama with a master-password for Panorama-Sampler provided by environment variable PANORAMA_SAMPLER_MASTER_PASSWORD, for example:
-                        <pre>PANORAMA_SAMPLER_MASTER_PASSWORD=mypasswd java -jar Panorama.war</pre> </li>
+                        <pre>PANORAMA_SAMPLER_MASTER_PASSWORD=mypasswd java -jar Panorama.war</pre> or
+                        <pre>docker run -e PANORAMA_SAMPLER_MASTER_PASSWORD=mypasswd rammpeter/panorama</pre>
+                    </li>
                     <li>If master-password is set, Panorama starts enhanced with:
                         <ul>
                             <li>Additional menu entry "Panorama-Sampler config" in menu "Spec. additions"</li>
