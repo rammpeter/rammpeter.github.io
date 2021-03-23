@@ -31,9 +31,9 @@
                 <h4>Configure your Panorama server instance for Panorama-Sampler</h4>
 
                 <ul>
-                    <li>You enable Panorama-Sampler if you start Panorama with a master-password for Panorama-Sampler provided by environment variable PANORAMA_SAMPLER_MASTER_PASSWORD, for example:
-                        <pre>PANORAMA_SAMPLER_MASTER_PASSWORD=mypasswd java -jar Panorama.war</pre> or
-                        <pre>docker run -e PANORAMA_SAMPLER_MASTER_PASSWORD=mypasswd rammpeter/panorama</pre>
+                    <li>You enable Panorama-Sampler if you start Panorama with a master-password for Panorama-Sampler provided by environment variable PANORAMA_SAMPLER_MASTER_PASSWORD, for example:<br/>
+                        <pre style="display: inline;">PANORAMA_SAMPLER_MASTER_PASSWORD=mypasswd java -jar Panorama.war</pre> or<br/>
+                        <pre style="display: inline;">docker run -e PANORAMA_SAMPLER_MASTER_PASSWORD=mypasswd rammpeter/panorama</pre>
                     </li>
                     <li>If master-password is set, Panorama starts enhanced with:
                         <ul>
@@ -67,7 +67,9 @@
                     <li><pre style="display: inline;">GRANT CONNECT, RESOURCE, CREATE VIEW</pre> to create tables and views</li>
                     <li>Enough quota on it's default tablespace to create objects</li>
                     <li><pre style="display: inline;">GRANT SELECT ANY DICTIONARY</pre> to select from dictionary tables</li>
-                    <li><pre style="display: inline;">GRANT EXECUTE ON DBMS_LOCK</pre> as SYS to allow execution of DBMS_LOCK.SLEEP in active session sampler (needed up to rel. 12.2, starting with 18.0 Panorama uses DBMS_SESSION.SLEEP instead of DBMS_LOCK.SLEEP)</li>
+                    <li><pre style="display: inline;">GRANT EXECUTE ON DBMS_LOCK</pre> as SYS to allow execution of DBMS_LOCK.SLEEP in active session sampler.<br/>
+                        This is needed only up to rel. 12.2, starting with 18.0 Panorama uses DBMS_SESSION.SLEEP instead of DBMS_LOCK.SLEEP.
+                    </li>
                     <li>The right to create objects in different object schema if connection user and object schema are different</li>
                 </ul>
                 If the connection user has the grant <pre style="display: inline;">GRANT SELECT ANY TABLE</pre> in addition, than PL/SQL-packages are created for the execution of sampling.</br>

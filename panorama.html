@@ -13,7 +13,7 @@
                     <a href="panorama_download.html" title="Download Panorama-application" target="_blank"><img src="images/download.png" height="30px"></a>
                     <a href="https://hub.docker.com/r/rammpeter/panorama/" title="Get Panorama as Docker image" target="_blank"><img src="images/docker.png" height="30px"></a>
                     <a href="https://www.slideshare.net/search/slideshow?searchfrom=header&q=oracle+panorama+%22peter+ramm%22" title="Show Panorama-tutorials at slideshare.net" target="_blank"><img src="images/slideshare.png" height="30px"></a>
-                    <a href="http://130.61.88.50:8080/Panorama" title="Run Panorama demo at Oracle cloud" target="_blank"><img src="images/play.png" height="30px"></a>
+                    <a href="http://158.101.168.240:8080/Panorama" title="Run Panorama demo at Oracle cloud" target="_blank"><img src="images/play.png" height="30px"></a>
                 </h2>
                 „Panorama” is my swiss army knife for performance analysis and troubleshooting on Oracle databases.<br/><br/>
                 Completed over many years it contains solutions for analysis workflows based on practical experience.<br/>
@@ -232,10 +232,10 @@
                 <ul>
                     <li>For production purposes you should run Panorama with SSL-encrypted web traffic (https). Easiest way for SSL connections is to run Panorama in a configured Tomcat etc. or use Nginx/Apache as reverse proxy.</li>
                     <li>Your Oracle DB connection's password is stored encrypted in server memory and will be decrypted shortly only for the process of establishing connection to your target database.<br/>
-                    The key used for this encryption consists of the server side key (SECRET_KEY_BASE) which is salted with a unique client key specific to your browser instance.<br/>
+                    The key used for this encryption consists of the server side key (<pre style="display: inline;">SECRET_KEY_BASE</pre>) which is salted with a unique client key specific to your browser instance.<br/>
                     This way only requests from your browser are able to reuse the stored connect info for reestablishing the database connection.</li>
                     <li>If you retain your login info for further fast logins (checkbox 'Save logins' in statup dialog), this info is stored in local server file system at <pre style="display: inline;">PANORAMA_VAR_HOME</pre> completely encrypted the same way like passwords.</li>
-                    <li>You should customize the server side key used for encryption by one of the following:
+                    <li>You can customize the server side key used for encryption by one of the following:
                         <ul>
                             <li>create a environment variable <pre style="display: inline;">SECRET_KEY_BASE</pre> with the key value.</li>
                             <li>create a file with the key value and set the environment variable <pre style="display: inline;">SECRET_KEY_BASE_FILE</pre> to the location of this file.</li>
