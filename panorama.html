@@ -330,7 +330,7 @@
 <script type="text/javascript">
     // Version und Datum ermitteln aus version.rb
     try {
-        $.get("https://raw.githubusercontent.com/rammpeter/Panorama_Gem/master/lib/Panorama/version.rb", function( version_html ) {
+        $.get("https://github.com/rammpeter/Panorama_Gem/raw/master/lib/panorama_gem/version.rb", function( version_html ) {
             var rest = version_html.substring(version_html.indexOf('VERSION =')+11);    // Begin of version in string
             jQuery('#panorama_version').html(rest.substring(0, rest.indexOf("'")));
 
