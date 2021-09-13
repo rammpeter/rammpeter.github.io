@@ -62,7 +62,7 @@ class Generator
 
   def generate
     def print_menu_entry(menu_entry, level)
-      ioutput = "<tr><td><b>"
+      ioutput = "<tr><td  style='white-space: nowrap;'><b>"
       for i in 0..level*20
         ioutput << "&nbsp;"
       end
@@ -73,7 +73,7 @@ class Generator
         ioutput << "#{print_menu_entry(m, level + 1) }" if m[:class] == "menu"
 
         if m[:class] == "item"
-          ioutput << "<tr><td><b>"
+          ioutput << "<tr><td style='white-space: nowrap;'><b>"
           for i in 0..(level+1)*20
             ioutput << "&nbsp;"
           end
