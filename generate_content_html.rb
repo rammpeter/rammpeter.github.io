@@ -66,18 +66,18 @@ class Generator
       for i in 0..level*20
         ioutput << "&nbsp;"
       end
-      ioutput << "#{menu_entry[:caption]}</b>"
+      ioutput << "&gt;&nbsp;#{menu_entry[:caption]}</b>"
       ioutput << "</td><td></td></tr>\n"
 
       menu_entry[:content].each do |m|
         ioutput << "#{print_menu_entry(m, level + 1) }" if m[:class] == "menu"
 
         if m[:class] == "item"
-          ioutput << "<tr><td style='white-space: nowrap;'><b>"
+          ioutput << "<tr><td style='white-space: nowrap;'>"
           for i in 0..(level+1)*20
             ioutput << "&nbsp;"
           end
-          ioutput << "#{m[:caption]}</b></td><td>#{m[:hint]}</td></tr>\n"
+          ioutput << "#{m[:caption]}</td><td>#{m[:hint]}</td></tr>\n"
         end
        end
        ioutput
@@ -86,12 +86,13 @@ class Generator
     menu_entries = "<html><head><title>Panorama: functions by top level menu entries</title></head><body  style='background-color: #ccccff;
                               color: #333;
                               font-family: sans-serif;
-                              margin: 0;
+                              margin: 10px;
                               padding:  5px;
                         '>\n"
-    menu_entries << "<h1  style='margin: 10px; padding: 15px; color:white; background-color: blue; '>Panorama: function overview by top level menu entries</h1>\n"
-    menu_entries << "Generated from source code: #{Time.now}<br/><br/><br/>\n"
-    menu_entries << "<table>\n"
+    menu_entries << "<h1  style='padding: 15px; color:white; background-color: blue; '>Panorama: function overview by top level menu entries</h1>\n"
+    menu_entries << "<span style='font-size: smaller'>Generated from source code: #{Time.now}</span><br/><br/><br/>\n"
+    menu_entries << "<table style='border-collapse: collapse; background-color: lightgray' border='1'>\n"
+    menu_entries << "<tr style='background-color: gray'><th>Menu function</th><th>Description</th></tr>"
     menu_content.each do |m|
       menu_entries << print_menu_entry(m, 0)
     end
