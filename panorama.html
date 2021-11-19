@@ -35,8 +35,8 @@
                     <li>
                         <ul>
                             <li><a href="#start running quickly">Start running quickly</a></li>
-                            <li><a href="#customize">Customize your installation</a></li>
-                            <li><a href="#docker">Run in Docker container</a></li>
+                            <li><a href="#docker">Customize a Panorama instance running as Docker container</a></li>
+                            <li><a href="#customize">Customize a Panorama instance running directly with java -jar Panorama.war</a></li>
                             <li><a href="#run demo">Run demo installation</a></li>
                         </ul>
                     </li>
@@ -67,8 +67,8 @@
                     <li>Panorama only reads via SELECT-SQLs from database. No write access, own database objects, compile etc. is needed at your database.</li>
                     <li>Supports:
                         <ul>
-                            <li>Oracle databases on standard hardware as well as RAC-systems and engineered systems (EXADATA)</li>
-                            <li>Oracle database versions beginning with Oracle 10.2</li>
+                            <li>Oracle databases on standard hardware as well as RAC-systems, engineered systems (EXADATA) and Autonomous Database in OCI</li>
+                            <li>Tested against Oracle database versions beginning with Oracle 11.2</li>
                         </ul>
                     </li>
                     <li><a href="panorama_content.html" target="_blank">Here you can find a function overview by available top level menu entries</a></li>
@@ -81,9 +81,10 @@
                         With Java 8 you may also need the <a href="http://www.oracle.com/technetwork/java/javase/downloads/jce8-download-2133166.html">Java Cryptography Extension Files</a> installed.
                     </li>
                     <li>Web browser with ES6-support to access Panorama-GUI (Firefox, Chrome, Safari, Edge)</li>
-                    <li>Your Oracle-User used for login with Panorama requires the following grants / privileges:
+                    <li>Your Oracle-User used for login with Panorama requires at least the grant SELECT ANY DICTIONARY<br/>
+                        Additional grants/privileges are required for some particular functions:
                         <table  border="1">
-                            <tr><th>Grant</th>                  <th>Reason for grant</th></tr>
+                            <tr><th>Grant</th>                  <th>Reason for the grant</th></tr>
                             <tr><td>SELECT ANY DICTIONARY</td>  <td>Default grant for access on DBA_xxx-views. This is the minimum requirement to run Panorama</td></tr>
                             <tr><td>OEM_MONITOR</td>            <td>Starting with Oracle 11.2.0.4 you need this grant to generate Oracle's builtin AWR-reports and ASH-reports</td></tr>
                             <tr><td>SELECT_CATALOG_ROLE</td>    <td>For getting results from DBMS_METADATA.GET_DDL and for Autonomous Database in Oracle cloud you need this role</tr>
@@ -134,7 +135,7 @@
                 This starts the application within one or two minutes. Now you can connect to Panorama's login screen in your browser via <pre style="display: inline;">http://&lt;your&nbsp;server&nbsp;ip&gt;:8080/Panorama</pre>
                 <br/>
 
-                <a name="docker"></a><h4>Customize your Docker container</h4>
+                <a name="docker"></a><h4>Customize a Panorama instance running as Docker container</h4>
                 To download and start Panorama as Docker container type:<br/>
                 <pre>docker run -p8080:8080 -d rammpeter/panorama</pre>
                 You can customize your Docker container:
@@ -165,7 +166,7 @@
                 This <a href="https://rammpeter.blogspot.com/2019/03/panorama-configure-https-access-to.html" target="_blank">blog post</a> describes how to configure Panorama and Nginx with docker-compose for SSL-encryption.
 
 
-                <a name="customize"></a><h4>Customize your standalone installation</h4>
+                <a name="customize"></a><h4>Customize a Panorama instance running directly with java -jar Panorama.war</h4>
                 Environment variables that are evaluated by Panorama-Server:
                 <table  border="1">
                     <tr>
@@ -314,7 +315,7 @@
                 </ul>
                 <br/>To avoid such conditions I recommend running Panorama as Docker container.<br/>
                 <img src="images/Panorama_Overview.png"/>
-                <br/><br/><br/><br/>
+                <!--<br/><br/><br/><br/>
                 <h3>Last but not least on this occasion my kindly request to Americans:</h3>
                 <div>
                     <img style="float: left" src="images/trash.png" height="50px"/><div style="font-weight: bold; font-size: larger;"><div style="color: red;">DUMP</div><div style="color: blue;">TRUMP</div></div>
@@ -322,6 +323,7 @@
                 <div style="clear: both">
                     <img style="float: left" src="images/black_lives_matter.jpg" height="80px"/>
                 </div>
+                -->
             </div>
         </div>
         <div style="clear: both;"></div>
