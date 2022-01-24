@@ -19,7 +19,7 @@
                     <a href="https://github.com/rammpeter/panorama/releases/latest/download/Panorama.war" title="Download latest Panorama release" target="_blank"><img src="images/download.png" height="30px"></a>
                     <a href="https://hub.docker.com/r/rammpeter/panorama/" title="Get Panorama as Docker image" target="_blank"><img src="images/docker.png" height="30px"></a>
                     <a href="https://www.slideshare.net/PeterRamm1" title="Show Panorama-tutorials at slideshare.net" target="_blank"><img src="images/slideshare.png" height="30px"></a>
-                    <a href="http://158.101.168.240:8080/Panorama" title="Run Panorama demo at Oracle cloud" target="_blank"><img src="images/play.png" height="30px"></a>
+                    <a href="http://158.101.168.240:8080" title="Run Panorama demo at Oracle cloud" target="_blank"><img src="images/play.png" height="30px"></a>
                     <a href="https://github.com/rammpeter/Panorama_Gem" title="Github source code repository" target="_blank"><img src="images/github.png" height="30px"></a>
                 </h2>
                 „Panorama” is my swiss army knife for performance analysis and troubleshooting on Oracle databases.<br/><br/>
@@ -132,7 +132,7 @@
                         </td>
                     </tr>
                 </table><br/>
-                This starts the application within one or two minutes. Now you can connect to Panorama's login screen in your browser via <pre style="display: inline;">http://&lt;your&nbsp;server&nbsp;ip&gt;:8080/Panorama</pre>
+                This starts the application within one or two minutes. Now you can connect to Panorama's login screen in your browser via <pre style="display: inline;">http://&lt;your&nbsp;server&nbsp;ip&gt;:8080</pre>
                 <br/>
 
                 <a name="docker"></a><h4>Customize a Panorama instance running as Docker container</h4>
@@ -221,7 +221,7 @@
                 <a name="run demo"></a><h4>Run demo installation</h4>
                 <ul>
                     <li>
-                        Run preinstalled Panorama at <a href="http://158.101.168.240:8080/Panorama" target="_blank">http://158.101.168.240:8080/Panorama</a> with access to a demo database instance at Oracle cloud.<br/>
+                        Run preinstalled Panorama at <a href="http://158.101.168.240:8080" target="_blank">http://158.101.168.240:8080</a> with access to a demo database instance at Oracle cloud.<br/>
                         Use one of the TNS-aliases PANORAMATEST_xxx with user = 'panorama_test' and password = 'TryItOut2019'
                     </li>
                     <!--<li><a href="https://panorama-ramm.herokuapp.com" target="_blank">Run preinstalled Panorama at Heroku-cloud (requires connect to your Oracle-DB from internet for usage)</a></li>-->
@@ -275,9 +275,9 @@
                     <li>Inactive database connections in connection pool are terminated 10 minutes after last usage</li>
                     <li>Panorama renders one single web page via Ajax-calls. This way the back button of your browser is not supported to return to former page content.</li>
                     <li>Panorama writes short usage information to local plain text file 'panorama_usage_info.log' in the directory targeted by environment variable <pre style="display: inline;">PANORAMA_VAR_HOME</pre><br/>
-                        You can view this log info via <pre style="display: inline;">http://&lt;your&nbsp;server&nbsp;ip&gt;:8080/Panorama/usage/info</pre>
+                        You can view this log info via <pre style="display: inline;">http://&lt;your&nbsp;server&nbsp;ip&gt;:8080/usage/info</pre>
                     </li>
-                    <li>Panorama pools (reuses) DB-connections. You can view pooled connections at Panorama server via <pre style="display: inline;">http://&lt;your&nbsp;server&nbsp;ip&gt;:8080/Panorama/usage/connection_pool</pre></li>
+                    <li>Panorama pools (reuses) DB-connections. You can view pooled connections at Panorama server via <pre style="display: inline;">http://&lt;your&nbsp;server&nbsp;ip&gt;:8080/usage/connection_pool</pre></li>
                 </ul>
 
                 <a name="possible runtime problems"></a><h4>Possible runtime problems with standalone application (using Panorama.war instead of Docker container)</h4>
@@ -295,7 +295,6 @@
                         If your are unsure for example what JDBC driver is used you can monitor class load paths by: <pre> java -verbose:class -jar Panorama.war | grep Oracle</pre>
                     </li>
                     <li>Some Java-problems may occur with older IBM Java VMs. If you have trouble with that please use alternative JVM like OpenJDK.</li>
-                    <li>Under some rare circumstances (e.g. at Windows 10) Panorama's URL is <pre style="display: inline;">http://&lt;your&nbsp;server&nbsp;ip&gt;:8080</pre> without the suffix "Panorama"</li>
                     <li>If you run Panorama on virtualized headless Linux server (e.g. in cloud environment) and your browser hangs after first request:
                         <ul>
                             <li>Reason: Your server does not generate enough entropy values in /dev/random, so read on /dev/random blocks during encryption operation</li>

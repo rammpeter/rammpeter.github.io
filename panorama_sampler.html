@@ -156,7 +156,7 @@
                         <li>'gc cr blocks served', 'gc current blocks served' and 'chain row excess' are not available from v$SegStat</li>
                     </ul>
                 <h3>Monitoring health status of Panorama-Sampler</h3>
-                    There is a monitoring service available at <pre style="display: inline;">http://&lt;your&nbsp;server&nbsp;ip&gt;:8080/Panorama/panorama_sampler/monitor_sampler_status</pre>.<br/>
+                    There is a monitoring service available at <pre style="display: inline;">http://&lt;your&nbsp;server&nbsp;ip&gt;:8080/panorama_sampler/monitor_sampler_status</pre>.<br/>
                     It returns a JSON buffer with a list of configured data sources with ID, name, timestamp of last successfull connect, timestamp of last error and error message.<br/>
                     The http return status depends from the existence of a still persisting error in any of the configured datasources (OK = 200, Error = 500).<br/>
                     You can use this service for observation with monitoring tools like Zabbix, Nagios. Icinga etc. .
