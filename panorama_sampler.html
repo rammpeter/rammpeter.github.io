@@ -28,6 +28,7 @@
                     <li>Sampling of storage object sizes</li>
                     <li>Sampling of DB-cache usage by objects</li>
                     <li>Sampling of detailed blocking lock information</li>
+                    <li>Long-term storage of condensed Active Session History</li>
                 </ul>
                 Evaluation and visualization of recorded data is possible with Panorama's web client app.
 
@@ -36,14 +37,14 @@
                 <h4>Configure your Panorama server instance for Panorama-Sampler</h4>
 
                 <ul>
-                    <li>You enable Panorama-Sampler if you start Panorama with a master-password for Panorama-Sampler provided by environment variable PANORAMA_SAMPLER_MASTER_PASSWORD, for example:<br/>
+                    <li>You enable Panorama-Sampler by starting the Panorama application with a master-password for Panorama-Sampler provided by environment variable PANORAMA_SAMPLER_MASTER_PASSWORD, for example:<br/>
                         <pre style="display: inline;">PANORAMA_SAMPLER_MASTER_PASSWORD=mypasswd java -jar Panorama.war</pre> or<br/>
                         <pre style="display: inline;">docker run -e PANORAMA_SAMPLER_MASTER_PASSWORD=mypasswd rammpeter/panorama</pre>
                     </li>
                     <li>If master-password is set, Panorama starts enhanced with:
                         <ul>
-                            <li>Additional menu entry "Panorama-Sampler config" in menu "Spec. additions"</li>
-                            <li>Background process for data sampling at each configured target database</li>
+                            <li>An additional menu entry "Panorama-Sampler config" in menu "Spec. additions"</li>
+                            <li>Background threads for data sampling (own thread for each snapshot of a configured target database)</li>
                         </ul>
                     </li>
                     <li>Access to GUI-function "Panorama-Sampler config" is protected by this master-password</li>
@@ -52,12 +53,12 @@
 
                 <h4>Configure data sources for sampling with Panorama-Sampler</h4>
 
-                <h5>To activate sampling for your database, add it at function "Panorama-Sampler config" in menu "Spec. additions" and configure:</h5>
+                <h5>To activate sampling for your database, add it with function "Panorama-Sampler config" in menu "Spec. additions" and configure:</h5>
                 <ul>
                     <li>TNS-Alias resp. host, port, SID/service-name</li>
-                    <li>user/password for the schema containing Panorama's tables for workload recording</li>
+                    <li>User/password for the schema containing Panorama's tables for workload recording</li>
                     <li>Schema name if workload tables should be created in different schema than used for connection. Important e.g. for CDB where you need to login with system account to sample workload of all PDBs</li>
-                    <li>For each of the four topics AWR/ASH, size evolution, cache-usage and blocking locks you can define separately:
+                    <li>For each of the five topics AWR/ASH, size evolution, cache-usage, blocking locks and long-term trend you can define separately:
                         <ul>
                             <li>Activate or deactivate sampling</li>
                             <li>Period between snapshots</li>
@@ -77,12 +78,12 @@
                     </li>
                     <li>The right to create objects in different object schema if connection user and object schema are different</li>
                 </ul>
-                If the connection user has the grant <pre style="display: inline;">GRANT SELECT ANY TABLE</pre> in addition, than PL/SQL-packages are created for the execution of sampling.</br>
-                If the connection user doesn't have this grant, than larger anonymous PL/SQL is executed at each snapshot instead of package call that may result in a bit more parse effort.<br>
-                Reason for need of possible anonymous PL/SQL is: you may not select from V$-tables from inside PL/SQL-packages because this right is based on role SELECT_CATALOG_ROLE and roles are not propagated to PL/SQL objects.
+                If the connection user has the grant <pre style="display: inline;">GRANT SELECT ANY TABLE</pre> in addition, then PL/SQL-packages are created for the execution of sampling.</br>
+                If the connection user doesn't have this grant, then larger anonymous PL/SQL is executed at each snapshot instead of a package call that may result in a bit more network traffic.<br>
+                The reason for need of possible anonymous PL/SQL is: you may not select from V$-tables from inside PL/SQL-packages because this right is based on role SELECT_CATALOG_ROLE and roles are not propagated to PL/SQL objects.
 
                 <h4>Choose access on Panorama-Sampler's data in Panorama's web client application</h4>
-                Panorama client automatically recognizes existence of Panorama-Sampler data during logon and offers you to choose this data.
+                The Panorama client automatically recognizes the existence of Panorama-Sampler data during logon and offers you to choose this data.
                 You can choose one of three options how Panorama gets access to historic workload info for this database:
                 <ul>
                     <li>Use Oracle's AWR data which requires Enterprise Edition and licensing of Diagnostics Pack for that database</li>
@@ -92,7 +93,7 @@
 
                 <img src="images/choose_management_pack.png" style="width: 800px"/><br/>
                 <span style="color: red">Please take into account that Panorama-Sampler's tables are created deferred at first snapshot execution.<br/>
-                This way you can choose Panorama-Sampler only after first snapshot execution.</span>
+                This way you can choose Panorama-Sampler data at logon only after first snapshot execution.</span>
 
                 <h3>Licensing</h3>
 
@@ -139,9 +140,9 @@
                 </ul>
                 <h3>Further implementation details</h3>
                 <ul>
-                    <li>For RAC-systems configure one sampler-entry for each RAC-instance with instance-specific service name or given SID.</li>
+                    <li>For RAC-systems please add one configuration for each particular RAC-instance with instance-specific service names or given SID.</li>
                     <li>You may use different master-passwords. This results in one configuration-set per master-password. Sampling is active only for the configuration set of the master password Panorama is started with</li>
-                    <li>Sampling cycle for function similar to Active Session History is fixed to 1 second for short term storage (currently until next snapshot) and 10 seconds for long term storage</li>
+                    <li>Sampling cycle for the function similar to Active Session History is fixed to 1 second for short term storage (currently until next snapshot) and 10 seconds for long term storage</li>
                     <li>Your configured connection passwords are stored in file system at Panorama server encrypted with a combination of server key (see <a href="https://rammpeter.github.io/panorama.html" target="_blank">Panorama</a>: What about security) and your master password</li>
                 </ul>
 
@@ -159,7 +160,7 @@
                 <h3>Monitoring health status of Panorama-Sampler</h3>
                     There is a monitoring service available at <pre style="display: inline;">http://&lt;your&nbsp;server&nbsp;ip&gt;:8080/panorama_sampler/monitor_sampler_status</pre>.<br/>
                     It returns a JSON buffer with a list of configured data sources with ID, name, timestamp of last successfull connect, timestamp of last error and error message.<br/>
-                    The http return status depends from the existence of a still persisting error in any of the configured datasources (OK = 200, Error = 500).<br/>
+                    The http return status depends on the existence of a still persisting error in any of the configured datasources (OK = 200, Error = 500).<br/>
                     You can use this service for observation with monitoring tools like Zabbix, Nagios. Icinga etc. .
             </div>
         </div>
