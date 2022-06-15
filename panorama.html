@@ -13,7 +13,7 @@
     <div style="position: relative; z-index: 2; padding: 10px;">
         <div id="panorama_global">
             <div id="panorama_text" style="float:left;">
-                <h2>
+                <h1>
                     Panorama for Oracle databases
                     <a href="https://rammpeter.blogspot.de/search/label/Panorama%20How-To" title="Open blog about Panorama" target="_blank"><img src="images/blog.png" height="30px"></a>
                     <a href="https://github.com/rammpeter/panorama/releases/latest/download/Panorama.war" title="Download latest Panorama release" target="_blank"><img src="images/download.png" height="30px"></a>
@@ -21,11 +21,11 @@
                     <a href="https://www.slideshare.net/PeterRamm1" title="Show Panorama-tutorials at slideshare.net" target="_blank"><img src="images/slideshare.png" height="30px"></a>
                     <a href="http://158.101.168.240:8080" title="Run Panorama demo at Oracle cloud" target="_blank"><img src="images/play.png" height="30px"></a>
                     <a href="https://github.com/rammpeter/Panorama_Gem" title="Github source code repository" target="_blank"><img src="images/github.png" height="30px"></a>
-                </h2>
+                </h1>
                 „Panorama” is my swiss army knife for performance analysis and troubleshooting on Oracle databases.<br/><br/>
                 Completed over many years it contains solutions for analysis workflows based on practical experience.<br/>
                 As a GUI-application it ensures quick reaction with predefined workflows instead off dealing by hand with lots of SQL scripts.
-                <h3>Content</h3>
+                <h2>Content</h2>
                 <ul>
                     <li><a href="#what does it offer">What does Panorama offer?</a></li>
                     <li><a href="#preconditions">Which preconditions are required?</a></li>
@@ -51,7 +51,7 @@
                     </li>
                 </ul>
 
-                <a name="what does it offer"></a><h3>What does Panorama offer?</h3>
+                <a name="what does it offer"></a><h2>What does Panorama offer?</h2>
                 <ul>
                     <li>Dialogs and workflows for:
                         <ul>
@@ -74,7 +74,7 @@
                     <li><a href="panorama_content.html" target="_blank">Here you can find a function overview by available top level menu entries</a></li>
                 </ul>
 
-                <a name="preconditions"></a><h3>Which preconditions are required?</h3>
+                <a name="preconditions"></a><h2>Which preconditions are required?</h2>
                 <ul>
                     <li>
                         Docker engine or Java runtime environment, version 7 or above to run Panorama application.<br/>
@@ -101,18 +101,18 @@
                     <li>Panorama's function "SQL monitor" is available only if Oracle's "Tuning Pack" is licensed for the connected Oracle-DB</li>
                 </ul>
 
-                <a name="license"></a><h3>License</h3>
+                <a name="license"></a><h2>License</h2>
                 You can use Panorama free of charge under the terms and conditions of <a href="http://www.gnu.org/licenses/gpl-3.0" target="_blank">GNU General Public License</a>.
 
-                <a name="how to get it"></a><h3>How to get it?</h3>
+                <a name="how to get it"></a><h2>How to get it?</h2>
                     <ul>
                         <li><a href="https://hub.docker.com/r/rammpeter/panorama" target="_blank">Pull docker image from https://hub.docker.com/r/rammpeter/panorama</a> or </li>
                         <li><a href="https://github.com/rammpeter/panorama/releases/latest/download/Panorama.war" target="_blank">Download latest release of Panorama application </a> or</li>
                         <li><a href="https://github.com/rammpeter/Panorama/releases" target="_blank">Download a previous release of Panorama application</a></li>
                     </ul>
 
-                <a name="how to run it"></a><h3>How to run it?</h3>
-                <a name="start running quickly"></a><h4>Start running quickly</h4>
+                <a name="how to run it"></a><h2>How to run it?</h2>
+                <a name="start running quickly"></a><h3>Start running quickly</h3>
                 <table  border="1">
                     <tr>
                         <th>Docker container</th>
@@ -135,7 +135,7 @@
                 This starts the application within one or two minutes. Now you can connect to Panorama's login screen in your browser via <pre style="display: inline;">http://&lt;your&nbsp;server&nbsp;ip&gt;:8080</pre>
                 <br/>
 
-                <a name="docker"></a><h4>Customize a Panorama instance running as Docker container</h4>
+                <a name="docker"></a><h3>Customize a Panorama instance running as Docker container</h3>
                 To download and start Panorama as Docker container type:<br/>
                 <pre>docker run -p8080:8080 -d rammpeter/panorama</pre>
                 You can customize your Docker container:
@@ -162,7 +162,7 @@
 > INFO:oejs.Server:main: Started @137606ms
                 </pre>
 
-                <h5>Running docker-container with SSL-encrypted https-access </h5>
+                <h4>Running docker-container with SSL-encrypted https-access </h4>
                 This <a href="https://rammpeter.blogspot.com/2019/03/panorama-configure-https-access-to.html" target="_blank">blog post</a> describes how to configure Panorama and Nginx with docker-compose for SSL-encryption.
 
 
@@ -218,7 +218,7 @@
                         For production use with SSL encrypted https-connections I personally use Tomcat.</li>
                 </ul>
 
-                <a name="run demo"></a><h4>Run demo installation</h4>
+                <a name="run demo"></a><h3>Run demo installation</h3>
                 <ul>
                     <li>
                         Run preinstalled Panorama at <a href="http://158.101.168.240:8080" target="_blank">http://158.101.168.240:8080</a> with access to a demo database instance at Oracle cloud.<br/>
@@ -227,7 +227,7 @@
                     <!--<li><a href="https://panorama-ramm.herokuapp.com" target="_blank">Run preinstalled Panorama at Heroku-cloud (requires connect to your Oracle-DB from internet for usage)</a></li>-->
                 </ul>
 
-                <a name="how to get help"></a><h3>How to get help?</h3>
+                <a name="how to get help"></a><h2>How to get help?</h2>
                 <ul>
                     <li>Look at the HowTo <a href="https://rammpeter.github.io/Oracle_performance_analysis_with_Panorama.html" target="_blank">Performance analysis of Oracle-DB with Panorama: Introduction</a></li>
                     <li>
@@ -237,7 +237,7 @@
                     <li>Write a <a href="mailto:Peter@ramm-oberhermsdorf.de">mail</a> if nothing else helps or to report problems.</li>
                 </ul>
 
-                <a name="security"></a><h3>What about security?</h3>
+                <a name="security"></a><h2>What about security?</h2>
                 <ul>
                     <li>For production purposes you should run Panorama with SSL-encrypted web traffic (https). Easiest way for SSL connections is to run Panorama in a configured Tomcat etc. or use Nginx/Apache as reverse proxy.</li>
                     <li>Your Oracle DB connection's password is stored encrypted in server memory and will be decrypted shortly only for the process of establishing connection to your target database.<br/>
@@ -260,8 +260,8 @@
                     </li>
                 </ul>
 
-                <a name="behind the scenes"></a><h3>Behind the scenes</h3>
-                <a name="implementation details"></a><h4>Implementation details</h4>
+                <a name="behind the scenes"></a><h2>Behind the scenes</h2>
+                <a name="implementation details"></a><h3>Implementation details</h3>
                 <ul>
                     <li>Panorama is an Ruby on Rails application that runs with JRuby. Web resources you can find here:
                         <ul>
@@ -280,7 +280,7 @@
                     <li>Panorama pools (reuses) DB-connections. You can view pooled connections at Panorama server via <pre style="display: inline;">http://&lt;your&nbsp;server&nbsp;ip&gt;:8080/usage/connection_pool</pre></li>
                 </ul>
 
-                <a name="possible runtime problems"></a><h4>Possible runtime problems with standalone application (using Panorama.war instead of Docker container)</h4>
+                <a name="possible runtime problems"></a><h3>Possible runtime problems with standalone application (using Panorama.war instead of Docker container)</h3>
                 <ul>
                     <li>
                         You will lose your stored database connection info during restart if you don't set environment variable <pre style="display: inline;">PANORAMA_VAR_HOME</pre> because Panorama will choose a new temporary subdir for every startup.
@@ -314,7 +314,7 @@
                 <br/>To avoid such conditions I recommend running Panorama as Docker container.<br/>
                 <img src="images/Panorama_Overview.png"/>
                 <!--<br/><br/><br/><br/>
-                <h3>Last but not least on this occasion my kindly request to Americans:</h3>
+                <h2>Last but not least on this occasion my kindly request to Americans:</h2>
                 <div>
                     <img style="float: left" src="images/trash.png" height="50px"/><div style="font-weight: bold; font-size: larger;"><div style="color: red;">DUMP</div><div style="color: blue;">TRUMP</div></div>
                 </div>
