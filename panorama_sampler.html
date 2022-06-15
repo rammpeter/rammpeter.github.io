@@ -164,9 +164,11 @@
                     You can use this service for observation with monitoring tools like Zabbix, Nagios. Icinga etc. .
                 <h2>Using other SQL scripts based on AWR and ASH</h2>
                     Due to the identical structure between Panorama's data and original AWR/ASH objects it becomes also possible to redirect foreign SQL scripts or software based on AWR/ASH to using Panorama's sampled data instead.<br/>
-                    This small PL/SQL snippet creates synonyms for all AWR views (DBA_HIST_xxx) as well as for ASH (v$Active_Session_History, gv$Active_Session_History).
-                    If there's no substitution by Panorama then the DBA_HIST_xxx-synonyms are directed to a non existing object, this way causing an error at access instead of possible license violation.
+                    This small PL/SQL snippet creates local synonyms for all AWR views (DBA_HIST_xxx) as well as for ASH (v$Active_Session_History, gv$Active_Session_History) if executed in Panorama's schema.
+                    If there's no substitution by Panorama then the DBA_HIST_xxx-synonyms are directed to a non existing object, this way causing an error at access instead of possible license violation.<br/>
+                    In result you may run your your SQLs in Panorama's schema with all access an DB_HIST_xxx and ASH views redirected to Panorama's data or causing errors.
                     <pre style="background-color: lightyellow">
+SET SERVEROUTPUT ON;
 BEGIN
   FOR Rec IN (SELECT v.View_Name, p.Object_Name Panorama_Name
               FROM   DBA_Views v
