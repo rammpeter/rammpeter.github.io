@@ -11,7 +11,7 @@
     </div>
     <div style="position: relative; z-index: 2; padding: 10px;">
         <div id="panorama_sampler_global">
-            <div id="panorama_sampler_text" style="float:left;">
+            <div id="panorama_sampler_text" style="float:left; max-width: 80%;">
                 <h1>Panorama-Sampler for Oracle databases</h1>
 
                 'Panorama-Sampler' is an add-on function for <a href="https://rammpeter.github.io/panorama.html" target="_blank">Panorama</a> which allows it's own database workload recording as alternative to use of AWR data.<br/>
@@ -168,7 +168,7 @@
                     This small PL/SQL snippet creates local synonyms for all AWR views (DBA_HIST_xxx) as well as for ASH (v$Active_Session_History, gv$Active_Session_History) if executed in Panorama's schema.
                     If there's no substitution by Panorama then the DBA_HIST_xxx-synonyms are directed to a non existing object, this way causing an error at access instead of possible license violation.<br/>
                     In result you may run your your SQLs in Panorama's schema with all access an DB_HIST_xxx and ASH views redirected to Panorama's data or causing errors.
-                    <pre style="background-color: lightyellow">
+                    <pre style="background-color: lightyellow; overflow-x: scroll;">
 SET SERVEROUTPUT ON;
 BEGIN
   FOR Rec IN (SELECT v.View_Name, p.Object_Name Panorama_Name
@@ -192,7 +192,9 @@ BEGIN
   DBMS_OUTPUT.PUT_LINE('Substituted by Panorama, redirecting synonym GV$ACTIVE_SESSION_HISTORY to PANORAMA_V$ACTIVE_SESS_HISTORY');
   EXECUTE IMMEDIATE 'CREATE OR REPLACE SYNONYM GV$ACTIVE_SESSION_HISTORY FOR PANORAMA_V$ACTIVE_SESS_HISTORY';
   DBMS_OUTPUT.PUT_LINE('Substituted by Panorama as view V$ACTIVE_SESSION_HISTORY on PANORAMA_V$ACTIVE_SESS_HISTORY');
-  EXECUTE IMMEDIATE 'CREATE OR REPLACE VIEW V$ACTIVE_SESSION_HISTORY AS SELECT * FROM PANORAMA_V$ACTIVE_SESS_HISTORY WHERE Inst_ID = SYS_CONTEXT(''USERENV'', ''INSTANCE'')';
+  EXECUTE IMMEDIATE 'CREATE OR REPLACE VIEW V$ACTIVE_SESSION_HISTORY AS
+                     SELECT * FROM PANORAMA_V$ACTIVE_SESS_HISTORY
+                     WHERE Inst_ID = SYS_CONTEXT(''USERENV'', ''INSTANCE'')';
 END;
 /
                     </pre>
