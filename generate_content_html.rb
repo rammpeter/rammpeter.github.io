@@ -50,7 +50,7 @@ class Generator
 
   module MenuHelper::EngineConfig
     class Hugo
-      def panorama_sampler_master_password
+      def panorama_master_password
         true
       end
     end

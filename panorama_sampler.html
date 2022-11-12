@@ -37,13 +37,14 @@
                 <h3>Configure your Panorama server instance for Panorama-Sampler</h3>
 
                 <ul>
-                    <li>You enable Panorama-Sampler by starting the Panorama application with a master-password for Panorama-Sampler provided by environment variable PANORAMA_SAMPLER_MASTER_PASSWORD, for example:<br/>
-                        <pre style="display: inline;">PANORAMA_SAMPLER_MASTER_PASSWORD=mypasswd java -jar Panorama.war</pre> or<br/>
-                        <pre style="display: inline;">docker run -e PANORAMA_SAMPLER_MASTER_PASSWORD=mypasswd rammpeter/panorama</pre>
+                    <li>You enable Panorama-Sampler by starting the Panorama application with a master-password for Panorama-Sampler provided by environment variable PANORAMA_MASTER_PASSWORD, for example:<br/>
+                        <pre style="display: inline;">PANORAMA_MASTER_PASSWORD=mypasswd java -jar Panorama.war</pre> or<br/>
+                        <pre style="display: inline;">docker run -e PANORAMA_MASTER_PASSWORD=mypasswd rammpeter/panorama</pre>
                     </li>
                     <li>If master-password is set, Panorama starts enhanced with:
                         <ul>
-                            <li>An additional menu entry "Panorama-Sampler config" in menu "Spec. additions"</li>
+                            <li>An additional menu entry "Admin login" in menu "Spec. additions"</li>
+                            <li>If you provide the password at "Admin login" then Panorama-Sampler config can be done at menu "Admin"/"Panorama-Sampler config"</li>
                             <li>Background threads for data sampling (own thread for each snapshot of a configured target database)</li>
                         </ul>
                     </li>
