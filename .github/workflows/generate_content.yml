@@ -20,20 +20,16 @@ jobs:
           ./bin/asciidoctor -o Oracle_performance_analysis_with_Panorama.html Oracle_performance_analysis_with_Panorama.adoc
       - name: git config
         run: |
-          git config user.email "Peter@ramm-oberhermsdorf.de"
-          git config user.name "Peter Ramm"
-      - name: switching from HTTPS to SSH
-        run: git remote set-url origin ${{ secrets.ssh }}
+          git config --global user.email "Peter@ramm-oberhermsdorf.de"
+          git config --global user.name "Peter Ramm"
       - name: git status
         run: git status
       - name: git stage
         run: git stage Oracle_performance_analysis_with_Panorama.html
       - name: git commit
         run: git commit -m "Auto generating Oracle_performance_analysis_with_Panorama.html"
-      - name: git fetch
-        run: git fetch origin master
       - name: git push
-        run: git push origin HEAD:master
+        run: git push
 
  
 
