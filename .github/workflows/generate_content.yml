@@ -22,6 +22,8 @@ jobs:
         run: |
           git config user.email "Peter@ramm-oberhermsdorf.de"
           git config user.name "Peter Ramm"
+      - name: switching from HTTPS to SSH
+        run: git remote set-url origin ${{ secrets.ssh }}
       - name: git status
         run: git status
       - name: git stage
