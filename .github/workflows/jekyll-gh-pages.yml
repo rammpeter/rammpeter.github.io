@@ -2,6 +2,12 @@
 name: Deploy Jekyll with GitHub Pages dependencies preinstalled
 
 on:
+  # Requests that "Generate content" runs before jekyll
+  workflow_run:
+    workflows: [ "Generate content" ]
+    branches: [ master ]
+    types:
+      - completed
   # Runs on pushes targeting the default branch
   push:
     branches: ["master"]

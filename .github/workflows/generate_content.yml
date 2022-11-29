@@ -1,5 +1,5 @@
 # GitHub action recipe
-name: rammpeter.github.io
+name: Generate content
 
 on:
   push:
