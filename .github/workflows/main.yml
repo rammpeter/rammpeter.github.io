@@ -13,11 +13,12 @@ jobs:
     steps:
       - uses: actions/checkout@v1
       - name: Install asciidoctor
-        run: gem install --install-dir . asciidoctor
-      - name: Check dir
-        run: ls -l && find . -name asciidoctor
-      - name: Generate asciidoc
-        run:  ./bin/asciidoctor -o Oracle_performance_analysis_with_Panorama_from_adoc.html Oracle_performance_analysis_with_Panorama.adoc
+        run: |
+          export GEM_PATH=$PWD
+          gem install --install-dir . asciidoctor
+          ls -l 
+          find . -name asciidoctor
+          ./bin/asciidoctor -o Oracle_performance_analysis_with_Panorama_from_adoc.html Oracle_performance_analysis_with_Panorama.adoc
 
  
 
