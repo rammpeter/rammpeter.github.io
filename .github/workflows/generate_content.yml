@@ -19,6 +19,12 @@ jobs:
           find . -name asciidoctor
           ./bin/asciidoctor -o Oracle_performance_analysis_with_Panorama.html Oracle_performance_analysis_with_Panorama.adoc
           ls -l 
+          run: git remote set-url origin ${{ secrets.ssh }}
+          git status
+          # git add .
+          # git commit -m "Auto updating TODO.txt"
+          # git fetch origin master
+          # git push origin HEAD:master
 
  
 
