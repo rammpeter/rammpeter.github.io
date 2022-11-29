@@ -506,7 +506,7 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 <li><a href="#_evaluate_scan_the_db_system_for_potential_performance_antipatterns">2.7. Evaluate / scan the DB system for potential performance antipatterns</a></li>
 </ul>
 </li>
-<li><a href="#_requirements_for_application_design_for_optimal_performance">3. Requirements for application design for optimal performance</a>
+<li><a href="#_application_design_requirements_for_optimal_performance">3. Application design requirements for optimal performance</a>
 <ul class="sectlevel2">
 <li><a href="#_tag_db_sessions_via_dbms_application_info">3.1. Tag DB sessions via DBMS_Application_Info</a></li>
 <li><a href="#_use_of_binding_variables">3.2. Use of binding variables</a></li>
@@ -516,6 +516,13 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 <li><a href="#_direct_addressing_of_package_constants_instead_of_package_functions">3.3.2. Direct addressing of package constants instead of package functions</a></li>
 </ul>
 </li>
+<li><a href="#_efficient_data_structures">3.4. Efficient data structures</a>
+<ul class="sectlevel3">
+<li><a href="#_indexing">3.4.1. Indexing</a></li>
+<li><a href="#_securing_references_uniqueness_and_rules">3.4.2. Securing references, uniqueness and rules</a></li>
+</ul>
+</li>
+<li><a href="#_usage_of_views">3.5. Usage of views</a></li>
 </ul>
 </li>
 <li><a href="#_influencing_the_execution_plan_of_critical_sqls">4. Influencing the execution plan of critical SQLs</a>
@@ -1014,7 +1021,7 @@ With increased write load, a temporary freezing of write processes is preprogram
 </div>
 </div>
 <div class="sect1">
-<h2 id="_requirements_for_application_design_for_optimal_performance">3. Requirements for application design for optimal performance</h2>
+<h2 id="_application_design_requirements_for_optimal_performance">3. Application design requirements for optimal performance</h2>
 <div class="sectionbody">
 <div class="sect2">
 <h3 id="_tag_db_sessions_via_dbms_application_info">3.1. Tag DB sessions via DBMS_Application_Info</h3>
@@ -1037,10 +1044,15 @@ This information on modules and action are recorded in various histories (includ
 </div>
 <div class="sect2">
 <h3 id="_use_of_binding_variables">3.2. Use of binding variables</h3>
-
+<div class="paragraph">
+<p>TODO: Transfer content from german document</p>
+</div>
 </div>
 <div class="sect2">
 <h3 id="_efficient_use_of_pl_sql_in_sql_statements">3.3. Efficient use of PL / SQL in SQL statements</h3>
+<div class="paragraph">
+<p>TODO: Transfer content from german document</p>
+</div>
 <div class="sect3">
 <h4 id="_pragma_udf_for_preventing_context_switches">3.3.1. Pragma UDF for preventing context switches</h4>
 
@@ -1048,6 +1060,27 @@ This information on modules and action are recorded in various histories (includ
 <div class="sect3">
 <h4 id="_direct_addressing_of_package_constants_instead_of_package_functions">3.3.2. Direct addressing of package constants instead of package functions</h4>
 
+</div>
+</div>
+<div class="sect2">
+<h3 id="_efficient_data_structures">3.4. Efficient data structures</h3>
+<div class="sect3">
+<h4 id="_indexing">3.4.1. Indexing</h4>
+<div class="paragraph">
+<p>TODO: Transfer content from german document</p>
+</div>
+</div>
+<div class="sect3">
+<h4 id="_securing_references_uniqueness_and_rules">3.4.2. Securing references, uniqueness and rules</h4>
+<div class="paragraph">
+<p>TODO: Transfer content from german document</p>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_usage_of_views">3.5. Usage of views</h3>
+<div class="paragraph">
+<p>TODO: Transfer content from german document</p>
 </div>
 </div>
 </div>
@@ -1280,7 +1313,7 @@ For a two-column index consisting of Status and ArtNr and an access per</p>
 </div>
 <div id="footer">
 <div id="footer-text">
-Last updated 2022-11-29 17:07:48 UTC
+Last updated 2022-11-29 17:14:34 UTC
 </div>
 </div>
 </body>
