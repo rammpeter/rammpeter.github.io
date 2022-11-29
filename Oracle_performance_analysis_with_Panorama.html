@@ -671,6 +671,24 @@ This page is not yet completed and still under construction.
 <div class="sect1">
 <h2 id="_essential_analysis_ways">2. Essential analysis ways</h2>
 <div class="sectionbody">
+<div class="paragraph">
+<p>Basically there are two ways for analysis of the operating status of the DB system:</p>
+</div>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p>Evaluation of the current state based on interal system views (V$, dictionary views etc.)</p>
+</li>
+<li>
+<p>Retrospective analysis of the operating status for a given period in the past based on recorded data</p>
+</li>
+</ol>
+</div>
+<div class="paragraph">
+<p>Retrospective analysis with Panorama is regularly based on Oracle&#8217;s Active Workload Repository (AWR).
+Precondition for usage of AWR is the Enterprise Edition of the DB combined with licensing of the Diagnostics Pack.<br>
+An also supported alternative to AWR is the Panorama-Sampler, which allows retrospective analysis also for Standard Edition rsp. without Diagnostics Pack.</p>
+</div>
 <div class="sect2">
 <h3 id="_ad_hoc_analysis_of_the_operating_status_of_a_db_system">2.1. Ad hoc analysis of the operating status of a DB system</h3>
 <div class="sect3">
@@ -887,7 +905,7 @@ This information on modules and action are recorded in various histories (includ
 </div>
 <div id="footer">
 <div id="footer-text">
-Last updated 2022-11-29 14:23:37 UTC
+Last updated 2022-11-29 15:14:35 UTC
 </div>
 </div>
 </body>
