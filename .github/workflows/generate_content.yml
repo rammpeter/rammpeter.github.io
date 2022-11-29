@@ -18,13 +18,20 @@ jobs:
           gem install --install-dir . asciidoctor
           find . -name asciidoctor
           ./bin/asciidoctor -o Oracle_performance_analysis_with_Panorama.html Oracle_performance_analysis_with_Panorama.adoc
-          ls -l 
-          # git remote set-url origin ${{ secrets.ssh }}
-          git status
-          git stage Oracle_performance_analysis_with_Panorama.html
-          git commit -m "Auto generating Oracle_performance_analysis_with_Panorama.html"
-          git fetch origin master
-          git push origin HEAD:master
+      - name: git config
+        run: |
+          git config user.email "Peter@ramm-oberhermsdorf.de"
+          git config user.name "Peter Ramm"
+      - name: git status
+        run: git status
+      - name: git stage
+        run: git stage Oracle_performance_analysis_with_Panorama.html
+      - name: git commit
+        run: git commit -m "Auto generating Oracle_performance_analysis_with_Panorama.html"
+      - name: git fetch
+        run: git fetch origin master
+      - name: git push
+        run: git push origin HEAD:master
 
  
 
