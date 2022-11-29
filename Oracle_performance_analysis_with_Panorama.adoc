@@ -227,9 +227,9 @@ Menu item "Special extensions" / "Dragnet investigation" allows scanning the DB 
 
 
 
-== Requirements for application design for optimal performance ==
+== Application design requirements for optimal performance
 
-=== Tag DB sessions via DBMS_Application_Info ===
+=== Tag DB sessions via DBMS_Application_Info
 The DB allows the tagging of DB sessions with context information about modules and action (64 characters each).
 This information on modules and action are recorded in various histories (including in ASH and SQL statistics) and allow the subsequent assignment of the various tracks in the DB to the subject context.
 
@@ -241,14 +241,25 @@ It is advisable to anchor the placement of modules and action deep in the techni
 
 In particular, when using connection pools, with only sporadic setting of modules and action, there is the risk that subsequent activities on a reused session of the pool with respect to modules / action remain assigned to a random predecessor activity of this session.
 
-=== Use of binding variables ===
+=== Use of binding variables
+TODO: Transfer content from german document
 
+=== Efficient use of PL / SQL in SQL statements
+TODO: Transfer content from german document
 
-=== Efficient use of PL / SQL in SQL statements ===
+==== Pragma UDF for preventing context switches
 
-==== Pragma UDF for preventing context switches ====
+==== Direct addressing of package constants instead of package functions
 
-==== Direct addressing of package constants instead of package functions ====
+=== Efficient data structures
+==== Indexing
+TODO: Transfer content from german document
+
+==== Securing references, uniqueness and rules
+TODO: Transfer content from german document
+
+=== Usage of views
+TODO: Transfer content from german document
 
 
 == Influencing the execution plan of critical SQLs ==
