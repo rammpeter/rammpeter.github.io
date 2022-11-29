@@ -12,13 +12,13 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v1
-      - name: Install asciidoctor
+      - name: Generate with asciidoctor
         run: |
           export GEM_PATH=$PWD
           gem install --install-dir . asciidoctor
-          ls -l 
           find . -name asciidoctor
-          ./bin/asciidoctor -o Oracle_performance_analysis_with_Panorama_from_adoc.html Oracle_performance_analysis_with_Panorama.adoc
+          ./bin/asciidoctor -o Oracle_performance_analysis_with_Panorama.html Oracle_performance_analysis_with_Panorama.adoc
+          ls -l 
 
  
 
