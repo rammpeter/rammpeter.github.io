@@ -21,10 +21,10 @@ jobs:
           ls -l 
           # git remote set-url origin ${{ secrets.ssh }}
           git status
-          # git add .
-          # git commit -m "Auto updating TODO.txt"
-          # git fetch origin master
-          # git push origin HEAD:master
+          git stage Oracle_performance_analysis_with_Panorama.html
+          git commit -m "Auto generating Oracle_performance_analysis_with_Panorama.html"
+          git fetch origin master
+          git push origin HEAD:master
 
  
 
