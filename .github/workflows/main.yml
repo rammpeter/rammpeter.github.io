@@ -1,0 +1,20 @@
+# GitHub action recipe
+name: rammpeter.github.io
+
+on:
+  push:
+  #schedule:
+    # * is a special character in YAML so you have to quote this string, runs on Sunday morning
+   # - cron: '0 0 * * 0'
+
+jobs:
+  setup:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v1
+      - name: Generate asciidoc
+        run:  asciidoctor -o Oracle_performance_analysis_with_Panorama_from_adoc.html Oracle_performance_analysis_with_Panorama.adoc
+
+ 
+
+
