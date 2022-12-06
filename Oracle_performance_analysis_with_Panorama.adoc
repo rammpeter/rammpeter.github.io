@@ -328,7 +328,11 @@ Optimization to minimize the use of storage and the physical size of DB objects 
 * Reduction of SQL execution times due to less I/O effort as well as higher hit rate in the DB cache
 * Higher protection against the risk of unplanned size growth through more free/available tablespace
 
-=== Removing deleted objects from the Recycle Bin
+=== Get information about storage usage
+==== Overview over current storage usage
+==== Evolution of storage usage over time
+
+==== Deleted objects in the Recycle Bin
 Menu item "Schema /Storage" / "Recycle bin" shows the current occupancy of the recycle bin of the DB.
 Selection by size and drop time allows prompt release of relevant storage sizes of deleted objects after sufficient grace period.
 
