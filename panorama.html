@@ -93,6 +93,13 @@
                             <tr><td>SELECT ANY TRANSACTION</td> <td>This grant is needed for selection on Flashback_Transaction_Query</td></tr>
                         </table>
                     </li>
+                    <li>For non-admin users in the autonomous DB in the OCI cloud additional grants are required for some minor functions:
+                        <ul>
+                            <li>GRANT SELECT ON V$DIAG_ALERT_EXT</li>
+                            <li>GRANT READ ON SYS.DBMS_LOCK_ALLOCATED</li>
+                            <li>GRANT READ ON gv$BH</li>
+                        </ul>
+                    </li>
                     <li>Several functions of Panorama are functional only if either:</li>
                     <ul>
                         <li>Oracle's "Diagnostic Pack" is licensed for the connected Oracle-DB or</li>
