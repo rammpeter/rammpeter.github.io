@@ -29,13 +29,12 @@
                     <li><a href="#what does it offer">What does Panorama offer?</a></li>
                     <li><a href="#preconditions">Which preconditions are required to use Panorama?</a></li>
                     <li><a href="#license">License</a></li>
-                    <li><a href="#how to get it">How to get it?</a></li>
                     <li><a href="#how to run it">How to run it?</a></li>
                     <li>
                         <ul>
                             <li><a href="#start running quickly">Start running quickly</a></li>
                             <li><a href="#docker">Customize a Panorama instance running as Docker container</a></li>
-                            <li><a href="#customize">Customizing the Panorama application</a></li>
+                            <li><a href="#customize">Options for customizing the Panorama application</a></li>
                             <li><a href="#run demo">Run demo installation</a></li>
                         </ul>
                     </li>
@@ -101,16 +100,9 @@
                 <a name="license"></a><h2>License</h2>
                 You can use Panorama free of charge under the terms and conditions of <a href="http://www.gnu.org/licenses/gpl-3.0" target="_blank">GNU General Public License</a>.
 
-                <a name="how to get it"></a><h2>How to get it?</h2>
-                    <ul>
-                        <li><a href="https://hub.docker.com/r/rammpeter/panorama" target="_blank">Pull docker image from https://hub.docker.com/r/rammpeter/panorama</a> or </li>
-                        <li><a href="https://github.com/rammpeter/panorama/releases/latest/download/Panorama.war" target="_blank">Download latest release of Panorama application </a> or</li>
-                        <li><a href="https://github.com/rammpeter/Panorama/releases" target="_blank">Download a previous release of Panorama application</a></li>
-                    </ul>
-
                 <a name="how to run it"></a><h2>How to run it?</h2>
                 <a name="start running quickly"></a><h3>Start running quickly</h3>
-                To download and start Panorama as Docker container type:<br/>
+                To download the image and start the Panorama application as Docker container type:<br/>
                 <pre>docker run -p8080:8080 -d rammpeter/panorama</pre>
                 This starts the application within one or two minutes. Now you can connect to Panorama's login screen in your browser via <pre style="display: inline;">http://&lt;your&nbsp;server&nbsp;ip&gt;:8080</pre>
 
@@ -143,7 +135,7 @@
                 This <a href="https://rammpeter.blogspot.com/2019/03/panorama-configure-https-access-to.html" target="_blank">blog post</a> describes how to configure Panorama and Nginx with docker-compose for SSL-encryption.
 
 
-                <a name="customize"></a><h3>Customizing the Panorama application</h3>
+                <a name="customize"></a><h3>Options for customizing the Panorama application</h3>
                 Environment variables that are evaluated by Panorama-Server:
                 <table  border="1">
                     <tr>
