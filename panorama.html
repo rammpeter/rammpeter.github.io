@@ -16,11 +16,10 @@
                 <h1 style="text-align: center">
                     <div>Panorama for Oracle databases</div>
                     <a href="https://rammpeter.blogspot.de/search/label/Panorama%20How-To" title="Open blog about Panorama" target="_blank"><img src="images/blog.png" height="30px"></a>
-                    <a href="https://github.com/rammpeter/panorama/releases/latest/download/Panorama.war" title="Download latest Panorama release" target="_blank"><img src="images/download.png" height="30px"></a>
                     <a href="https://hub.docker.com/r/rammpeter/panorama/" title="Get Panorama as Docker image" target="_blank"><img src="images/docker.png" height="30px"></a>
                     <a href="https://www.slideshare.net/PeterRamm1" title="Show Panorama-tutorials at slideshare.net" target="_blank"><img src="images/slideshare.png" height="30px"></a>
                     <a href="http://158.101.168.240:8080" title="Run Panorama demo at Oracle cloud" target="_blank"><img src="images/play.png" height="30px"></a>
-                    <a href="https://github.com/rammpeter/Panorama_Gem" title="Github source code repository" target="_blank"><img src="images/github.png" height="30px"></a>
+                    <a href="https://github.com/rammpeter/Panorama" title="Github source code repository" target="_blank"><img src="images/github.png" height="30px"></a>
                 </h1>
                 „Panorama” is my swiss army knife for performance analysis and troubleshooting on Oracle databases.<br/><br/>
                 Completed over many years it contains solutions for analysis workflows based on practical experience.<br/>
@@ -36,19 +35,13 @@
                         <ul>
                             <li><a href="#start running quickly">Start running quickly</a></li>
                             <li><a href="#docker">Customize a Panorama instance running as Docker container</a></li>
-                            <li><a href="#customize">Customize a Panorama instance running directly with java -jar Panorama.war</a></li>
+                            <li><a href="#customize">Customizing the Panorama application</a></li>
                             <li><a href="#run demo">Run demo installation</a></li>
                         </ul>
                     </li>
                     <li><a href="#how to get help">How to get help?</a></li>
                     <li><a href="#security">What about security?</a></li>
-                    <li><a href="#behind the scenes">Behind the scenes</a></li>
-                    <li>
-                        <ul>
-                            <li><a href="#implementation details">Implementation details</a></li>
-                            <li><a href="#possible runtime problems">Possible runtime problems</a></li>
-                        </ul>
-                    </li>
+                    <li><a href="#implementation details">Behind the scenes: Implementation details</a></li>
                 </ul>
 
                 <a name="what does it offer"></a><h2>What does Panorama offer?</h2>
@@ -120,38 +113,18 @@
 
                 <a name="how to run it"></a><h2>How to run it?</h2>
                 <a name="start running quickly"></a><h3>Start running quickly</h3>
-                <table  border="1">
-                    <tr>
-                        <th>Docker container</th>
-                        <th>Standalone</th>
-                    </tr>
-                    <tr>
-                        <td>
-                            <pre>docker run \
-  -p8080:8080 -d \
-  rammpeter/panorama</pre>
-                        </td>
-                        <td>
-                            <ul>
-                                <li><a href="https://github.com/rammpeter/panorama/releases/latest/download/Panorama.war" target="_blank">Download file Panorama.war</a></li>
-                                <li>Open a terminal window, navigate to the directory containing Panorama.war and type <pre>java -jar Panorama.war</pre> no matter if your are running Windows, Linux or Mac-OS</li>
-                            </ul>
-                        </td>
-                    </tr>
-                </table><br/>
-                This starts the application within one or two minutes. Now you can connect to Panorama's login screen in your browser via <pre style="display: inline;">http://&lt;your&nbsp;server&nbsp;ip&gt;:8080</pre>
-                <br/>
-
-                <a name="docker"></a><h3>Customize a Panorama instance running as Docker container</h3>
                 To download and start Panorama as Docker container type:<br/>
                 <pre>docker run -p8080:8080 -d rammpeter/panorama</pre>
+                This starts the application within one or two minutes. Now you can connect to Panorama's login screen in your browser via <pre style="display: inline;">http://&lt;your&nbsp;server&nbsp;ip&gt;:8080</pre>
+
+                <a name="docker"></a><h3>Customize a Panorama instance running as Docker container</h3>
                 You can customize your Docker container:
                 <ul>
                     <li>Mount your host's tnsnames.ora at $TNS_ADMIN/tnsnames.ora into the container in a folder and tell it Panorama by setting $TNS_ADMIN in container so Panorama can refer to your config:  <pre style="display: inline;">-v $TNS_ADMIN/tnsnames.ora:/etc/tnsnames.ora -e TNS_ADMIN=/etc</pre><br/>
                         Caution: with Docker in Windows sometimes you have to mount the file tnsnames.ora with <pre style="display: inline;">-v $TNS_ADMIN/tnsnames.ora:/etc</pre></li>
                     <li>Mount directory for Panorama's config files (/var/opt/panorama) to a directory of your choice outside the container so the config persists even if container is rebuilded</li>
                     <li>Set your timezone for Docker container (default is UTC): <pre style="display: inline;">-e TZ="Europe/Berlin"</pre></li>
-                    <li>Set maximum Java heap space memory usable for Panorama in megabytes (Default=1024):<pre style="display: inline;">-e MAX_JAVA_HEAP_SPACE_MB=1024</pre>  </li>
+                    <li>Set additional customizing properties for Panorama application as Docker container environment variables</li>
                 </ul>
                 Example:
                 <pre>docker run --name panorama -p8080:8080 \
@@ -173,7 +146,7 @@
                 This <a href="https://rammpeter.blogspot.com/2019/03/panorama-configure-https-access-to.html" target="_blank">blog post</a> describes how to configure Panorama and Nginx with docker-compose for SSL-encryption.
 
 
-                <a name="customize"></a><h4>Customize a Panorama instance running directly with java -jar Panorama.war</h4>
+                <a name="customize"></a><h3>Customizing the Panorama application</h3>
                 Environment variables that are evaluated by Panorama-Server:
                 <table  border="1">
                     <tr>
@@ -188,6 +161,12 @@
                         </td>
                     </tr>
                     <tr>
+                        <td><pre style="display: inline;">MAX_JAVA_HEAP_SPACE_MB</pre></td>
+                        <td>Set maximum Java heap space memory usable for Panorama in megabytes (Default=1024).<br/>
+                            The suggested value for multiuser production use is 4096.
+                        </td>
+                    </tr>
+                    <tr>
                         <td><pre style="display: inline;">PANORAMA_MASTER_PASSWORD</pre></td>
                         <td>Setting a master password in environment adds an additional menu item "Spec. additions"/"Admin login" in Panorama GUI.<br/>
                             Applying this password at "Admin logon" adds additional control functions to the GUI menu, e.g. Panorama-Sampler configuration.
@@ -195,17 +174,24 @@
                     </tr>
                     <tr>
                         <td><pre style="display: inline;">PANORAMA_VAR_HOME</pre></td>
-                        <td>Panorama stores encrypted session connect data and usage log in your local filesystem.<br/>
-                            You can control the directory for this files by setting the environment variable <pre style="display: inline;">PANORAMA_VAR_HOME</pre> to your target directory.<br/>
-                            Without defining <pre style="display: inline;">PANORAMA_VAR_HOME</pre> it will use a subdir 'Panorama' at your systems default temporary directory.
+                        <td>Panorama stores encrypted session connect data and usage log in local filesystem.<br/>
+                            This setting controls the used directory inside the Docker container (Default: /var/opt/panorama).<br/>
+                            It is suggested to mount this directory to the local filesystem outside the Docker container.
                         </td>
                     </tr>
                     <tr>
                         <td><pre style="display: inline;">PANORAMA_LOG_LEVEL=debug|info|warn|error</pre></td>
-                        <td>Set the level for log output on stdout rsp. Docker log.<br/>
+                        <td>
+                            Set the level for output in Docker log.<br/>
                             Default log level is "info".<br/>
-                            Setting PANORAMA_LOG_LEVEL=debug enables the log output of each executed SQL-Statement.<br/>
-                            This helps to reproduce how Panorama gets information from database.</td>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td><pre style="display: inline;">PANORAMA_LOG_SQL=true</pre></td>
+                        <td>
+                            Force the output of executed SQL statements in Docker log.<br/>
+                            This helps to reproduce how Panorama gets information from database (without setting PANORAMA_LOG_LEVEL=debug which logs the same + much more).
+                        </td>
                     </tr>
                     <tr>
                         <td><pre style="display: inline;">SECRET_KEY_BASE</pre></td>
@@ -216,20 +202,6 @@
                         <td>Location of file with server side key used to encrypt stored connection info. See also <a href="#security">What about security?</a></td>
                     </tr>
                 </table>
-
-                <ul>
-                    <li>You can specify the following additional Java-options executing <pre style="display: inline;">java &lt;options&gt; -jar Panorama.war</pre>:
-                        <ul>
-                            <li><pre style="display: inline;">-Xmx1024m -Xms1024m</pre> : startup and max. heap memory allocation for JVM,<br>minimum value of 512 MB suggested,<br>for production use choose 1024m or higher (suggestion: 4096m)</li>
-                            <li><pre style="display: inline;">XX:MaxPermSize=512M</pre> : object space for java classes, suggested value 512MB (until Java 7, unnecessary beginning Java 8)</li>
-                            <li><pre style="display: inline;">-Djava.io.tmpdir=mydir</pre> : define working directory for extraction of jar file, default is system's temp dir</li>
-                            <li><pre style="display: inline;">-Dwarbler.port=9090</pre> : Use another http-port than default 8080 for Panorama's URL</li>
-                        </ul>
-                    </li>
-                    <li><a href="http://github.com/rammpeter/Panorama/blob/master/start_Panorama.sh" target="_blank">Here you can find a sample shell-script to start Panorama for Unix/Linux</a></li>
-                    <li>Panorama.war can also be run as web archive in any Java JEE application server or web container like Tomcat, Glassfish, JBoss etc. .<br>
-                        For production use with SSL encrypted https-connections I personally use Tomcat.</li>
-                </ul>
 
                 <a name="run demo"></a><h3>Run demo installation</h3>
                 <ul>
@@ -273,13 +245,12 @@
                     </li>
                 </ul>
 
-                <a name="behind the scenes"></a><h2>Behind the scenes</h2>
-                <a name="implementation details"></a><h3>Implementation details</h3>
+                <a name="implementation details"></a><h2>Behind the scenes: Implementation details</h2>
                 <ul>
                     <li>Panorama is an Ruby on Rails application that runs with JRuby. Web resources you can find here:
                         <ul>
-                            <li><a href="https://github.com/rammpeter/Panorama_Gem" target="_blank">Source code</a>, last commit is for release <span id="panorama_version"></span> from <span id="panorama_date"></span></li>
-                            <li><a href="https://gitcdn.link/repo/rammpeter/Panorama_Gem/master/app/views/help/version_history.html" target="_blank">Version history</a></li>
+                            <li><a href="https://github.com/rammpeter/Panorama" target="_blank">Source code</a>, last commit is for release <span id="panorama_version"></span> from <span id="panorama_date"></span></li>
+                            <li><a href="https://gitcdn.link/repo/rammpeter/Panorama/master/app/views/help/version_history.html" target="_blank">Version history</a></li>
                         </ul>
                     </li>
                     <li>If you use <pre style="display: inline;">tnsnames.ora</pre> for TNS name resolution it should be located at server site in <pre style="display: inline;">$ORACLE_HOME/network/admin</pre> or in a directory targeted by environment variable <pre style="display: inline;">TNS_ADMIN</pre>.</li>
@@ -293,38 +264,6 @@
                     <li>Panorama pools (reuses) DB-connections. You can view pooled connections at Panorama server via <pre style="display: inline;">http://&lt;your&nbsp;server&nbsp;ip&gt;:8080/usage/connection_pool</pre></li>
                 </ul>
 
-                <a name="possible runtime problems"></a><h3>Possible runtime problems with standalone application (using Panorama.war instead of Docker container)</h3>
-                <ul>
-                    <li>
-                        You will lose your stored database connection info during restart if you don't set environment variable <pre style="display: inline;">PANORAMA_VAR_HOME</pre> because Panorama will choose a new temporary subdir for every startup.
-                    </li>
-                    <li>
-                        Beginning with Java8 u102 you need to install the "Java Cryptography Extension (JCE) Unlimited Strength Jurisdiction Policy Files for JDK/JRE 8" to use strong encryption with Panorama<br/>
-                        Panorama will remind you at startup if this is necessary.
-                        <a href="http://www.oracle.com/technetwork/java/javase/downloads/jce8-download-2133166.html">Here you may find the JCE-files for Java 8</a>
-                    </li>
-                    <li>
-                        Environment variable <pre style="display: inline;">CLASSPATH</pre> should not be set before starting Panorama.war to ensure that only Panorama's elements are used, especially the builtin JDBC driver for Oracle<br/>
-                        If your are unsure for example what JDBC driver is used you can monitor class load paths by: <pre> java -verbose:class -jar Panorama.war | grep Oracle</pre>
-                    </li>
-                    <li>Some Java-problems may occur with older IBM Java VMs. If you have trouble with that please use alternative JVM like OpenJDK.</li>
-                    <li>If you run Panorama on virtualized headless Linux server (e.g. in cloud environment) and your browser hangs after first request:
-                        <ul>
-                            <li>Reason: Your server does not generate enough entropy values in /dev/random, so read on /dev/random blocks during encryption operation</li>
-                            <li>Solution: Start Panorama with non-blocking entropy generator by option <pre style="display: inline;">java.security.egd=file:/dev/urandom</pre><li>
-                            <li>If using the embedded Jetty app-server then type <pre style="display: inline;">java -Djava.security.egd=file:/dev/urandom -jar Panorama.war</pre></li>
-                            <li>If using Tomcat then set <pre style="display: inline;">export CATALINA_OPTS=-Djava.security.egd=file:/dev/urandom</pre> before starting Tomcat</li>
-                            <li>On Read Hat Linux and clones (Oracle Linux etc.) you can install rng-tools instead of using /dev/urandom like described <a href="https://developers.redhat.com/blog/2017/10/05/entropy-rhel-based-cloud-instances/">here</a>:
-                                <ul>
-                                    <li>yum install -y rng-tools</li>
-                                    <li>systemctl enable rngd.service</li>
-                                    <li>systemctl start rngd.service</li>
-                                </ul>
-                            </li>
-                        </ul>
-                    </li>
-                </ul>
-                <br/>To avoid such conditions I recommend running Panorama as Docker container.<br/>
                 <img src="images/Panorama_Overview.png"/>
                 <!--<br/><br/><br/><br/>
                 <h2>Last but not least on this occasion my kindly request to Americans:</h2>
@@ -343,7 +282,7 @@
 <script type="text/javascript">
     // Version und Datum ermitteln aus version.rb
     try {
-        $.get("https://github.com/rammpeter/Panorama_Gem/raw/master/lib/panorama_gem/version.rb", function( version_html ) {
+        $.get("https://github.com/rammpeter/Panorama/raw/master/lib/panorama/version.rb", function( version_html ) {
             var rest = version_html.substring(version_html.indexOf('VERSION =')+11);    // Begin of version in string
             jQuery('#panorama_version').html(rest.substring(0, rest.indexOf("'")));
 
