@@ -36,6 +36,7 @@
                             <li><a href="#docker">Customize a Panorama instance running as Docker container</a></li>
                             <li><a href="#customize">Options for customizing the Panorama application</a></li>
                             <li><a href="#run demo">Run demo installation</a></li>
+                            <li><a href="#war_file">Run with Java as war-file</a></li>
                         </ul>
                     </li>
                     <li><a href="#how to get help">How to get help?</a></li>
@@ -104,7 +105,7 @@
                 <a name="start running quickly"></a><h3>Start running quickly</h3>
                 To download the image and start the Panorama application as Docker container type:<br/>
                 <pre>docker run -p8080:8080 -d rammpeter/panorama</pre>
-                This starts the application within one or two minutes. Now you can connect to Panorama's login screen in your browser via <pre style="display: inline;">http://&lt;your&nbsp;server&nbsp;ip&gt;:8080</pre>
+                This starts the application within one or two minutes. Now you can connect to Panorama's login screen in your browser via <pre style="display: inline;">http://&lt;your&nbsp;server&gt;:8080</pre>
 
                 <a name="docker"></a><h3>Customize a Panorama instance running as Docker container</h3>
                 You can customize your Docker container:
@@ -131,12 +132,12 @@
 > INFO:oejs.Server:main: Started @137606ms
                 </pre>
 
-                <h4>Running docker-container with SSL-encrypted https-access </h4>
+                <h4>Running docker-container with SSL encryption for https access</h4>
                 This <a href="https://rammpeter.blogspot.com/2019/03/panorama-configure-https-access-to.html" target="_blank">blog post</a> describes how to configure Panorama and Nginx with docker-compose for SSL-encryption.
 
 
                 <a name="customize"></a><h3>Options for customizing the Panorama application</h3>
-                Environment variables that are evaluated by Panorama-Server:
+                Environment variables for customization:
                 <table  border="1">
                     <tr>
                         <td><pre style="display: inline;">MAX_CONNECTION_POOL_SIZE</pre></td>
@@ -201,15 +202,10 @@
                     <!--<li><a href="https://panorama-ramm.herokuapp.com" target="_blank">Run preinstalled Panorama at Heroku-cloud (requires connect to your Oracle-DB from internet for usage)</a></li>-->
                 </ul>
 
-                <a name="how to get help"></a><h2>How to get help?</h2>
-                <ul>
-                    <li>Look at the HowTo <a href="https://rammpeter.github.io/Oracle_performance_analysis_with_Panorama.html" target="_blank">Performance analysis of Oracle-DB with Panorama: Introduction</a></li>
-                    <li>
-                        Look at my <a href="https://rammpeter.blogspot.com" target="_blank">blog</a> for news and usage hints.<br/>
-                        To stay informed about further development you may subscribe to this blog.
-                    </li>
-                    <li>Write a <a href="mailto:Peter@ramm-oberhermsdorf.de">mail</a> if nothing else helps or to report problems.</li>
-                </ul>
+                <a name="war_file"></a><h3>Run with Java as war-file</h3>
+                Up to end of 2022 Panorama was also available as war file for immediate execution per <pre style="display: inline;">java -jar Panorama.war</pre>.<br>
+                Unfortunately, the solution for running a jRuby application as a war file is no longer maintained and functional, so I cannot continue to offer the application in this way.<br/>
+                The last release for simple execution with Java you may find <a href="https://github.com/rammpeter/panorama/releases/latest/download/Panorama.war" target="_blank">here</a>.
 
                 <a name="security"></a><h2>What about security?</h2>
                 <ul>
