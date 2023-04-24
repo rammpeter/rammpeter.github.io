@@ -16,6 +16,7 @@
                 <h1 style="text-align: center">
                     <div>Panorama for Oracle databases</div>
                     <a href="https://rammpeter.blogspot.de/search/label/Panorama%20How-To" title="Open blog about Panorama" target="_blank"><img src="images/blog.png" height="30px"></a>
+                    <a href="https://github.com/rammpeter/panorama/releases/latest/download/Panorama.jar" title="Download the latest release of Panorama.jar" target="_blank"><img src="images/download.png" height="30px"></a>
                     <a href="https://hub.docker.com/r/rammpeter/panorama/" title="Get Panorama as Docker image" target="_blank"><img src="images/docker.png" height="30px"></a>
                     <a href="https://www.slideshare.net/PeterRamm1" title="Show Panorama-tutorials at slideshare.net" target="_blank"><img src="images/slideshare.png" height="30px"></a>
                     <a href="http://158.101.168.240:8080" title="Run Panorama demo at Oracle cloud" target="_blank"><img src="images/play.png" height="30px"></a>
@@ -103,6 +104,12 @@
 
                 <a name="how to run it"></a><h2>How to run it?</h2>
                 <a name="start running quickly"></a><h3>Start running quickly</h3>
+                Panorama supports two ways to run it: as Java application or as Docker container.
+                <h4>Run as Java application</h4>
+                <ul>
+                    <li>Download the latest release of Panorama.jar from <a href="https://github.com/rammpeter/panorama/releases/latest/download/Panorama.jar" target="_blank">here</a></li>
+                    <li>Start Panorama.jar by double-clicking on it or by typing <pre style="display: inline;">java -jar Panorama.jar</pre> in a command line</li>
+                <h4>Run as Docker container</h4>
                 To download the image and start the Panorama application as Docker container type:<br/>
                 <pre>docker run -p8080:8080 -d rammpeter/panorama</pre>
                 This starts the application within one or two minutes. Now you can connect to Panorama's login screen in your browser via <pre style="display: inline;">http://&lt;your&nbsp;server&gt;:8080</pre>
@@ -136,7 +143,7 @@
                 This <a href="https://rammpeter.blogspot.com/2019/03/panorama-configure-https-access-to.html" target="_blank">blog post</a> describes how to configure Panorama and Nginx with docker-compose for SSL-encryption.
 
 
-                <a name="customize"></a><h3>Options for customizing the Panorama application</h3>
+                <a name="customize"></a><h3>Options for customizing the Panorama application (Java + Docker)</h3>
                 Environment variables for customization:
                 <table  border="1">
                     <tr>
@@ -153,7 +160,8 @@
                     <tr>
                         <td><pre style="display: inline;">MAX_JAVA_HEAP_SPACE_MB</pre></td>
                         <td>Set maximum Java heap space memory usable for Panorama in megabytes (Default=1024).<br/>
-                            The suggested value for multiuser production use is 4096.
+                            The suggested value for multiuser production use is 4096.<br>
+                            If running as pure Java program (Panorama.jar) then use the Java parameter -Xmx4096m instead.
                         </td>
                     </tr>
                     <tr>
