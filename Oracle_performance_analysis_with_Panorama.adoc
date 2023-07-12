@@ -117,6 +117,7 @@ SQL-Monitoring records individual executions of an SQL statement in detail if th
 - Execution with parallel query
 - CPU- or I/O-activity for more than 5 seconds
 - Optimizer-hint `MONITOR` in SQL statement
+- ALTER SESSION|SESSION SET EVENTS 'sql_monitor [sql: 5hc07qvt8v737] force=true';
 
 Starting with Oracle 12.1, the short-living detailed monitoring reports from gv$SQL_Monitor are also available within the AWR retention period via DBA_Hist_Reports and DBA_Hist_Reports_Details.
 
@@ -131,12 +132,19 @@ The SQL monitor reports existing for the respective object (SQL / DB session) an
 image::sql-monitor-list.png[]
 
 Clicking on the report ID opens the Database Activity Report known from the Enterprise Manager for this SQL execution in a new browser tab.
-If an internet connection is possible for the browser, it will be displayed as an active Flash page, otherwise as a static HTML page.
+If an internet connection is possible for the browser, it will be displayed as an active page enriched with CSS and Javascript from  https://download.oracle.com/... , otherwise as a static HTML page.
 
 image::sql-monitor-report.png[]
 
 If the DB Activity Report ist not shown, please check browser console if there are security restriction settings active.
-Especially Google Chrome often does not accept Oracle's Flash pages.
+
+In addition to Panorama's core functions, the SQL Monitor Report offers:
+- Display of the execution plan with the activities of the individual steps on time line
+- Show real execution counts and result counts per step of execution plan
+- Show real execution times and I/O operations per step of execution plan
+- Show recursive SQLs executed by the SQL statement and their percentage of total execution time
+
+
 
 === Analysis of concurrency issues (e.g., blocking locks)
 
