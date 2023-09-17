@@ -74,7 +74,7 @@
                     <li>Web browser with ES6-support to access Panorama-GUI (Firefox, Chrome, Safari, Edge)</li>
                     <li>Your Oracle-User used for login with Panorama requires at least the grant SELECT ANY DICTIONARY<br/>
                         Additional grants/privileges are required for some particular functions:
-                        <table  border="1">
+                        <table  style="border: 1px solid;">
                             <tr><th>Grant</th>                  <th>Reason for the grant</th></tr>
                             <tr><td>SELECT ANY DICTIONARY</td>  <td>Default grant for access on DBA_xxx-views. This is the minimum requirement to run Panorama</td></tr>
                             <tr><td>OEM_MONITOR</td>            <td>Starting with Oracle 11.2.0.4 you need this grant to generate Oracle's builtin AWR-reports and ASH-reports</td></tr>
@@ -85,11 +85,13 @@
                         </table>
                     </li>
                     <li>For non-admin users in the autonomous DB in the OCI cloud additional grants are required for some minor functions:
-                        <ul>
-                            <li>GRANT SELECT ON V$DIAG_ALERT_EXT</li>
-                            <li>GRANT READ ON SYS.DBMS_LOCK_ALLOCATED</li>
-                            <li>GRANT READ ON gv$BH</li>
-                        </ul>
+                        <table style="border: 1px solid;">
+                            <tr><th>Grant</th><th>Resaon for the grant</th></tr>
+                            <tr><td>SELECT ON V$DIAG_ALERT_EXT</td><td>Allow read on particular table</td></tr>
+                            <tr><td>READ ON SYS.DBMS_LOCK_ALLOCATED</td><td>Allow read access</td></tr>
+                            <tr><td>READ ON gv$BH</td><td>Allow read access</td></tr>
+                            <tr><td>AUDIT_VIEWER</td><td>Allow read access on unified audit view</td></tr>
+                        </table>
                     </li>
                     <li>Several functions of Panorama are functional only if either:</li>
                     <ul>
