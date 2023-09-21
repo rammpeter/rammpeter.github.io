@@ -461,6 +461,12 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 <li><a href="#_evaluation_of_current_connected_db_sessions_via_session_list">2.1.1. Evaluation of current connected DB sessions via session list</a></li>
 <li><a href="#_evaluation_of_the_wait_state_of_the_currently_active_sessions">2.1.2. Evaluation of the wait state of the currently active sessions</a></li>
 <li><a href="#_retrospective_analysis_of_active_db_sessions_via_active_session_history_ash">2.1.3. Retrospective analysis of active DB sessions via Active Session History (ASH)</a></li>
+<li><a href="#_analysis_of_concurrency_issues_e_g_blocking_locks">2.1.4. Analysis of concurrency issues (e.g., blocking locks)</a>
+<ul class="sectlevel4">
+<li><a href="#_analysis_of_current_locks">2.1.4.1. Analysis of current locks</a></li>
+<li><a href="#_retrospective_analysis_of_concurrency_problems">2.1.4.2. Retrospective analysis of concurrency problems</a></li>
+</ul>
+</li>
 </ul>
 </li>
 <li><a href="#_sql_analysis">2.2. SQL analysis</a>
@@ -470,100 +476,98 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 <li><a href="#_evaluation_of_recorded_sql_monitoring_reports">2.2.3. Evaluation of recorded SQL monitoring reports</a></li>
 </ul>
 </li>
-<li><a href="#_analysis_of_concurrency_issues_e_g_blocking_locks">2.3. Analysis of concurrency issues (e.g., blocking locks)</a>
+<li><a href="#_db_objects">2.3. DB Objects</a>
 <ul class="sectlevel3">
-<li><a href="#_analysis_of_current_locks">2.3.1. Analysis of current locks</a>
+<li><a href="#_detail_information_about_db_objects_tables_indexes_etc">2.3.1. Detail information about DB objects (tables, indexes etc.)</a></li>
+<li><a href="#_current_statistics_for_db_objects">2.3.2. Current statistics for DB objects</a></li>
+<li><a href="#_retrospective_statistics_for_db_objects">2.3.3. Retrospective statistics for DB objects</a></li>
+<li><a href="#_db_cache_usage_by_objects">2.3.4. DB cache usage by objects</a>
 <ul class="sectlevel4">
-<li><a href="#_analysis_of_current_blocking_dml_locks">2.3.1.1. Analysis of current blocking DML locks</a></li>
+<li><a href="#_use_of_the_current_db_cache_by_objects">2.3.4.1. Use of the current DB cache by objects</a></li>
+<li><a href="#_retrospective_analysis_of_db_cache_utilization_by_objects_via_recording_by_panorama_sampler">2.3.4.2. Retrospective analysis of DB cache utilization by objects via recording by Panorama-Sampler</a></li>
 </ul>
 </li>
-<li><a href="#_retrospective_analysis_of_concurrency_problems">2.3.2. Retrospective analysis of concurrency problems</a>
+</ul>
+</li>
+</ul>
+</li>
+<li><a href="#_evaluate_scan_the_db_system_for_potential_performance_antipatterns">3. Evaluate / scan the DB system for potential performance antipatterns</a></li>
+<li><a href="#_evaluation_of_configuration_and_operation_of_the_db_system">4. Evaluation of configuration and operation of the DB system</a>
+<ul class="sectlevel2">
+<li><a href="#_view_the_current_db_configuration_via_initialization_parameters">4.1. View the current DB configuration via initialization parameters</a></li>
+<li><a href="#_evaluate_the_memory_configuration_of_the_db_system">4.2. Evaluate the memory configuration of the DB system</a></li>
+<li><a href="#_evaluation_of_sufficient_dimensioning_of_the_redo_log_files">4.3. Evaluation of sufficient dimensioning of the redo log files</a></li>
+<li><a href="#_evaluate_the_stress_and_performance_of_the_io_system">4.4. Evaluate the stress and performance of the I/O system</a></li>
+<li><a href="#_db_audit_trail">4.5. DB audit trail</a>
+<ul class="sectlevel3">
+<li><a href="#_audit_configuration">4.5.1. Audit configuration</a></li>
+<li><a href="#_standard_audit_trail">4.5.2. Standard audit trail</a></li>
+<li><a href="#_unified_audit_trail">4.5.3. Unified audit trail</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li><a href="#_application_design_requirements_for_optimal_performance">5. Application design requirements for optimal performance</a>
+<ul class="sectlevel2">
+<li><a href="#_tag_db_sessions_via_dbms_application_info">5.1. Tag DB sessions via DBMS_Application_Info</a></li>
+<li><a href="#_use_of_binding_variables">5.2. Use of binding variables</a></li>
+<li><a href="#_efficient_use_of_pl_sql_in_sql_statements">5.3. Efficient use of PL / SQL in SQL statements</a>
+<ul class="sectlevel3">
+<li><a href="#_pragma_udf_for_preventing_context_switches">5.3.1. Pragma UDF for preventing context switches</a></li>
+<li><a href="#_direct_addressing_of_package_constants_instead_of_package_functions">5.3.2. Direct addressing of package constants instead of package functions</a></li>
+</ul>
+</li>
+<li><a href="#_efficient_data_structures">5.4. Efficient data structures</a>
+<ul class="sectlevel3">
+<li><a href="#_indexing">5.4.1. Indexing</a></li>
+<li><a href="#_securing_references_uniqueness_and_rules">5.4.2. Securing references, uniqueness and rules</a></li>
+</ul>
+</li>
+<li><a href="#_usage_of_views">5.5. Usage of views</a></li>
+</ul>
+</li>
+<li><a href="#_influencing_the_execution_plan_of_critical_sqls">6. Influencing the execution plan of critical SQLs</a>
+<ul class="sectlevel2">
+<li><a href="#_ensure_up_to_date_and_realistic_object_analysis_data">6.1. Ensure up-to-date and realistic object analysis data</a></li>
+<li><a href="#_act_directly_on_the_execution_plan_of_sqls_without_changing_the_application_code">6.2. Act directly on the execution plan of SQLs without changing the application code</a>
+<ul class="sectlevel3">
+<li><a href="#_fix_execution_plans_to_a_concrete_plan_by_sql_plan_baseline">6.2.1. Fix execution plans to a concrete plan by SQL Plan Baseline</a>
 <ul class="sectlevel4">
-<li><a href="#_retrospective_analysis_of_concurrency_problems_via_active_session_history_ash">2.3.2.1. Retrospective analysis of concurrency problems via Active Session History (ASH)</a></li>
-<li><a href="#_retrospective_analysis_of_concurrency_problems_by_recordings_of_panorama_sampler">2.3.2.2. Retrospective analysis of concurrency problems by recordings of Panorama-Sampler</a></li>
+<li><a href="#_use_of_better_past_execution_plans_from_awr_history_per_sql_plan_baseline">6.2.1.1. Use of better past execution plans from AWR history per SQL plan baseline</a></li>
+<li><a href="#_fix_an_execution_plan_from_the_current_sga_as_an_sql_plan_baseline">6.2.1.2. Fix an execution plan from the current SGA as an SQL plan baseline</a></li>
+</ul>
+</li>
+<li><a href="#_specification_of_optimizer_hints_via_sql_profiles">6.2.2. Specification of optimizer hints via SQL Profiles</a></li>
+<li><a href="#_specification_of_optimizer_hints_via_sql_patch">6.2.3. Specification of optimizer hints via SQL Patch</a></li>
+<li><a href="#_dynamically_changing_the_sql_text_via_sql_translation">6.2.4. Dynamically changing the SQL text via SQL Translation</a></li>
 </ul>
 </li>
 </ul>
 </li>
-<li><a href="#_db_cache_usage_by_objects">2.4. DB cache usage by objects</a>
-<ul class="sectlevel3">
-<li><a href="#_use_of_the_current_db_cache_by_objects">2.4.1. Use of the current DB cache by objects</a></li>
-<li><a href="#_retrospective_analysis_of_db_cache_utilization_by_objects_via_recording_by_panorama_sampler">2.4.2. Retrospective analysis of DB cache utilization by objects via recording by Panorama-Sampler</a></li>
-</ul>
-</li>
-<li><a href="#_retrospective_evaluation_of_db_objects_with_possibly_problematic_behavior">2.5. Retrospective evaluation of DB objects with possibly problematic behavior</a></li>
-<li><a href="#_evaluate_the_configuration_of_the_db_system">2.6. Evaluate the configuration of the DB system</a>
-<ul class="sectlevel3">
-<li><a href="#_view_the_current_db_configuration_via_initialization_parameters">2.6.1. View the current DB configuration via initialization parameters</a></li>
-<li><a href="#_evaluate_the_memory_configuration_of_the_db_system">2.6.2. Evaluate the memory configuration of the DB system</a></li>
-<li><a href="#_evaluation_of_sufficient_dimensioning_of_the_redo_log_files">2.6.3. Evaluation of sufficient dimensioning of the redo log files</a></li>
-<li><a href="#_evaluate_the_stress_and_performance_of_the_io_system">2.6.4. Evaluate the stress and performance of the I/O system</a></li>
-</ul>
-</li>
-<li><a href="#_evaluate_scan_the_db_system_for_potential_performance_antipatterns">2.7. Evaluate / scan the DB system for potential performance antipatterns</a></li>
-</ul>
-</li>
-<li><a href="#_application_design_requirements_for_optimal_performance">3. Application design requirements for optimal performance</a>
+<li><a href="#_ensure_optimal_storage_utilization">7. Ensure optimal storage utilization</a>
 <ul class="sectlevel2">
-<li><a href="#_tag_db_sessions_via_dbms_application_info">3.1. Tag DB sessions via DBMS_Application_Info</a></li>
-<li><a href="#_use_of_binding_variables">3.2. Use of binding variables</a></li>
-<li><a href="#_efficient_use_of_pl_sql_in_sql_statements">3.3. Efficient use of PL / SQL in SQL statements</a>
+<li><a href="#_get_information_about_storage_usage">7.1. Get information about storage usage</a>
 <ul class="sectlevel3">
-<li><a href="#_pragma_udf_for_preventing_context_switches">3.3.1. Pragma UDF for preventing context switches</a></li>
-<li><a href="#_direct_addressing_of_package_constants_instead_of_package_functions">3.3.2. Direct addressing of package constants instead of package functions</a></li>
+<li><a href="#_overview_over_current_storage_usage">7.1.1. Overview over current storage usage</a></li>
+<li><a href="#_evolution_of_storage_usage_over_time">7.1.2. Evolution of storage usage over time</a></li>
+<li><a href="#_deleted_objects_in_the_recycle_bin">7.1.3. Deleted objects in the Recycle Bin</a></li>
 </ul>
 </li>
-<li><a href="#_efficient_data_structures">3.4. Efficient data structures</a>
+<li><a href="#_release_unused_space_below_the_high_water_mark_offcut">7.2. Release unused space below the high-water mark / offcut</a></li>
+<li><a href="#_compression_of_tables">7.3. Compression of tables</a>
 <ul class="sectlevel3">
-<li><a href="#_indexing">3.4.1. Indexing</a></li>
-<li><a href="#_securing_references_uniqueness_and_rules">3.4.2. Securing references, uniqueness and rules</a></li>
+<li><a href="#_partitioning_to_separate_current_and_legacy_data">7.3.1. Partitioning to separate current and legacy data</a></li>
 </ul>
 </li>
-<li><a href="#_usage_of_views">3.5. Usage of views</a></li>
-</ul>
-</li>
-<li><a href="#_influencing_the_execution_plan_of_critical_sqls">4. Influencing the execution plan of critical SQLs</a>
-<ul class="sectlevel2">
-<li><a href="#_ensure_up_to_date_and_realistic_object_analysis_data">4.1. Ensure up-to-date and realistic object analysis data</a></li>
-<li><a href="#_act_directly_on_the_execution_plan_of_sqls_without_changing_the_application_code">4.2. Act directly on the execution plan of SQLs without changing the application code</a>
+<li><a href="#_compression_of_indexes">7.4. Compression of indexes</a></li>
+<li><a href="#_use_function_based_indexes_to_reduce_indexes_to_values_of_interest">7.5. Use function based indexes to reduce indexes to values of interest</a></li>
+<li><a href="#_determination_of_unused_tables">7.6. Determination of unused tables</a></li>
+<li><a href="#_identification_and_removal_of_unused_indexes">7.7. Identification and removal of unused indexes</a>
 <ul class="sectlevel3">
-<li><a href="#_fix_execution_plans_to_a_concrete_plan_by_sql_plan_baseline">4.2.1. Fix execution plans to a concrete plan by SQL Plan Baseline</a>
-<ul class="sectlevel4">
-<li><a href="#_use_of_better_past_execution_plans_from_awr_history_per_sql_plan_baseline">4.2.1.1. Use of better past execution plans from AWR history per SQL plan baseline</a></li>
-<li><a href="#_fix_an_execution_plan_from_the_current_sga_as_an_sql_plan_baseline">4.2.1.2. Fix an execution plan from the current SGA as an SQL plan baseline</a></li>
+<li><a href="#_establishment_of_monitoring_usage_for_the_detection_of_unused_indices">7.7.1. Establishment of monitoring usage for the detection of unused indices</a></li>
 </ul>
 </li>
-<li><a href="#_specification_of_optimizer_hints_via_sql_profiles">4.2.2. Specification of optimizer hints via SQL Profiles</a></li>
-<li><a href="#_specification_of_optimizer_hints_via_sql_patch">4.2.3. Specification of optimizer hints via SQL Patch</a></li>
-<li><a href="#_dynamically_changing_the_sql_text_via_sql_translation">4.2.4. Dynamically changing the SQL text via SQL Translation</a></li>
-</ul>
-</li>
-</ul>
-</li>
-<li><a href="#_ensure_optimal_storage_utilization">5. Ensure optimal storage utilization</a>
-<ul class="sectlevel2">
-<li><a href="#_get_information_about_storage_usage">5.1. Get information about storage usage</a>
-<ul class="sectlevel3">
-<li><a href="#_overview_over_current_storage_usage">5.1.1. Overview over current storage usage</a></li>
-<li><a href="#_evolution_of_storage_usage_over_time">5.1.2. Evolution of storage usage over time</a></li>
-<li><a href="#_deleted_objects_in_the_recycle_bin">5.1.3. Deleted objects in the Recycle Bin</a></li>
-</ul>
-</li>
-<li><a href="#_release_unused_space_below_the_high_water_mark_offcut">5.2. Release unused space below the high-water mark / offcut</a></li>
-<li><a href="#_compression_of_tables">5.3. Compression of tables</a>
-<ul class="sectlevel3">
-<li><a href="#_partitioning_to_separate_current_and_legacy_data">5.3.1. Partitioning to separate current and legacy data</a></li>
-</ul>
-</li>
-<li><a href="#_compression_of_indexes">5.4. Compression of indexes</a></li>
-<li><a href="#_use_function_based_indexes_to_reduce_indexes_to_values_of_interest">5.5. Use function based indexes to reduce indexes to values of interest</a></li>
-<li><a href="#_determination_of_unused_tables">5.6. Determination of unused tables</a></li>
-<li><a href="#_identification_and_removal_of_unused_indexes">5.7. Identification and removal of unused indexes</a>
-<ul class="sectlevel3">
-<li><a href="#_establishment_of_monitoring_usage_for_the_detection_of_unused_indices">5.7.1. Establishment of monitoring usage for the detection of unused indices</a></li>
-</ul>
-</li>
-<li><a href="#_tracking_the_size_evolution_of_objects_via_panorama_sampler">5.8. Tracking the size evolution of objects via panorama sampler</a></li>
+<li><a href="#_tracking_the_size_evolution_of_objects_via_panorama_sampler">7.8. Tracking the size evolution of objects via panorama sampler</a></li>
 </ul>
 </li>
 </ul>
@@ -729,6 +733,22 @@ This page is not yet completed and still under construction.
 Precondition for usage of AWR is the Enterprise Edition of the DB combined with licensing of the Diagnostics Pack.<br>
 An also supported alternative to AWR is the Panorama-Sampler, which allows retrospective analysis also for Standard Edition rsp. without Diagnostics Pack.</p>
 </div>
+<div class="paragraph">
+<p>There are three main pillars of analysis supported by Panorama:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>DB sessions</p>
+</li>
+<li>
+<p>SQL statements</p>
+</li>
+<li>
+<p>DB objects</p>
+</li>
+</ul>
+</div>
 <div class="sect2">
 <h3 id="_db_session_analysis">2.1. DB session analysis</h3>
 <div class="sect3">
@@ -779,6 +799,69 @@ For start of investigation, the time period as well as the initial grouping crit
 <p>Listing of the individual sampled records according to the current filters (smallest grain of information) by clicking in the "Samples" column</p>
 </li>
 </ul>
+</div>
+</div>
+<div class="sect3">
+<h4 id="_analysis_of_concurrency_issues_e_g_blocking_locks">2.1.4. Analysis of concurrency issues (e.g., blocking locks)</h4>
+<div class="sect4">
+<h5 id="_analysis_of_current_locks">2.1.4.1. Analysis of current locks</h5>
+<div class="paragraph">
+<p>Menu item "DBA General" / "DB-Locks" / "Current" allows to display various lock states:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>all currently existing DML locks (DML = data manipulation language)</p>
+</li>
+<li>
+<p>all blocking DML locks</p>
+</li>
+<li>
+<p>all blocking DDL locks (DDL = data definition language)</p>
+</li>
+<li>
+<p>not completed 2phase-commits (e.g. via DB-Link)</p>
+</li>
+</ul>
+</div>
+<div class="sect5">
+<h6 id="_analysis_of_current_blocking_dml_locks">2.1.4.1.1. Analysis of current blocking DML locks</h6>
+<div class="paragraph">
+<p>There are two analysis paths for viewing existing DML locks, certain special blockage situations are only displayed by one of the two variants:</p>
+</div>
+<div class="paragraph">
+<p><strong>Analysis of current blocking DML locks via gv$Lock:</strong></p>
+</div>
+<div class="paragraph">
+<p>Menu option "DBA General" / "DB Locks" / "Current", button "Blocking DML Locks"
+shows the hierarchical blocker/waiter relationships between DB sessions, starting with the session triggering the lock cascade.
+Data base is the information from gv$Lock about waiting lock requests.</p>
+</div>
+<div class="paragraph">
+<p><strong>Analysis of current blocking DML locks via gv$Session</strong></p>
+</div>
+<div class="paragraph">
+<p>At menu item "Analyses/Statistics" / "Session waits" / "Current", in addition to the wait events of the currently active sessions, blocker/waiter relationships based on gv$Session are listed hierarchically here.</p>
+</div>
+</div>
+</div>
+<div class="sect4">
+<h5 id="_retrospective_analysis_of_concurrency_problems">2.1.4.2. Retrospective analysis of concurrency problems</h5>
+<div class="sect5">
+<h6 id="_retrospective_analysis_of_concurrency_problems_via_active_session_history_ash">2.1.4.2.1. Retrospective analysis of concurrency problems via Active Session History (ASH)</h6>
+<div class="paragraph">
+<p>Menu item "DBA General" / "DB Locks" / "Blocking Locks historic from ASH" lists triggering sessions of the cascade of blocking locks in the selected period sorted by the summed waiting time of all DB sessions attached to it.
+The data basis for the evaluation is the blocking session information of the Active Session History.</p>
+</div>
+</div>
+<div class="sect5">
+<h6 id="_retrospective_analysis_of_concurrency_problems_by_recordings_of_panorama_sampler">2.1.4.2.2. Retrospective analysis of concurrency problems by recordings of Panorama-Sampler</h6>
+<div class="paragraph">
+<p>Menu item "DBA General" / "DB Locks" / "Blocking Locks historic from Panorama Sampler" lists triggering sessions of the cascade of blocking locks in the selected period sorted by the summed waiting time of all DB sessions attached to it.
+The data basis for the evaluation is the information about past blocking lock situations collected by Panorama Sampler.
+The menu item is only available if the recording of blocking lock situations by the panorama sampler is activated for the DB.</p>
+</div>
+</div>
 </div>
 </div>
 </div>
@@ -881,79 +964,63 @@ If an internet connection is possible for the browser, it will be displayed as a
 </div>
 </div>
 <div class="sect2">
-<h3 id="_analysis_of_concurrency_issues_e_g_blocking_locks">2.3. Analysis of concurrency issues (e.g., blocking locks)</h3>
+<h3 id="_db_objects">2.3. DB Objects</h3>
 <div class="sect3">
-<h4 id="_analysis_of_current_locks">2.3.1. Analysis of current locks</h4>
+<h4 id="_detail_information_about_db_objects_tables_indexes_etc">2.3.1. Detail information about DB objects (tables, indexes etc.)</h4>
 <div class="paragraph">
-<p>Menu item "DBA General" / "DB-Locks" / "Current" allows to display various lock states:</p>
+<p>Menu item "Schema/Storage" / "Describe Object" allows to display the structure and current state of a particular DB object.
+The buttons at the footer line let you dig deeper into several details of that object.
+This view is also linked from several other views.</p>
 </div>
-<div class="ulist">
-<ul>
-<li>
-<p>all currently existing DML locks (DML = data manipulation language)</p>
-</li>
-<li>
-<p>all blocking DML locks</p>
-</li>
-<li>
-<p>all blocking DDL locks (DDL = data definition language)</p>
-</li>
-<li>
-<p>not completed 2phase-commits (e.g. via DB-Link)</p>
-</li>
-</ul>
-</div>
-<div class="sect4">
-<h5 id="_analysis_of_current_blocking_dml_locks">2.3.1.1. Analysis of current blocking DML locks</h5>
-<div class="paragraph">
-<p>There are two analysis paths for viewing existing DML locks, certain special blockage situations are only displayed by one of the two variants:</p>
-</div>
-<div class="sect5">
-<h6 id="_analysis_of_current_blocking_dml_locks_via_gvlock">2.3.1.1.1. Analysis of current blocking DML locks via gv$Lock</h6>
-<div class="paragraph">
-<p>Menu option "DBA General" / "DB Locks" / "Current", button "Blocking DML Locks"
-shows the hierarchical blocker/waiter relationships between DB sessions, starting with the session triggering the lock cascade.
-Data base is the information from gv$Lock about waiting lock requests.</p>
-</div>
-</div>
-<div class="sect5">
-<h6 id="_analysis_of_current_blocking_dml_locks_via_gvsession">2.3.1.1.2. Analysis of current blocking DML locks via gv$Session</h6>
-<div class="paragraph">
-<p>At menu item "Analyses/Statistics" / "Session waits" / "Current", in addition to the wait events of the currently active sessions, blocker/waiter relationships based on gv$Session are listed hierarchically here.</p>
-</div>
+<div class="imageblock">
+<div class="content">
+<img src="./images/describe_db_object.png" alt="describe db object">
 </div>
 </div>
 </div>
 <div class="sect3">
-<h4 id="_retrospective_analysis_of_concurrency_problems">2.3.2. Retrospective analysis of concurrency problems</h4>
-<div class="sect4">
-<h5 id="_retrospective_analysis_of_concurrency_problems_via_active_session_history_ash">2.3.2.1. Retrospective analysis of concurrency problems via Active Session History (ASH)</h5>
+<h4 id="_current_statistics_for_db_objects">2.3.2. Current statistics for DB objects</h4>
 <div class="paragraph">
-<p>Menu item "DBA General" / "DB Locks" / "Blocking Locks historic from ASH" lists triggering sessions of the cascade of blocking locks in the selected period sorted by the summed waiting time of all DB sessions attached to it.
-The data basis for the evaluation is the blocking session information of the Active Session History.</p>
+<p>Menu item "Analyses/Statistics" / "Segment statistics" / "Current" shows the change of statistic values of DB objects for the last x seconds.</p>
 </div>
-</div>
-<div class="sect4">
-<h5 id="_retrospective_analysis_of_concurrency_problems_by_recordings_of_panorama_sampler">2.3.2.2. Retrospective analysis of concurrency problems by recordings of Panorama-Sampler</h5>
-<div class="paragraph">
-<p>Menu item "DBA General" / "DB Locks" / "Blocking Locks historic from Panorama Sampler" lists triggering sessions of the cascade of blocking locks in the selected period sorted by the summed waiting time of all DB sessions attached to it.
-The data basis for the evaluation is the information about past blocking lock situations collected by Panorama Sampler.
-The menu item is only available if the recording of blocking lock situations by the panorama sampler is activated for the DB.</p>
+<div class="imageblock">
+<div class="content">
+<img src="./images/segment_statistics_current.png" alt="segment statistics current">
 </div>
 </div>
 </div>
-</div>
-<div class="sect2">
-<h3 id="_db_cache_usage_by_objects">2.4. DB cache usage by objects</h3>
 <div class="sect3">
-<h4 id="_use_of_the_current_db_cache_by_objects">2.4.1. Use of the current DB cache by objects</h4>
+<h4 id="_retrospective_statistics_for_db_objects">2.3.3. Retrospective statistics for DB objects</h4>
+<div class="paragraph">
+<p>Menu "Analyses/Statistics" / "Segment statistics" / "Historic" shows the change of statistic values of DB objects for the selected period.
+The first view gives the summary of serveral statistic values for the selected period based on AWR snapshots.</p>
+</div>
+<div class="imageblock">
+<div class="content">
+<img src="./images/segment_statistics_historic_entry.png" alt="segment statistics historic entry">
+</div>
+</div>
+<div class="paragraph">
+<p>An click at the column "AWR snaps." lists the single AWR snapshots of the selected period for a certain object with the statistic values at that time.
+This values can then also be shown and compared in a diagram.</p>
+</div>
+<div class="imageblock">
+<div class="content">
+<img src="./images/segment_statistics_historic_awr_snaps.png" alt="segment statistics historic awr snaps">
+</div>
+</div>
+</div>
+<div class="sect3">
+<h4 id="_db_cache_usage_by_objects">2.3.4. DB cache usage by objects</h4>
+<div class="sect4">
+<h5 id="_use_of_the_current_db_cache_by_objects">2.3.4.1. Use of the current DB cache by objects</h5>
 <div class="paragraph">
 <p>Menu item "SGA/PGA details" / "DB cache" / "DB cache usage current" allows to display the concrete objects in the DB cache with their allocated memory sizes.
 It can be further detailed to the SQL statements of the objects currently kept in SGA as well as the structure information.</p>
 </div>
 </div>
-<div class="sect3">
-<h4 id="_retrospective_analysis_of_db_cache_utilization_by_objects_via_recording_by_panorama_sampler">2.4.2. Retrospective analysis of DB cache utilization by objects via recording by Panorama-Sampler</h4>
+<div class="sect4">
+<h5 id="_retrospective_analysis_of_db_cache_utilization_by_objects_via_recording_by_panorama_sampler">2.3.4.2. Retrospective analysis of DB cache utilization by objects via recording by Panorama-Sampler</h5>
 <div class="paragraph">
 <p>At menu item "SGA/PGA details" / "DB cache" / "DB cache usage historic" past snapshots of the DB cache can be analyzed.
 The menu item is only available if the recording of the DB cache usage by panorama sampler is activated for the DB.
@@ -978,21 +1045,29 @@ history of concrete snapshots of the DB cache for an object including graphical 
 </div>
 </div>
 </div>
-<div class="sect2">
-<h3 id="_retrospective_evaluation_of_db_objects_with_possibly_problematic_behavior">2.5. Retrospective evaluation of DB objects with possibly problematic behavior</h3>
-
 </div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_evaluate_scan_the_db_system_for_potential_performance_antipatterns">3. Evaluate / scan the DB system for potential performance antipatterns</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>Menu item "Special extensions" / "Dragnet investigation" allows scanning the DB system for over 100 different performance antipatterns</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_evaluation_of_configuration_and_operation_of_the_db_system">4. Evaluation of configuration and operation of the DB system</h2>
+<div class="sectionbody">
 <div class="sect2">
-<h3 id="_evaluate_the_configuration_of_the_db_system">2.6. Evaluate the configuration of the DB system</h3>
-<div class="sect3">
-<h4 id="_view_the_current_db_configuration_via_initialization_parameters">2.6.1. View the current DB configuration via initialization parameters</h4>
+<h3 id="_view_the_current_db_configuration_via_initialization_parameters">4.1. View the current DB configuration via initialization parameters</h3>
 <div class="paragraph">
 <p>Menu item "DBA General" / "Oracle Parameter" allows to display the initialization parameters of the DB.
 Filtering the "Default" column to "FALSE" shows the explicitly set initialization parameters of the DB.</p>
 </div>
 </div>
-<div class="sect3">
-<h4 id="_evaluate_the_memory_configuration_of_the_db_system">2.6.2. Evaluate the memory configuration of the DB system</h4>
+<div class="sect2">
+<h3 id="_evaluate_the_memory_configuration_of_the_db_system">4.2. Evaluate the memory configuration of the DB system</h3>
 <div class="paragraph">
 <p>Menu item "DBA/SGA details" / "SGA memory" / "SGA components" shows the memory usage of the SGA (Shared Global Area).</p>
 </div>
@@ -1003,8 +1078,8 @@ The optimization goal is usually to use as much of the physical memory as possib
 The list of objects in the library cache, grouped by type and namespace, allows a detailed listing of the concrete objects with the size of the allocated memory.</p>
 </div>
 </div>
-<div class="sect3">
-<h4 id="_evaluation_of_sufficient_dimensioning_of_the_redo_log_files">2.6.3. Evaluation of sufficient dimensioning of the redo log files</h4>
+<div class="sect2">
+<h3 id="_evaluation_of_sufficient_dimensioning_of_the_redo_log_files">4.3. Evaluation of sufficient dimensioning of the redo log files</h3>
 <div class="paragraph">
 <p>Menu item "DBA-General" / "Redologs" / "Current" shows the current configuration of the redo log files.
 Menu item "DBA General" / "Redologs" / "Historical" shows the past usage of the redo log files per AWR snapshot,
@@ -1017,26 +1092,68 @@ This risk is often latent, since DBs are created by default with only 3 logfile 
 With increased write load, a temporary freezing of write processes is preprogrammed for such DBs.</p>
 </div>
 </div>
-<div class="sect3">
-<h4 id="_evaluate_the_stress_and_performance_of_the_io_system">2.6.4. Evaluate the stress and performance of the I/O system</h4>
+<div class="sect2">
+<h3 id="_evaluate_the_stress_and_performance_of_the_io_system">4.4. Evaluate the stress and performance of the I/O system</h3>
 <div class="paragraph">
 <p>Menu "I/O analysis" contains several historic characteristics, throughput and time related values about usage and performance of the underlying I/O system.</p>
 </div>
 </div>
-</div>
 <div class="sect2">
-<h3 id="_evaluate_scan_the_db_system_for_potential_performance_antipatterns">2.7. Evaluate / scan the DB system for potential performance antipatterns</h3>
+<h3 id="_db_audit_trail">4.5. DB audit trail</h3>
+<div class="sect3">
+<h4 id="_audit_configuration">4.5.1. Audit configuration</h4>
 <div class="paragraph">
-<p>Menu item "Special extensions" / "Dragnet investigation" allows scanning the DB system for over 100 different performance antipatterns</p>
+<p>Menu item "DBA General" / "Audit Trail" / "Auditing rules" shows the current configuration of the DB audit trail as well as several auditing rules.</p>
+</div>
+<div class="imageblock">
+<div class="content">
+<img src="./images/auditing_rules.png" alt="auditing rules">
+</div>
+</div>
+</div>
+<div class="sect3">
+<h4 id="_standard_audit_trail">4.5.2. Standard audit trail</h4>
+<div class="paragraph">
+<p>Menu item "DBA General" / "Audit Trail" / "Standard audit trail" opens a dialog for evaluation of standard audit trail including find grained audit trail.
+Depending on the choosen value for "Grouping" single audit records are show or the result is grouped by time with record counts for the top x actions, machines and users.</p>
+</div>
+<div class="imageblock">
+<div class="content">
+<img src="./images/audit_trail_standard_group.png" alt="audit trail standard group">
+</div>
+</div>
+<div class="paragraph">
+<p>By clicking at the links in the columns for "Action", "Machine", "User" etc. you can refine the grouped result.
+Clicking at the column "Audits total" shows the single audit records for the selected grouping.</p>
+</div>
+<div class="imageblock">
+<div class="content">
+<img src="./images/audit_trail_standard_detail.png" alt="audit trail standard detail">
+</div>
+</div>
+</div>
+<div class="sect3">
+<h4 id="_unified_audit_trail">4.5.3. Unified audit trail</h4>
+<div class="paragraph">
+<p>Menu item "DBA General" / "Audit Trail" / "Unified audit trail" works similar like the previous section for standard audit trail, but for the unified audit trail.</p>
+</div>
+<div class="paragraph">
+<p>Filter and group the result and show detail records:</p>
+</div>
+<div class="imageblock">
+<div class="content">
+<img src="./images/audit_trail_unified_all.png" alt="audit trail unified all">
+</div>
+</div>
 </div>
 </div>
 </div>
 </div>
 <div class="sect1">
-<h2 id="_application_design_requirements_for_optimal_performance">3. Application design requirements for optimal performance</h2>
+<h2 id="_application_design_requirements_for_optimal_performance">5. Application design requirements for optimal performance</h2>
 <div class="sectionbody">
 <div class="sect2">
-<h3 id="_tag_db_sessions_via_dbms_application_info">3.1. Tag DB sessions via DBMS_Application_Info</h3>
+<h3 id="_tag_db_sessions_via_dbms_application_info">5.1. Tag DB sessions via DBMS_Application_Info</h3>
 <div class="paragraph">
 <p>The DB allows the tagging of DB sessions with context information about modules and action (64 characters each).
 This information on modules and action are recorded in various histories (including in ASH and SQL statistics) and allow the subsequent assignment of the various tracks in the DB to the subject context.</p>
@@ -1055,42 +1172,42 @@ This information on modules and action are recorded in various histories (includ
 </div>
 </div>
 <div class="sect2">
-<h3 id="_use_of_binding_variables">3.2. Use of binding variables</h3>
+<h3 id="_use_of_binding_variables">5.2. Use of binding variables</h3>
 <div class="paragraph">
 <p>TODO: Transfer content from german document</p>
 </div>
 </div>
 <div class="sect2">
-<h3 id="_efficient_use_of_pl_sql_in_sql_statements">3.3. Efficient use of PL / SQL in SQL statements</h3>
+<h3 id="_efficient_use_of_pl_sql_in_sql_statements">5.3. Efficient use of PL / SQL in SQL statements</h3>
 <div class="paragraph">
 <p>TODO: Transfer content from german document</p>
 </div>
 <div class="sect3">
-<h4 id="_pragma_udf_for_preventing_context_switches">3.3.1. Pragma UDF for preventing context switches</h4>
+<h4 id="_pragma_udf_for_preventing_context_switches">5.3.1. Pragma UDF for preventing context switches</h4>
 
 </div>
 <div class="sect3">
-<h4 id="_direct_addressing_of_package_constants_instead_of_package_functions">3.3.2. Direct addressing of package constants instead of package functions</h4>
+<h4 id="_direct_addressing_of_package_constants_instead_of_package_functions">5.3.2. Direct addressing of package constants instead of package functions</h4>
 
 </div>
 </div>
 <div class="sect2">
-<h3 id="_efficient_data_structures">3.4. Efficient data structures</h3>
+<h3 id="_efficient_data_structures">5.4. Efficient data structures</h3>
 <div class="sect3">
-<h4 id="_indexing">3.4.1. Indexing</h4>
+<h4 id="_indexing">5.4.1. Indexing</h4>
 <div class="paragraph">
 <p>TODO: Transfer content from german document</p>
 </div>
 </div>
 <div class="sect3">
-<h4 id="_securing_references_uniqueness_and_rules">3.4.2. Securing references, uniqueness and rules</h4>
+<h4 id="_securing_references_uniqueness_and_rules">5.4.2. Securing references, uniqueness and rules</h4>
 <div class="paragraph">
 <p>TODO: Transfer content from german document</p>
 </div>
 </div>
 </div>
 <div class="sect2">
-<h3 id="_usage_of_views">3.5. Usage of views</h3>
+<h3 id="_usage_of_views">5.5. Usage of views</h3>
 <div class="paragraph">
 <p>TODO: Transfer content from german document</p>
 </div>
@@ -1098,10 +1215,10 @@ This information on modules and action are recorded in various histories (includ
 </div>
 </div>
 <div class="sect1">
-<h2 id="_influencing_the_execution_plan_of_critical_sqls">4. Influencing the execution plan of critical SQLs</h2>
+<h2 id="_influencing_the_execution_plan_of_critical_sqls">6. Influencing the execution plan of critical SQLs</h2>
 <div class="sectionbody">
 <div class="sect2">
-<h3 id="_ensure_up_to_date_and_realistic_object_analysis_data">4.1. Ensure up-to-date and realistic object analysis data</h3>
+<h3 id="_ensure_up_to_date_and_realistic_object_analysis_data">6.1. Ensure up-to-date and realistic object analysis data</h3>
 <div class="paragraph">
 <p>The first prerequisite for optimal execution plans is the existence of true-to-life object statistics!
 For this a regular analysis of tables and indices should be ensured by the default scheduler settings of the DB or independent analysis.</p>
@@ -1118,16 +1235,16 @@ The comparison with the number of rows according to the last analysis allows the
 </div>
 </div>
 <div class="sect2">
-<h3 id="_act_directly_on_the_execution_plan_of_sqls_without_changing_the_application_code">4.2. Act directly on the execution plan of SQLs without changing the application code</h3>
+<h3 id="_act_directly_on_the_execution_plan_of_sqls_without_changing_the_application_code">6.2. Act directly on the execution plan of SQLs without changing the application code</h3>
 <div class="sect3">
-<h4 id="_fix_execution_plans_to_a_concrete_plan_by_sql_plan_baseline">4.2.1. Fix execution plans to a concrete plan by SQL Plan Baseline</h4>
+<h4 id="_fix_execution_plans_to_a_concrete_plan_by_sql_plan_baseline">6.2.1. Fix execution plans to a concrete plan by SQL Plan Baseline</h4>
 <div class="paragraph">
 <p>SQL plan baselines allow a concrete execution plan to be specified in a binding manner when a syntactically identical SQL statement is executed (SQL ID hash).<br>
 It is not the concrete execution plan that is specified here, but the plan hash value of the plan to be used. This means that the optimizer itself must be able to determine this plan with the plan hash value to be obtained.<br>
 Prerequisite for the use of SQL Plan Baselines is the Enterprise Edition of the Oracle DB.</p>
 </div>
 <div class="sect4">
-<h5 id="_use_of_better_past_execution_plans_from_awr_history_per_sql_plan_baseline">4.2.1.1. Use of better past execution plans from AWR history per SQL plan baseline</h5>
+<h5 id="_use_of_better_past_execution_plans_from_awr_history_per_sql_plan_baseline">6.2.1.1. Use of better past execution plans from AWR history per SQL plan baseline</h5>
 <div class="paragraph">
 <p>SQL plan baselines allow a concrete execution plan to be specified in a binding manner when a syntactically identical SQL statement is executed (SQL ID hash).<br>
 If a better execution plan exists in the AWR history of an SQL, Panorama can generate a PL/SQL snippet to fix this plan via SQL plan baseline.</p>
@@ -1157,21 +1274,21 @@ The possible existence of a default by SQL plan baseline is shown in the detail 
 </div>
 </div>
 <div class="sect4">
-<h5 id="_fix_an_execution_plan_from_the_current_sga_as_an_sql_plan_baseline">4.2.1.2. Fix an execution plan from the current SGA as an SQL plan baseline</h5>
+<h5 id="_fix_an_execution_plan_from_the_current_sga_as_an_sql_plan_baseline">6.2.1.2. Fix an execution plan from the current SGA as an SQL plan baseline</h5>
 <div class="paragraph">
 <p>As an alternative to the AWR source, SQL plan baselines can also be generated from the current cursor cache of the SGA</p>
 </div>
 </div>
 </div>
 <div class="sect3">
-<h4 id="_specification_of_optimizer_hints_via_sql_profiles">4.2.2. Specification of optimizer hints via SQL Profiles</h4>
+<h4 id="_specification_of_optimizer_hints_via_sql_profiles">6.2.2. Specification of optimizer hints via SQL Profiles</h4>
 <div class="paragraph">
 <p>SQL profiles can be generated via the SQL tuning functions of the Oracle Enterprise Manager (or newly Cloud Control), which influence the execution plan for a concrete SQL statement by specifying optimizer hints.<br>
 The possible existence of a specification by SQL profiles is displayed in the detail view of the SQL in signal red.</p>
 </div>
 </div>
 <div class="sect3">
-<h4 id="_specification_of_optimizer_hints_via_sql_patch">4.2.3. Specification of optimizer hints via SQL Patch</h4>
+<h4 id="_specification_of_optimizer_hints_via_sql_patch">6.2.3. Specification of optimizer hints via SQL Patch</h4>
 <div class="paragraph">
 <p>SQL patches (available from Release 11.1) allow to specify alternative optimizer hints in a less complex way than via SQL profiles.<br>
 SQL patches can be used without additional license also in Standard Edition.<br>
@@ -1180,7 +1297,7 @@ A PL/SQL snippet for creating an SQL patch for a concrete SQL statement can be g
 </div>
 </div>
 <div class="sect3">
-<h4 id="_dynamically_changing_the_sql_text_via_sql_translation">4.2.4. Dynamically changing the SQL text via SQL Translation</h4>
+<h4 id="_dynamically_changing_the_sql_text_via_sql_translation">6.2.4. Dynamically changing the SQL text via SQL Translation</h4>
 <div class="paragraph">
 <p>As of version 12.1, the SQL Translation Framework allows alternative SQL texts to be stored for an SQL statement.<br>
 Before the SQL is executed, the SQL text is replaced by the stored alternative SQL text.<br>
@@ -1197,7 +1314,7 @@ The possible existence of an alternative SQL text is indicated in the detail vie
 </div>
 </div>
 <div class="sect1">
-<h2 id="_ensure_optimal_storage_utilization">5. Ensure optimal storage utilization</h2>
+<h2 id="_ensure_optimal_storage_utilization">7. Ensure optimal storage utilization</h2>
 <div class="sectionbody">
 <div class="paragraph">
 <p>Optimization to minimize the use of storage and the physical size of DB objects addresses the following objectives:</p>
@@ -1219,17 +1336,17 @@ The possible existence of an alternative SQL text is indicated in the detail vie
 </ul>
 </div>
 <div class="sect2">
-<h3 id="_get_information_about_storage_usage">5.1. Get information about storage usage</h3>
+<h3 id="_get_information_about_storage_usage">7.1. Get information about storage usage</h3>
 <div class="sect3">
-<h4 id="_overview_over_current_storage_usage">5.1.1. Overview over current storage usage</h4>
+<h4 id="_overview_over_current_storage_usage">7.1.1. Overview over current storage usage</h4>
 
 </div>
 <div class="sect3">
-<h4 id="_evolution_of_storage_usage_over_time">5.1.2. Evolution of storage usage over time</h4>
+<h4 id="_evolution_of_storage_usage_over_time">7.1.2. Evolution of storage usage over time</h4>
 
 </div>
 <div class="sect3">
-<h4 id="_deleted_objects_in_the_recycle_bin">5.1.3. Deleted objects in the Recycle Bin</h4>
+<h4 id="_deleted_objects_in_the_recycle_bin">7.1.3. Deleted objects in the Recycle Bin</h4>
 <div class="paragraph">
 <p>Menu item "Schema /Storage" / "Recycle bin" shows the current occupancy of the recycle bin of the DB.
 Selection by size and drop time allows prompt release of relevant storage sizes of deleted objects after sufficient grace period.</p>
@@ -1237,24 +1354,24 @@ Selection by size and drop time allows prompt release of relevant storage sizes 
 </div>
 </div>
 <div class="sect2">
-<h3 id="_release_unused_space_below_the_high_water_mark_offcut">5.2. Release unused space below the high-water mark / offcut</h3>
+<h3 id="_release_unused_space_below_the_high_water_mark_offcut">7.2. Release unused space below the high-water mark / offcut</h3>
 
 </div>
 <div class="sect2">
-<h3 id="_compression_of_tables">5.3. Compression of tables</h3>
+<h3 id="_compression_of_tables">7.3. Compression of tables</h3>
 <div class="sect3">
-<h4 id="_partitioning_to_separate_current_and_legacy_data">5.3.1. Partitioning to separate current and legacy data</h4>
+<h4 id="_partitioning_to_separate_current_and_legacy_data">7.3.1. Partitioning to separate current and legacy data</h4>
 <div class="paragraph">
 <p>Use interval partitioning to automate the partitioning process</p>
 </div>
 </div>
 </div>
 <div class="sect2">
-<h3 id="_compression_of_indexes">5.4. Compression of indexes</h3>
+<h3 id="_compression_of_indexes">7.4. Compression of indexes</h3>
 
 </div>
 <div class="sect2">
-<h3 id="_use_function_based_indexes_to_reduce_indexes_to_values_of_interest">5.5. Use function based indexes to reduce indexes to values of interest</h3>
+<h3 id="_use_function_based_indexes_to_reduce_indexes_to_values_of_interest">7.5. Use function based indexes to reduce indexes to values of interest</h3>
 <div class="paragraph">
 <p>Often, indexes are built over all records in a table, even though the index is accessed with only one or a few values that comprise only a very small portion of the total set of records.<br></p>
 </div>
@@ -1313,22 +1430,22 @@ For a two-column index consisting of Status and ArtNr and an access per</p>
 </div>
 </div>
 <div class="sect2">
-<h3 id="_determination_of_unused_tables">5.6. Determination of unused tables</h3>
+<h3 id="_determination_of_unused_tables">7.6. Determination of unused tables</h3>
 <div class="paragraph">
 <p>Unused (and with corresponding probability dispensable) tables are those on which there are no accesses at all over a longer period of time as well as those tables in which only writing takes place, but whose contents are never used.</p>
 </div>
 </div>
 <div class="sect2">
-<h3 id="_identification_and_removal_of_unused_indexes">5.7. Identification and removal of unused indexes</h3>
+<h3 id="_identification_and_removal_of_unused_indexes">7.7. Identification and removal of unused indexes</h3>
 <div class="sect3">
-<h4 id="_establishment_of_monitoring_usage_for_the_detection_of_unused_indices">5.7.1. Establishment of monitoring usage for the detection of unused indices</h4>
+<h4 id="_establishment_of_monitoring_usage_for_the_detection_of_unused_indices">7.7.1. Establishment of monitoring usage for the detection of unused indices</h4>
 <div class="paragraph">
 <p>Detailed steps for establishing and using Monitoring Usage are described <a href="https://rammpeter.blogspot.de/2017/10/oracle-db-identify-unused-indexes.html">here</a>.</p>
 </div>
 </div>
 </div>
 <div class="sect2">
-<h3 id="_tracking_the_size_evolution_of_objects_via_panorama_sampler">5.8. Tracking the size evolution of objects via panorama sampler</h3>
+<h3 id="_tracking_the_size_evolution_of_objects_via_panorama_sampler">7.8. Tracking the size evolution of objects via panorama sampler</h3>
 
 </div>
 </div>
@@ -1336,7 +1453,7 @@ For a two-column index consisting of Status and ArtNr and an access per</p>
 </div>
 <div id="footer">
 <div id="footer-text">
-Last updated 2023-09-19 13:34:32 UTC
+Last updated 2023-09-21 16:10:25 UTC
 </div>
 </div>
 </body>
