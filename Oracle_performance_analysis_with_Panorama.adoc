@@ -6,7 +6,7 @@ Author: Peter Ramm ( Peter@ramm-oberhermsdorf.de )
 :icons:
 :imagesdir: ./images
 :numbered:
-:sectnumlevels: 6
+:sectnumlevels: 7
 :website: https://rammpeter.github.io
 
 
@@ -62,6 +62,12 @@ Retrospective analysis with Panorama is regularly based on Oracle's Active Workl
 Precondition for usage of AWR is the Enterprise Edition of the DB combined with licensing of the Diagnostics Pack. +
 An also supported alternative to AWR is the Panorama-Sampler, which allows retrospective analysis also for Standard Edition rsp. without Diagnostics Pack.
 
+There are three main pillars of analysis supported by Panorama:
+
+* DB sessions
+* SQL statements
+* DB objects
+
 === DB session analysis
 
 ==== Evaluation of current connected DB sessions via session list
@@ -91,6 +97,41 @@ In the display of waiting times and information grouped by the selected criterio
 * Drilldown into data of the selected row by splitting according to various criteria, for this click into corresponding column
 * Switch the perspective from session wait time to involved SQLs, acessed data structure, executed PL/SQL-objects etc.
 * Listing of the individual sampled records according to the current filters (smallest grain of information) by clicking in the "Samples" column
+
+==== Analysis of concurrency issues (e.g., blocking locks)
+
+===== Analysis of current locks
+Menu item "DBA General" / "DB-Locks" / "Current" allows to display various lock states:
+
+* all currently existing DML locks (DML = data manipulation language)
+* all blocking DML locks
+* all blocking DDL locks (DDL = data definition language)
+* not completed 2phase-commits (e.g. via DB-Link)
+
+====== Analysis of current blocking DML locks
+There are two analysis paths for viewing existing DML locks, certain special blockage situations are only displayed by one of the two variants:
+
+*Analysis of current blocking DML locks via gv$Lock:*
+
+Menu option "DBA General" / "DB Locks" / "Current", button "Blocking DML Locks"
+shows the hierarchical blocker/waiter relationships between DB sessions, starting with the session triggering the lock cascade.
+Data base is the information from gv$Lock about waiting lock requests.
+
+*Analysis of current blocking DML locks via gv$Session*
+
+At menu item "Analyses/Statistics" / "Session waits" / "Current", in addition to the wait events of the currently active sessions, blocker/waiter relationships based on gv$Session are listed hierarchically here.
+
+===== Retrospective analysis of concurrency problems
+
+====== Retrospective analysis of concurrency problems via Active Session History (ASH)
+Menu item "DBA General" / "DB Locks" / "Blocking Locks historic from ASH" lists triggering sessions of the cascade of blocking locks in the selected period sorted by the summed waiting time of all DB sessions attached to it.
+The data basis for the evaluation is the blocking session information of the Active Session History.
+
+====== Retrospective analysis of concurrency problems by recordings of Panorama-Sampler
+Menu item "DBA General" / "DB Locks" / "Blocking Locks historic from Panorama Sampler" lists triggering sessions of the cascade of blocking locks in the selected period sorted by the summed waiting time of all DB sessions attached to it.
+The data basis for the evaluation is the information about past blocking lock situations collected by Panorama Sampler.
+The menu item is only available if the recording of blocking lock situations by the panorama sampler is activated for the DB.
+
 
 === SQL analysis
 ==== Determination of possibly problematic SQL statements which are still hold in memory
@@ -144,47 +185,38 @@ In addition to Panorama's core functions, the SQL Monitor Report offers:
 - Show real execution times and I/O operations per step of execution plan
 - Show recursive SQLs executed by the SQL statement and their percentage of total execution time
 
+=== DB Objects
 
+==== Detail information about DB objects (tables, indexes etc.)
+Menu item "Schema/Storage" / "Describe Object" allows to display the structure and current state of a particular DB object.
+The buttons at the footer line let you dig deeper into several details of that object.
+This view is also linked from several other views.
 
-=== Analysis of concurrency issues (e.g., blocking locks)
+image::describe_db_object.png[]
 
-==== Analysis of current locks
-Menu item "DBA General" / "DB-Locks" / "Current" allows to display various lock states:
+==== Current statistics for DB objects
+Menu item "Analyses/Statistics" / "Segment statistics" / "Current" shows the change of statistic values of DB objects for the last x seconds.
 
-* all currently existing DML locks (DML = data manipulation language)
-* all blocking DML locks
-* all blocking DDL locks (DDL = data definition language)
-* not completed 2phase-commits (e.g. via DB-Link)
+image::segment_statistics_current.png[]
 
-===== Analysis of current blocking DML locks
-There are two analysis paths for viewing existing DML locks, certain special blockage situations are only displayed by one of the two variants:
+==== Retrospective statistics for DB objects
+Menu "Analyses/Statistics" / "Segment statistics" / "Historic" shows the change of statistic values of DB objects for the selected period.
+The first view gives the summary of serveral statistic values for the selected period based on AWR snapshots.
 
-====== Analysis of current blocking DML locks via gv$Lock
-Menu option "DBA General" / "DB Locks" / "Current", button "Blocking DML Locks"
-shows the hierarchical blocker/waiter relationships between DB sessions, starting with the session triggering the lock cascade.
-Data base is the information from gv$Lock about waiting lock requests.
+image::segment_statistics_historic_entry.png[]
 
-====== Analysis of current blocking DML locks via gv$Session
-At menu item "Analyses/Statistics" / "Session waits" / "Current", in addition to the wait events of the currently active sessions, blocker/waiter relationships based on gv$Session are listed hierarchically here.
+An click at the column "AWR snaps." lists the single AWR snapshots of the selected period for a certain object with the statistic values at that time.
+This values can then also be shown and compared in a diagram.
 
-==== Retrospective analysis of concurrency problems
+image::segment_statistics_historic_awr_snaps.png[]
 
-===== Retrospective analysis of concurrency problems via Active Session History (ASH)
-Menu item "DBA General" / "DB Locks" / "Blocking Locks historic from ASH" lists triggering sessions of the cascade of blocking locks in the selected period sorted by the summed waiting time of all DB sessions attached to it.
-The data basis for the evaluation is the blocking session information of the Active Session History.
+==== DB cache usage by objects
 
-===== Retrospective analysis of concurrency problems by recordings of Panorama-Sampler
-Menu item "DBA General" / "DB Locks" / "Blocking Locks historic from Panorama Sampler" lists triggering sessions of the cascade of blocking locks in the selected period sorted by the summed waiting time of all DB sessions attached to it.
-The data basis for the evaluation is the information about past blocking lock situations collected by Panorama Sampler.
-The menu item is only available if the recording of blocking lock situations by the panorama sampler is activated for the DB.
-
-=== DB cache usage by objects
-
-==== Use of the current DB cache by objects
+===== Use of the current DB cache by objects
 Menu item "SGA/PGA details" / "DB cache" / "DB cache usage current" allows to display the concrete objects in the DB cache with their allocated memory sizes.
 It can be further detailed to the SQL statements of the objects currently kept in SGA as well as the structure information.
 
-==== Retrospective analysis of DB cache utilization by objects via recording by Panorama-Sampler
+===== Retrospective analysis of DB cache utilization by objects via recording by Panorama-Sampler
 At menu item "SGA/PGA details" / "DB cache" / "DB cache usage historic" past snapshots of the DB cache can be analyzed.
 The menu item is only available if the recording of the DB cache usage by panorama sampler is activated for the DB.
 Weighted average values of DB usage are shown for the period under consideration, if the analysis includes multiple snapshots.
@@ -198,17 +230,16 @@ history of concrete snapshots of the DB cache for an object including graphical 
 
 By clicking on the time of a concrete snapshot, all cache objects of this concrete snapshot are listed.
 
+== Evaluate / scan the DB system for potential performance antipatterns
+Menu item "Special extensions" / "Dragnet investigation" allows scanning the DB system for over 100 different performance antipatterns
 
-=== Retrospective evaluation of DB objects with possibly problematic behavior
+== Evaluation of configuration and operation of the DB system
 
-
-=== Evaluate the configuration of the DB system
-
-==== View the current DB configuration via initialization parameters
+=== View the current DB configuration via initialization parameters
 Menu item "DBA General" / "Oracle Parameter" allows to display the initialization parameters of the DB.
 Filtering the "Default" column to "FALSE" shows the explicitly set initialization parameters of the DB.
 
-==== Evaluate the memory configuration of the DB system
+=== Evaluate the memory configuration of the DB system
 Menu item "DBA/SGA details" / "SGA memory" / "SGA components" shows the memory usage of the SGA (Shared Global Area).
 
 This allows conclusions to be drawn about the use of the physical main memory for the individual SGA components.
@@ -216,8 +247,7 @@ The allocation of the memory to the components is usually done dynamically accor
 The optimization goal is usually to use as much of the physical memory as possible for the DB cache and InMemory area, but to limit the shared pool usage for the library cache incl. SQL area etc. to what is necessary.
 The list of objects in the library cache, grouped by type and namespace, allows a detailed listing of the concrete objects with the size of the allocated memory.
 
-
-==== Evaluation of sufficient dimensioning of the redo log files
+=== Evaluation of sufficient dimensioning of the redo log files
 Menu item "DBA-General" / "Redologs" / "Current" shows the current configuration of the redo log files.
 Menu item "DBA General" / "Redologs" / "Historical" shows the past usage of the redo log files per AWR snapshot,
 including the number of log switches and the number of log files still active and not archived at the time of the snapshot.
@@ -227,12 +257,32 @@ If this does happen, there is a risk that the DB cannot complete a log switch th
 This risk is often latent, since DBs are created by default with only 3 logfile groups and this is often not adapted even for productive systems.
 With increased write load, a temporary freezing of write processes is preprogrammed for such DBs.
 
-==== Evaluate the stress and performance of the I/O system
+=== Evaluate the stress and performance of the I/O system
 Menu "I/O analysis" contains several historic characteristics, throughput and time related values about usage and performance of the underlying I/O system.
 
-=== Evaluate / scan the DB system for potential performance antipatterns
-Menu item "Special extensions" / "Dragnet investigation" allows scanning the DB system for over 100 different performance antipatterns
+=== DB audit trail
+==== Audit configuration
+Menu item "DBA General" / "Audit Trail" / "Auditing rules" shows the current configuration of the DB audit trail as well as several auditing rules.
 
+image::auditing_rules.png[]
+
+==== Standard audit trail
+Menu item "DBA General" / "Audit Trail" / "Standard audit trail" opens a dialog for evaluation of standard audit trail including find grained audit trail.
+Depending on the choosen value for "Grouping" single audit records are show or the result is grouped by time with record counts for the top x actions, machines and users.
+
+image::audit_trail_standard_group.png[]
+
+By clicking at the links in the columns for "Action", "Machine", "User" etc. you can refine the grouped result.
+Clicking at the column "Audits total" shows the single audit records for the selected grouping.
+
+image::audit_trail_standard_detail.png[]
+
+==== Unified audit trail
+Menu item "DBA General" / "Audit Trail" / "Unified audit trail" works similar like the previous section for standard audit trail, but for the unified audit trail.
+
+Filter and group the result and show detail records:
+
+image::audit_trail_unified_all.png[]
 
 
 == Application design requirements for optimal performance
