@@ -1,0 +1,25 @@
+<h3>Missing usage of bind variables: Detection by identical force matching signature from SGA</h3>
+Usage of literals instead of bind variables with high number of different literals leads to high parse counts and flooding of SQL-Area in SGA.<br/>
+You may reduce the problem by setting cursor_sharing != EXACT, but you still need large amount of SGA-memory to match your SQL with the corresponding SQL with replaced bind variables.<br/>
+So strong suggestion is: Use bind variables!<br/>
+This selection looks for statements with identical execution plans by force-matching-signature (or plan-hash-value if force-matching-signature = 0)  from SGA.<pre style='background-color: #FFFFCC;'>SELECT a.Inst_ID                                                         "Instance",
+                            MIN(a.Force_Matching_Signature)                                   "Force matching signature",
+                            a.Parsing_Schema_Name                                             "Parsing schema",
+                            CASE WHEN COUNT(DISTINCT a.Plan_Hash_Value) = 1 THEN TO_CHAR(MIN(a.Plan_Hash_Value)) ELSE '< '||COUNT(DISTINCT a.Plan_Hash_Value)||' >' END "Plan hash value or no",
+                            COUNT(*)                                                          "No. of entries in gv$SQLArea",
+                            COUNT(DISTINCT a.SQL_ID)                                          "No. of different SQL-IDs",
+                            MIN(a.Last_Active_Time)                                           "Oldest active time",
+                            MAX(a.Last_Active_Time)                                           "Youngest active time",
+                            MIN(TO_DATE(a.First_Load_Time, 'YYYY-MM-DD/HH24:MI:SS'))          "First load time",
+                            ROUND(SUM(a.Elapsed_Time)/1000000)                                "Elapsed time (seconds)",
+                            MAX(a.SQL_ID) KEEP (DENSE_RANK LAST ORDER BY Last_Active_Time)    "SQL_ID",
+                            ROUND(SUM(a.Sharable_Mem)  /(1024*1024), 2)                       "Sharable memory (MB)",
+                            ROUND(SUM(a.Persistent_Mem)/(1024*1024), 2)                       "Persistent memory (MB)",
+                            ROUND(SUM(a.Runtime_Mem)   /(1024*1024), 2)                       "Runtime memory (MB)",
+                            SUBSTR(MAX(a.SQL_Text) KEEP (DENSE_RANK LAST ORDER BY Last_Active_Time), 1, 400)  "SQL text"
+                     FROM   gv$SQLArea a
+                     WHERE DECODE(a.Force_Matching_Signature, 0, a.Plan_Hash_Value, a.Force_Matching_Signature) != 0   /* Include INSERTs with Force_Matching_Signature = 0 via Plan_Hash_Value */
+                     GROUP BY a.Inst_ID, DECODE(a.Force_Matching_Signature, 0, a.Plan_Hash_Value, a.Force_Matching_Signature), a.Parsing_Schema_Name
+                     HAVING COUNT(*) > :P1
+                     ORDER BY "No. of entries in gv$SQLArea" DESC
+            </pre><div>Parameter :P1: Minimum number of different SQL-IDs per plan-hash-value for consideration in selection</div>

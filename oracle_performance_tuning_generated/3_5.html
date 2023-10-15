@@ -1,19 +1,22 @@
-<h3>Multiple open cursor: SQLs opened multiple in session</h3>
-Normally there should be only one open cursor per SQL statement and session.<br/>
-SQLs with multiple open cursors withon one session my flood session cursor cache and PGA<br/>
-<pre style='background-color: #FFFFCC;'>SELECT /* SQLs mehrfach als Cursor geoeffnet je Session */
-                             sq.*, cu.SID "Session-ID", s.UserName, cu.Anz_Open_Cursor "Number of open cursor", cu.Anz_Sql "Number of SQLs",
-                             s.Client_Info, s.Machine, s.Program, s.Module, s.Action, cu.SQL_Text
-                      FROM   (
-                              SELECT oc.Inst_ID, oc.SID, oc.SQL_ID, COUNT(*) Anz_Open_Cursor, COUNT(DISTINCT oc.SQL_ID) Anz_Sql, MIN(oc.SQL_Text) SQL_Text
-                              FROM   gv$Open_Cursor oc
-                              GROUP BY oc.Inst_ID, oc.SID, oc.SQL_ID
-                              HAVING count(*) > COUNT(DISTINCT oc.SQL_ID)
-                             ) cu
-                      JOIN   gv$Session s ON s.Inst_ID=cu.Inst_ID AND s.SID=cu.SID
-                      JOIN   (SELECT Inst_ID, SQL_ID, COUNT(*) "Number of childs", MIN(Parsing_schema_name) Parsing_schema_Name
-                              FROM gv$SQL
-                              GROUP BY Inst_ID, SQL_ID
-                             )sq ON sq.Inst_ID = cu.Inst_ID AND sq.SQL_ID = cu.SQL_ID
-                      WHERE sq.Parsing_Schema_Name NOT IN ('SYS')
-                      ORDER BY cu.Anz_Open_Cursor-cu.Anz_Sql DESC NULLS LAST</pre>
+<h3>Concurrency on memory, latches: insufficient cached sequences from DBA_Sequences</h3>
+Fetching of sequence values / filling the sequence cache causes writes in dictionary and interchange between REC-instances.<br/>
+                          Highly frequent access on dictionary structures of sequences leads to unnecessary wait events, therefore you should define reasonable cache sizes for sequences.<br/>
+                          Starting with Rel. 19.10 the DYNAMIC SEQUENCE CACHE feature will automatically cover this issue if you set the cache size of a sequence > 0.<pre style='background-color: #FFFFCC;'>SELECT Sequence_Owner, Sequence_Name, Cache_size,
+                            ROUND(suggested, 0-LENGTH(TO_CHAR(suggested))+1) "Suggested Cache Size",
+                            Min_Value, Max_Value, Increment_By, Cycle_flag, Last_Number,
+                            "Pct. of max. value reached", "Values per day", Created, Last_DDL_Time,
+                            ROUND("Values per day"/DECODE(Cache_Size,0,1,Cache_Size)) "Cache reloads per day"
+                     FROM   (SELECT
+                                    s.Sequence_Owner, s.Sequence_Name, s.Cache_size,
+                                    ROUND((s.Last_Number-s.Min_Value)/(SYSDATE-o.Created)/24) Suggested, /* Based on strived one reload per hour */
+                                    s.Min_Value, s.Max_Value, s.Increment_By,
+                                    s.Cycle_flag, s.Last_Number,
+                                    ROUND(s.Last_Number*100/s.Max_Value, 1) "Pct. of max. value reached",
+                                    ROUND((s.Last_Number-s.Min_Value)/(SYSDATE-o.Created)) "Values per day",
+                                    o.Created, o.Last_DDL_Time
+                             FROM   DBA_Sequences s
+                             LEFT OUTER JOIN   DBA_Objects o ON o.Owner = s.Sequence_Owner AND o.Object_Name = s.Sequence_Name AND o.Object_Type = 'SEQUENCE'
+                             WHERE  Sequence_Owner NOT IN (SELECT /*+ NO_MERGE */ UserName FROM All_Users WHERE Oracle_Maintained = 'Y')
+                            ) x
+                      WHERE "Values per day"/DECODE(Cache_Size,0,1,Cache_Size) > :P1
+                      ORDER  By "Values per day"/DECODE(Cache_Size,0,1,Cache_Size) DESC NULLS LAST</pre><div>Parameter :P1: Minimum reloads per day (single sequence values or cache reloads) for consideration in selection</div>

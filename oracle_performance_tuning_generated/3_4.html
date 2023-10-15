@@ -1,16 +1,31 @@
-<h3>Multiple open cursor: overview over SQL</h3>
-Normally there should be only one open cursor per SQL statement and session.<br/>
-SQLs with multiple open cursors withon one session my flood session cursor cache and PGA<br/>
-<pre style='background-color: #FFFFCC;'>SELECT /* Panorama: Number of open cursor grouped by SQL */
-                             oc.*
+<h3>Check necessity of update for indexed columns</h3>
+Update of indexed columns of a table costs effort for index maintenance (Removal of old and insertion of new index entry) even if content of column did not change.<br/>
+This way it is worth to remove indexed columns from UPDATE SQL statement if their values never change.<br/>
+Especially this is true for generated dynamic SQL statements (e.g. from OR-mappers), which by default contains all columns of a table.<pre style='background-color: #FFFFCC;'>SELECT * FROM (
+                      SELECt /*+ ORDERED */ p.*, t.SQL_Text, i.Column_Name,
+                            (SELECT SUM(Executions_Delta) FROM DBA_Hist_SQLStat st
+                            WHERE st.DBID=p.DBID AND st.SQL_ID=p.SQL_ID
+                            ) Executions,
+                            (SELECT SUM(Rows_Processed_Delta) FROM DBA_Hist_SQLStat st
+                            WHERE st.DBID=p.DBID AND st.SQL_ID=p.SQL_ID
+                            ) Rows_Processed
                       FROM   (
-                              SELECT Inst_ID, SQL_ID,
-                                     COUNT(*) "Number of open cursor",
-                                     COUNT(DISTINCT SID) "Number of sessions",
-                                     ROUND(Count(*) / COUNT(DISTINCT SID),2) "open cursors per session",
-                                     MIN(SQL_Text) SQL_Text
-                              FROM   gv$Open_Cursor
-                              GROUP BY Inst_ID, SQL_ID
-                              HAVING Count(*) / COUNT(DISTINCT SID) > 1
-                             ) oc
-                      ORDER BY 3 DESC NULLS LAST</pre>
+                                  SELECT /*+ NO_MERGE PARALLEL(p) */ DBID, SQL_ID, Object_Owner, Object_Name
+                                  FROM   DBA_Hist_SQL_Plan p
+                                  WHERE Operation = 'UPDATE'
+                                  AND     Timestamp > SYSDATE-:P1
+                                  ) p,
+                                  DBA_Hist_SQLText t,
+                                  (SELECt /*+ NO_MERGE */ Table_Owner, Table_Name, Column_Name FROM DBA_Ind_Columns
+                                  ) i
+                      WHERE t.DBID              = p.DBID
+                      AND     t.SQL_ID          = p.SQL_ID
+                      AND     i.Table_Owner = p.Object_Owner
+                      AND     i.Table_Name   = p.Object_Name
+                      AND     REGEXP_LIKE(
+                                         SUBSTR(UPPER(t.SQL_Text), INSTR(UPPER(t.SQL_Text), 'SET'), INSTR(UPPER(t.SQL_Text), 'WHERE')-INSTR(UPPER(t.SQL_Text), 'SET')),
+                                         '[ ,]'||i.Column_Name||'[ =]'
+                                        )
+                      )
+                      WHERE Rows_Processed > :P2
+                      ORDER BY Rows_Processed DESC NULLS LAST</pre><div>Parameter :P1: Number of days in history backward from now for consideration</div><div>Parameter :P2: Minimum number of rows processed for consideration in selection</div>

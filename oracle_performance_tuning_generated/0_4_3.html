@@ -1,0 +1,12 @@
+<h3>Detection of not used columns (all values = NULL)</h3>
+Unused columns with only NULL-values Spalten can possibly be removed.<br/>
+Each NULL-value of a record claims one byte if not all subsequent columns of that record are also NULL.<br/>
+You can use virtual columns instead if this table structure is precondition (SAP etc.).<br/>
+<pre style='background-color: #FFFFCC;'>SELECT /* DB-Tools Ramm  Spalten mit komplett  NULL-Values */
+                             c.Owner, c.Table_Name, c.Column_Name, t.Num_Rows, c.Num_Nulls, c.Num_Distinct
+                      FROM   DBA_Tab_Columns c
+                      JOIN   DBA_Tables t ON t.Owner = c.Owner AND t.Table_Name = c.Table_Name
+                      WHERE  c.Num_Nulls = t.Num_Rows
+                      AND    t.Num_Rows  > 0   -- Tabelle enthaelt auch Daten
+                      AND    c.Owner NOT IN (SELECT /*+ NO_MERGE */ UserName FROM All_Users WHERE Oracle_Maintained = 'Y')
+                      ORDER BY t.Num_Rows DESC NULLS LAST</pre>

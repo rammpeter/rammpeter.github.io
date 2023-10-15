@@ -1,0 +1,6 @@
+<h3>Unused marked but not physical deleted columns</h3>
+For as unused marked columns it may be worth to reorganize the table by ALTER TABLE DROP UNSED COLUMNS or recreation of table.<br/>
+<pre style='background-color: #FFFFCC;'>SELECT /* DB-Tools Ramm Unused gesetzte Spalten ohne ALTER TABLE DROP UNUSED COLUMNS*/ cs.*, t.Num_Rows
+                      FROM   DBA_Unused_Col_Tabs cs
+                      JOIN   DBA_Tables t ON t.Owner = cs.Owner AND t.Table_Name = cs.Table_Name
+                      ORDER BY t.Num_Rows*cs.Count DESC NULLS LAST</pre>

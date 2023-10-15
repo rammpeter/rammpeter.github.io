@@ -1,28 +1,36 @@
 <h3>Identification of probably unused PL/SQL-objects</h3>
-PL/SQL-code may assumed to be unused and dispensable if there are no dependencies from other PL/SQL-code.<br/>
+PL/SQL-code may assumed to be unused and dispensable if there are no dependencies from other PL/SQL-code and no usage in SQL.<br/>
 This must not be true because you need entry points to PL/SQL-processing that doesn't have dependencies from other PL/SQL-objects but are essential.<br/>
-Therefor additional selection is useful, e.g. by filter based on name convention.<br/>
-<pre style='background-color: #FFFFCC;'>SELECT o.Owner, o.Object_Name, o.Object_Type, o.Created, o.Last_DDL_Time, o.Status
-                    FROM   DBA_Objects o
-                    CROSS JOIN (SELECT UPPER(:P1) Name FROM DUAL) schema
-                    CROSS JOIN (SELECT UPPER(:P2) Filter FROM DUAL) name_filter_incl
-                    CROSS JOIN (SELECT UPPER(:P3) Filter FROM DUAL) name_filter_excl
-                    WHERE  o.Object_Type IN ('PROCEDURE', 'PACKAGE', 'TYPE', 'FUNCTION', 'SYNONYM')
-                    AND    o.Owner NOT IN ('SYS', 'OUTLN', 'SYSTEM', 'DBSNMP', 'WMSYS', 'CTXSYS', 'XDB', 'APPQOSSYS')
-                    AND    (schema.name IS NULL OR schema.Name = o.Owner)
-                    AND    (name_filter_incl.Filter IS NULL OR o.Object_name LIKE '%'||name_filter_incl.Filter||'%')
-                    AND    (name_filter_excl.Filter IS NULL OR o.Object_name NOT LIKE '%'||name_filter_excl.Filter||'%')
-                    AND NOT EXISTS (SELECT 1
-                                    FROM   DBA_Dependencies d
-                                    WHERE  d.Referenced_Owner = o.Owner
-                                    AND    d.Referenced_Name = o.Object_Name
-                                    AND    d.Referenced_Type = o.Object_Type
-                                    AND    (d.Type != 'SYNONYM' OR EXISTS (SELECT 1 FROM DBA_Dependencies di WHERE  di.Referenced_Owner = d.Owner AND di.Referenced_Name = d.Name AND di.Referenced_Type = d.Type) ) -- Synonyme ohne weitere Abhängigkeiten nicht werten
-                                    AND    (   d.Type != 'PACKAGE BODY'
-                                            OR d.Name != d.Referenced_Name                          /* Referenz von anderslautendem Body zählt als Abhängigkeit */
-                                            OR EXISTS (SELECT 1 FROM DBA_Dependencies di WHERE  di.Referenced_Owner = d.Owner AND di.Referenced_Name = d.Name AND di.Referenced_Type = d.Type) /* Weitere Abhängigkeiten des Bodys eines Package zählen als Abhängigkeiten */
+Therefore additional selection is useful, e.g. by filter based on name convention.<br/>
+<br/>
+Unfortunately the check of usage of this PL/SQL-Objects in SQL-Statements (SGA and AWR) seams impossible in acceptabe runtime.<br/>
+Therefore this check is excluded here.<br/>
+<pre style='background-color: #FFFFCC;'>SELECT o.*
+                    FROM   (
+                            SELECT /*+ NO_MERGE */ o.Owner, o.Object_Name, o.Object_Type, o.Created, o.Last_DDL_Time, o.Status
+                            FROM   DBA_Objects o
+                            CROSS JOIN (SELECT UPPER(:P1) Name FROM DUAL) schema
+                            CROSS JOIN (SELECT UPPER(:P2) Filter FROM DUAL) name_filter_incl
+                            CROSS JOIN (SELECT UPPER(:P3) Filter FROM DUAL) name_filter_excl
+                            WHERE  o.Object_Type IN ('PROCEDURE', 'PACKAGE', 'TYPE', 'FUNCTION', 'SYNONYM')
+                            AND    o.Owner NOT IN (SELECT /*+ NO_MERGE */ UserName FROM All_Users WHERE Oracle_Maintained = 'Y')
+                            AND    o.Owner NOT IN ('PUBLIC')
+                            AND    (schema.name IS NULL OR schema.Name = o.Owner)
+                            AND    (name_filter_incl.Filter IS NULL OR o.Object_name LIKE '%'||name_filter_incl.Filter||'%')
+                            AND    (name_filter_excl.Filter IS NULL OR o.Object_name NOT LIKE '%'||name_filter_excl.Filter||'%')
+                            AND NOT EXISTS (SELECT 1
+                                            FROM   DBA_Dependencies d
+                                            WHERE  d.Referenced_Owner = o.Owner
+                                            AND    d.Referenced_Name = o.Object_Name
+                                            AND    d.Referenced_Type = o.Object_Type
+                                            AND    (d.Type != 'SYNONYM' OR EXISTS (SELECT 1 FROM DBA_Dependencies di WHERE  di.Referenced_Owner = d.Owner AND di.Referenced_Name = d.Name AND di.Referenced_Type = d.Type) ) -- Synonyme ohne weitere Abhängigkeiten nicht werten
+                                            AND    (   d.Type != 'PACKAGE BODY'
+                                                    OR d.Name != d.Referenced_Name                          /* Referenz von anderslautendem Body zählt als Abhängigkeit */
+                                                    OR EXISTS (SELECT 1 FROM DBA_Dependencies di WHERE  di.Referenced_Owner = d.Owner AND di.Referenced_Name = d.Name AND di.Referenced_Type = d.Type) /* Weitere Abhängigkeiten des Bodys eines Package zählen als Abhängigkeiten */
+                                                   )
                                            )
-                                   )
-                    AND    o.Created < SYSDATE - :P4
-                    AND    o.Last_DDL_Time < SYSDATE - :P5
+                            AND NOT EXISTS (SELECT 1 FROM gv$SQLArea s WHERE UPPER(SQL_FullText) LIKE '%'||o.Object_Name||'%')
+                            AND    o.Created < SYSDATE - :P4
+                            AND    o.Last_DDL_Time < SYSDATE - :P5
+                           ) o
            </pre><div>Parameter :P1: Check only PL/SQL-objects for this schema (optional)</div><div>Parameter :P2: Check only PL/SQL objects with names matching this wildcard-filter(optional)</div><div>Parameter :P3: Exclude PL/SQL objects with names matching this wildcard-filter from check (optional)</div><div>Parameter :P4: Minimum number of days since creation of object</div><div>Parameter :P5: Minimum number of days since last DDL-operation on object</div>

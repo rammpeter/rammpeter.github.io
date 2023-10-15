@@ -1,55 +1,47 @@
-<h3>Possibly expensive TABLE ACCESS BY INDEX ROWID with additional filter predicates on table</h3>
-If in a SQL a table has additional filter conditions that are not covered by the used index you may consider to extend the index by these filter conditions.<br/>
-This would ensure that you do the more expensive TABLE ACCESS BY ROWID only if that table row matches all your access conditions checked by the index.<br/>
-This selection considers current SGA<pre style='background-color: #FFFFCC;'>
-              SELECT Table_Owner, Table_Name, Index_Name,
-                     Elapsed_Secs               "Elapsed time SQL total (sec.)",
-                     Ash_Seconds_Tab            "Table access time ASH (sec.)",
-                     SQL_ID_Max_Elapsed_Secs    "SQL-ID with max. total elapsed",
-                     SQL_ID_Max_Ash_Seconds_Tab "SQL-ID with max. ASH per table",
-                     Index_Access               "Access criteria on index",
-                     Table_Filter               "Filter criteria on table"
-              FROM   (
-                      SELECT Table_Owner, Table_Name, Index_Name,
-                             SUM(Elapsed_Secs) Elapsed_Secs, SUM(Ash_Seconds_Tab) Ash_Seconds_Tab,
-                             MAX(SQL_ID) KEEP (DENSE_RANK LAST ORDER BY Elapsed_Secs) SQL_ID_Max_Elapsed_Secs,
-                             MAX(SQL_ID) KEEP (DENSE_RANK LAST ORDER BY Ash_Seconds_Tab) SQL_ID_Max_Ash_Seconds_Tab,
-                             Index_Access, Table_Filter
+<h3>Relevance of access on migrated / chained rows compared to total amount of table access</h3>
+Chained rows causes additional reads of rows in separate DB-blocks while accessing a record which is not completely contained in current block.<br/>
+There are two types:<br/>
+<br/>
+1. true chained rows:<br/>
+A record doesn't compeletely fit into one DB-block, the columns of the record are stored in several DB blocks.<br/>
+Both the Full Scan and Index RowID scans read further linked DB blocks when accessing paged out columns in the linked blocks (incrementing of 'table fetch continued rows').<br/>
+<br/>
+2. migrated rows:<br/>
+A record no longer fits into the current block, is completely migrated to another block, but its RowID still references the original block.<br/>
+At full scan, the linked blocks are not read separately, but with multiblock-read as part of the full scan (no increment of 'table fetch continued rows').<br/>
+At RowID access e.g. during index scan, the linked blocks are read by another access (with increment of 'table fetch continued rows').<br/>
+<br/>
+Chained rows are predominantly migrated rows (variant 2). Variant 1 only occurs if the size of a record is greater than the blocksize.<br/>
+<br/>
+Chained rows can be avoided by adjusting PCTFREE and reorganization of affected table.<br/>
+This selection shows the relevance of access on chained rows compared to total amount of table access by RowID.<pre style='background-color: #FFFFCC;'>WITH Inst_Filter AS (SELECT :P1 Instance FROM DUAL)
+                      SELECT x.*, CASE WHEN table_fetch_by_rowid > 0 THEN
+                                  ROUND(table_fetch_continued_row / table_fetch_by_rowid * 100,2)
+                                  ELSE 0 END "Pct. chained rowid access",
+                                  CASE WHEN table_fetch_by_rowid + table_scan_rows_gotten > 0 THEN
+                                  ROUND(table_fetch_continued_row / (table_fetch_by_rowid + table_scan_rows_gotten) * 100,2)
+                                  ELSE 0 END "Pct. chained rowid and full"
                       FROM   (
-                              SELECT ind.Inst_ID, ind.SQL_ID, ind.Plan_Hash_Value, ind.Child_Number, ind.ID Ind_ID, tab.ID tab_ID, tab.Table_Owner, tab.Table_Name, ind.Index_Name,
-                                     ROUND(s.Elapsed_Time/1000000) Elapsed_Secs, ash.ash_Seconds_Tab,
-                                     ind.Access_Predicates Index_Access, tab.Filter_Predicates Table_Filter
+                              SELECT /*+ NO_MERGE*/ ROUND(Begin_Interval_Time, 'MI') Start_Time,
+                                     SUM(CASE WHEN Stat_Name = 'table fetch continued row' THEN Value ELSE 0 END) table_fetch_continued_row,
+                                     SUM(CASE WHEN Stat_Name = 'table fetch by rowid'      THEN Value ELSE 0 END) table_fetch_by_rowid,
+                                     SUM(CASE WHEN Stat_Name = 'table scan rows gotten'    THEN Value ELSE 0 END) table_scan_rows_gotten
                               FROM   (
-                                      SELECT /*+ NO_MERGE */  Inst_ID, SQL_ID, Plan_Hash_Value, Child_Number, ID, Object_Owner Index_Owner, Object_Name Index_Name, Access_Predicates
-                                      FROM   gv$SQL_Plan
-                                      WHERE  Access_Predicates IS NOT NULL
-                                      AND    Operation LIKE 'INDEX%'
-                                      AND    Object_Owner NOT IN ('SYS')
-                                     ) ind
-                              JOIN   DBA_Indexes i ON i.Owner = ind.Index_Owner AND i.Index_Name = ind.Index_Name
-                              JOIN   (
-                                      SELECT /*+ NO_MERGE */ Inst_ID, SQL_ID, Plan_Hash_Value, Child_Number, ID, Object_Owner Table_Owner, Object_Name Table_Name, Filter_Predicates
-                                      FROM   gv$SQL_Plan
-                                      WHERE  Filter_Predicates IS NOT NULL
-                                      AND    Operation LIKE 'TABLE ACCESS%'
-                                      AND    Options LIKE 'BY INDEX ROWID%'
-                                      AND    Object_Owner NOT IN ('SYS')
-                                     ) tab ON tab.Inst_ID = ind.Inst_ID AND tab.SQL_ID = ind.SQL_ID AND tab.Plan_Hash_Value = ind.Plan_Hash_Value AND tab.Child_Number = ind.Child_Number AND
-                                              tab.Table_Owner = i.Table_Owner AND tab.Table_Name = i.Table_Name AND tab.ID < ind.ID -- Index kommt unter table beim index-Zugriff
-                              JOIN   (SELECT /*+ NO_MERGE */ Inst_ID, SQL_ID, Plan_Hash_Value, Child_Number, Elapsed_Time
-                                      FROM   gv$SQL
-                                      WHERE  Elapsed_Time > :P1 * 1000000
-                                     )s ON S.INST_ID = ind.Inst_ID AND s.SQL_ID = ind.SQL_ID AND s.Plan_Hash_Value = ind.Plan_Hash_Value AND s.Child_Number = ind.Child_Number
-                              LEFT OUTER JOIN ( -- Ash may be removed after short time but SQL remains in SGA
-                                      SELECT /*+ NO_MERGE */ inst_ID, SQL_ID, SQL_Plan_Hash_Value, SQL_Child_Number, SQL_Plan_Line_ID, COUNT(*) Ash_Seconds_Tab
-                                      FROM   gv$Active_Session_History
-                                      WHERE  SQL_Plan_Hash_Value != 0 -- kein SQL
-                                      GROUP BY inst_ID, SQL_ID, SQL_Plan_Hash_Value, SQL_Child_Number, SQL_Plan_Line_ID
-                                     ) ash ON ash.INST_ID = ind.Inst_ID AND ash.SQL_ID = ind.SQL_ID AND ash.SQL_Plan_Hash_Value = ind.Plan_Hash_Value AND ash.SQL_Child_Number = ind.Child_Number AND ash.SQL_Plan_Line_ID = tab.ID
-                             )
-                      GROUP BY Table_Owner, Table_Name, Index_Name, Index_Access, Table_Filter
-                     )
-              WHERE  Elapsed_Secs >= :P2
-              AND    NVL(Ash_Seconds_Tab, :P3) >= 0
-              ORDER BY Elapsed_Secs + NVL(Ash_Seconds_Tab, 0) DESC
-            </pre><div>Parameter :P1: Minimum amount of elapsed seconds an SQL must have in GV$SQL to be considered in this selection</div><div>Parameter :P2: Minimum amount of elapsed seconds of all SQLs in SGA that are accessing the considered table to be shown in this selection</div><div>Parameter :P3: Minimum amount of elapsed seconds in GV$Active_Session_History of for TABLE ACCESS BY ROWID on the considered table to be shown in this selection. Value=0 means: show this table access also if there are no records in active session history for this access.</div>
+                                      SELECT /*+ NO_MERGE*/ ss.Begin_Interval_Time, st.Stat_Id, st.Stat_Name, ss.Min_Snap_ID, st.Snap_ID,
+                                             Value - LAG(Value, 1, Value) OVER (PARTITION BY st.Instance_Number, st.Stat_ID ORDER BY st.Snap_ID) Value
+                                      FROM   (SELECT /*+ NO_MERGE*/ DBID, Instance_Number, Begin_Interval_Time, Snap_ID,
+                                                     MIN(Snap_ID) KEEP (DENSE_RANK FIRST ORDER BY ss.Begin_Interval_Time) OVER (PARTITION BY Instance_Number) Min_Snap_ID /* Snap_ID may start again with 1 in cloned instances */
+                                              FROM   DBA_Hist_Snapshot ss
+                                              WHERE  Begin_Interval_Time >= SYSDATE - :P2
+                                              AND    ( (SELECT Instance FROM Inst_Filter) IS NULL OR ss.Instance_Number = (SELECT Instance FROM Inst_Filter)    )
+                                             ) ss
+                                      JOIN   DBA_Hist_SysStat st ON st.DBID=ss.DBID AND st.Instance_Number=ss.Instance_Number
+                                      WHERE  st.Snap_ID = ss.Snap_ID /* Vorgänger des ersten mit auswerten für Differenz per LAG */
+                                      AND    st.Stat_Name IN ('table fetch continued row', 'table fetch by rowid', 'table scan rows gotten')
+                                    ) hist
+                              WHERE  hist.Value >= 0    /* Ersten Snap nach Reboot ausblenden */
+                              AND    hist.Snap_ID > hist.Min_Snap_ID /* Vorgaenger des ersten Snap fuer LAG wieder ausblenden */
+                              GROUP BY ROUND(Begin_Interval_Time, 'MI')
+                             ) x
+                      ORDER BY 1
+                      </pre><div>Parameter :P1: Optional filter for selection on RAC-instance</div><div>Parameter :P2: Number of days in history backward from now for consideration</div>

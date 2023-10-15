@@ -3,6 +3,20 @@
 $LOAD_PATH << 'panorama/app/helpers'
 $LOAD_PATH << 'panorama/app/helpers/dragnet'
 
+require 'active_session_history_helper.rb'
+
+module Rails
+  def self.logger
+    Class.new do
+      def info(msg)
+
+      end
+    end.new
+  end
+
+end
+
+# Fake modules to resolve dependencies
 module Dragnet
 end
 
@@ -13,6 +27,20 @@ end
 
 require 'dragnet_helper.rb'
 
+module Panorama
+  module Application
+    # return an anonymous class object with method panorama_master_password
+    def self.config
+      anon_class = Class.new do
+        def panorama_var_home
+          '/'
+        end
+      end
+      anon_class.new
+    end
+  end
+end
+
 class Generator
   include DragnetHelper
 
@@ -22,13 +50,33 @@ class Generator
   def t(a, args)
     args[:default]
   end
-  
+
+  def system_schema_subselect
+    "SELECT /*+ NO_MERGE */ UserName FROM All_Users WHERE Oracle_Maintained = 'Y'"
+  end
+
+  def system_userid_subselect
+    "SELECT /*+ NO_MERGE */ User_ID FROM All_Users WHERE Oracle_Maintained = 'Y'"
+  end
+
+  def get_db_version
+    '30.1'  # activate all
+  end
+
+  def get_dbid
+    '&your_DBID'
+  end
+
   def get_locale
     'en'
   end
 
   def sql_select_all(args)
     []
+  end
+
+  def read_from_client_info_store(_args)
+    nil
   end
 
   def render_jstree_json

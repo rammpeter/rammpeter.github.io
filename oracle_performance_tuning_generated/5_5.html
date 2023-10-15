@@ -16,7 +16,7 @@ Transaktions in OLTP-systems should be short enough to keep potential lock wait 
                              MIN(Inst_ID)                   "Instance",
                              MIN(TO_CHAR(Session_ID))       "SID",
                              MIN(TO_CHAR(Session_Serial#))  "Serial number",
-                             MIN(Session_Type)              "Session-Type",
+                             MIN(Session_Type)              "Session Type",
                              MIN(User_ID)                   User_ID,
                              MIN(Program)                   "Program",
                              MIN(Module)                    "Module",
@@ -41,6 +41,7 @@ Transaktions in OLTP-systems should be short enough to keep potential lock wait 
                               FROM   DBA_Hist_Active_Sess_History s
                               WHERE  XID IS NOT NULL
                               AND    Sample_Time > SYSDATE-:P1
+                              AND    s.DBID = &your_DBID  /* do not count multiple times for multipe different DBIDs/ConIDs */
                               GROUP BY XID, NVL(Event, Session_State)
                              )
                       GROUP BY XID

@@ -23,10 +23,16 @@ Longer inactive sessions with continued active transactions may indicate to:<br/
                    s.Logon_Time,
                    s.Last_Call_ET "Seconds since last activity",
                    l.Type         "Lock type",
-                   l.Request, l.LMode, lo.Owner, lo.Object_Name, l.ID1, l.ID2
+                   l.Request, l.LMode, lo.Owner, lo.Object_Name, l.ID1, l.ID2, bs.Blocked_Sessions
             FROM   Sessions s
             JOIN   Locks l ON l.Inst_ID = s.Inst_ID AND l.SID = s.SID
             LEFT OUTER JOIN DBA_Objects lo ON lo.Object_ID = l.ID1
-            WHERE  s.UserName NOT IN ('SYS')
+            LEFT OUTER JOIN (SELECT /*+ NO_MERGE */ Blocking_Instance, Blocking_Session, COUNT(*) Blocked_Sessions
+                             FROM   gv$Session
+                             WHERE  Blocking_Session IS NOT NULL
+                             GROUP BY Blocking_Instance, Blocking_Session
+                            ) bs ON bs.Blocking_Instance = s.Inst_ID AND bs.Blocking_Session = s.SID
+            WHERE  s.UserName NOT IN (SELECT /*+ NO_MERGE */ UserName FROM All_Users WHERE Oracle_Maintained = 'Y')
             AND    l.Type NOT IN ('AE', 'PS', 'TO')
+            ORDER BY s.Last_Call_ET DESC
            </pre><div>Parameter :P1: Minimum duration (seconds) since end of last activity of session</div>

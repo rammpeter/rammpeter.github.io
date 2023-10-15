@@ -13,5 +13,5 @@ Ensure that indexes are used with PCTFree >= 10 (minimum from my experience).<br
                           WHERE  PCT_FREE < :P2
                           )
                       WHERE Num_Rows > :P3
-                      AND   Owner NOT IN ('SYS', 'SYSTEM', 'SYSMAN')
+                      AND   Owner NOT IN (SELECT /*+ NO_MERGE */ UserName FROM All_Users WHERE Oracle_Maintained = 'Y')
                       ORDER BY Num_Rows DESC NULLS LAST</pre><div>Parameter :P1: Selection of indexes underrunning this value for PctFree</div><div>Parameter :P2: Selection of index partitions underrunning this value for PctFree</div><div>Parameter :P3: Minimum number of rows for index</div>

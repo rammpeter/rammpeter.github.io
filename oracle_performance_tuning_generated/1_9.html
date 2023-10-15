@@ -2,8 +2,8 @@
 Cartesian joins may be problematic in case of joining two large results without join condition.<br/>
 Problems may be targeted by execution time of SQL or size of affected tables.<br/>
 Results are from GV$SQL_Plan<pre style='background-color: #FFFFCC;'>SELECT /*+ USE_HASH(p s i t) LEADING(p) */ p.Inst_ID, p.SQL_ID, p.Child_Number, p.Operation, p.Options, p.Object_Owner, p.Object_Name, NVL(i.Num_Rows, t.Num_Rows) Num_Rows,
-                             s.Executions, s.Elapsed_Time/1000000 Elapsed_Time_Secs,
-                             p.ID Line_ID, p.Parent_ID
+                             s.Executions, ROUND(s.Elapsed_Time/1000000, 1) Elapsed_Time_Secs_SQL, h.Seconds Seconds_ASH_Cartesian,
+                             p.ID Line_ID, p.Parent_ID, p.Cartesian_Line_ID
                       FROM   (WITH plans AS (SELECT /*+ NO_MERGE */ *
                                              FROM   gv$SQL_Plan
                                              WHERE  (Inst_ID, SQL_ID, Plan_Hash_Value, Child_Number) IN (SELECT Inst_ID, SQL_ID, Plan_Hash_Value, Child_Number
@@ -11,7 +11,7 @@ Results are from GV$SQL_Plan<pre style='background-color: #FFFFCC;'>SELECT /*+ U
                                                                                                          WHERE  options = 'CARTESIAN'
                                                                                                         )
                                             )
-                              SELECT /*+ NO_MERGE */ Level, plans.*
+                              SELECT /*+ NO_MERGE */ Level, plans.*, CONNECT_BY_ROOT ID Cartesian_Line_ID
                               FROM   plans
                               CONNECT BY PRIOR Inst_ID = Inst_ID AND PRIOR SQL_ID=SQL_ID AND  PRIOR Plan_Hash_Value = Plan_Hash_Value AND  PRIOR child_number = child_number AND PRIOR  id = parent_id AND PRIOR Object_Name IS NULL -- Nur Nachfolger suchen so lange Vorgänger kein Object_Name hat
                               START WITH options = 'CARTESIAN'
@@ -19,10 +19,16 @@ Results are from GV$SQL_Plan<pre style='background-color: #FFFFCC;'>SELECT /*+ U
                       JOIN   (SELECT /*+ NO_MERGE */ Inst_ID, SQL_ID, Child_Number, Executions, Elapsed_Time
                               FROM gv$SQL
                              ) s ON s.Inst_ID = p.Inst_ID AND s.SQL_ID = p.SQL_ID AND s.Child_Number = p.Child_Number
+                      LEFT OUTER JOIN (SELECT /*+ NO_MERGE */ h.Inst_ID, h.SQL_ID, h.SQL_Child_Number, h.SQL_Plan_Hash_Value, h.SQL_Plan_Line_ID, COUNT(*) Seconds
+                                       FROM   gv$Active_Session_History h
+                                       JOIN   All_Users u ON u.User_ID = h.User_ID
+                                       AND    u.UserName NOT IN (SELECT /*+ NO_MERGE */ UserName FROM All_Users WHERE Oracle_Maintained = 'Y')
+                                       GROUP BY h.Inst_ID, h.SQL_ID, h.SQL_Child_Number, h.SQL_Plan_Hash_Value, h.SQL_Plan_Line_ID
+                                      ) h ON h.Inst_ID = p.Inst_ID AND h.SQL_ID = p.SQL_ID AND h.SQL_Child_Number = p.Child_Number AND h.SQL_Plan_Hash_Value = p.Plan_Hash_Value AND h.SQL_Plan_Line_ID = p.Cartesian_Line_ID
                       LEFT OUTER JOIN DBA_Indexes i ON i.Owner = p.Object_Owner AND i.Index_Name = p.Object_Name
                       LEFT OUTER JOIN DBA_Tables t  ON t.Owner = p.Object_Owner AND t.Table_Name = p.Object_Name
                       WHERE Object_Name IS NOT NULL  -- Erstes Vorkommen von ObjectName in der Parent-Hierarchie nutzen
-                      AND   Object_Owner != NVL(:P1, 'Hugo')
-                      AND   Elapsed_Time/1000000 > :P2
-                      ORDER BY s.Elapsed_Time DESC, s.SQL_ID, s.Child_Number
-            </pre><div>Parameter :P1: Exclusion of single object owners from result</div><div>Parameter :P2: Minimum total execution time of SQL in SGA in seconds</div>
+                      AND   Object_Owner NOT IN (SELECT /*+ NO_MERGE */ UserName FROM All_Users WHERE Oracle_Maintained = 'Y')
+                      AND   Elapsed_Time/1000000 > :P1
+                      ORDER BY h.Seconds DESC NULLS LAST, s.Elapsed_Time DESC NULLS LAST, s.SQL_ID, s.Child_Number
+            </pre><div>Parameter :P1: Minimum total execution time of SQL in SGA in seconds</div>

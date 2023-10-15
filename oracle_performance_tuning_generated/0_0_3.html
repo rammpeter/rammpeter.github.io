@@ -1,31 +1,48 @@
 <h3>Recommendations for index-compression, test by selectivity of single columns from multicolumn index</h3>
 For multicolumn-indexes compression of single index columns (beginning from left) may be useful even if this multicolumn-index has overall Num_Rows=Distinct_Keys (selectivity=1).<br/>
 Partial index-compression (COMPRESS x) assumes that index-column to be compressed has position 1 in index or all columns before are also compressed.<br/>
-This selections shows recommendations for compression of single columns of multicolumn indexes beginning with column-position 1.<pre style='background-color: #FFFFCC;'>SELECT *
+This selections shows recommendations for compression of single columns of multicolumn indexes beginning with column-position 1.<pre style='background-color: #FFFFCC;'>WITH Indexes AS (SELECT /*+ NO_MERGE MATERIALIZE */ Owner, Table_Owner, Table_Name, Index_Name, Compression, Prefix_Length,
+                                            Num_Rows, Last_Analyzed, Partitioned, Index_Type
+                                     FROM   DBA_Indexes
+                                     WHERE  Owner NOT IN (SELECT /*+ NO_MERGE */ UserName FROM All_Users WHERE Oracle_Maintained = 'Y')
+                                     AND    Index_Type NOT IN ('BITMAP')
+                                     AND    Num_Rows > :P1
+                                    ),
+                         Ind_Columns AS (SELECT /*+ NO_MERGE MATERIALIZE */ Index_Owner, Index_Name, Column_Name, Column_Position
+                                         FROM   DBA_Ind_Columns
+                                        ),
+                         Tab_Columns AS (SELECT /*+ NO_MERGE MATERIALIZE */ Owner, Table_Name, Column_Name, Num_Distinct, Avg_Col_Len
+                                         FROM   DBA_Tab_Columns
+                                        ),
+                         Grouped_Ind_Columns AS (SELECT /*+ NO_MERGE MATERIALIZE */ Index_Owner, Index_Name, COUNT(*) Columns
+                                                 FROM   Ind_Columns
+                                                 GROUP BY Index_Owner, Index_Name
+                                                 HAVING COUNT(*) > 1
+                                                ),
+                         Segments AS (SELECT /*+ NO_MERGE MATERIALIZE */ Owner, Segment_Name, ROUND(SUM(bytes)/(1024*1024),1) MBytes
+                                      FROM   DBA_Segments
+                                      GROUP BY Owner, Segment_Name
+                                     )
+                    SELECT *
                     FROM   (
-                            SELECT i.Owner, i.Table_Name, i.Index_Name, i.Index_Type, i.Compression, i.Prefix_Length, i.Num_Rows, i.Last_Analyzed, i.Partitioned,
+                            SELECT i.Owner, i.Table_Name, i.Index_Name, i.Index_Type "Index Type", i.Compression, i.Prefix_Length "Prefix Length",
+                                   i.Num_Rows, i.Last_Analyzed "Last Analyzed", i.Partitioned "Part.",
                                    (SELECT COUNT(*)
                                     FROM   DBA_Ind_Partitions ip
                                     WHERE  ip.Index_Owner = i.Owner
                                     AND    ip.Index_Name = i.Index_Name
                                    ) Partitions,
-                                   ica.Columns, ic.Column_Name, ic.Column_Position,
-                                   tc.Num_Distinct, tc.Avg_Col_Len, ROUND(i.Num_Rows/DECODE(tc.Num_Distinct,0,1,tc.Num_Distinct)) Rows_per_Key,
+                                   ica.Columns, ic.Column_Name, ic.Column_Position "Column Pos.",
+                                   tc.Num_Distinct "Num. Distinct",
+                                   tc.Avg_Col_Len   "Avg Col Len",
+                                   ROUND(i.Num_Rows/DECODE(tc.Num_Distinct,0,1,tc.Num_Distinct)) "Rows per Key",
                                    seg.MBytes
-                            FROM   DBA_Indexes i
-                            JOIN   (SELECT Index_Owner, Index_Name, COUNT(*) Columns
-                                    FROM   DBA_Ind_Columns
-                                    GROUP BY Index_Owner, Index_Name
-                                    HAVING COUNT(*) > 1
-                                   ) ica ON ica.Index_Owner = i.Owner AND ica.Index_Name = i.Index_Name
-                            JOIN   DBA_Ind_Columns ic ON ic.Index_Owner = i.Owner AND ic.Index_Name = i.Index_Name
-                            JOIN   DBA_Tab_Columns tc ON tc.Owner = i.Table_Owner AND tc.Table_Name = i.Table_Name AND tc.Column_Name = ic.Column_Name
-                            JOIN   (SELECT Owner, Segment_Name, ROUND(SUM(bytes)/(1024*1024),1) MBytes FROM DBA_Segments GROUP BY Owner, Segment_Name
-                                   ) seg ON seg.Owner = i.Owner AND seg.Segment_Name = i.Index_Name
-                            WHERE  i.Owner NOT IN ('SYS', 'SYSTEM', 'OUTLN', 'DBSNMP', 'WMSYS', 'CTXSYS', 'XDB')
-                            AND    i.Index_Type NOT IN ('BITMAP')
-                            AND    i.Num_Rows > :P1
-                            AND    i.Num_Rows/DECODE(tc.Num_Distinct,0,1,tc.Num_Distinct) > :P2
+                            FROM   Indexes i
+                            JOIN   Grouped_Ind_Columns ica ON ica.Index_Owner = i.Owner AND ica.Index_Name = i.Index_Name
+                            JOIN   Ind_Columns ic ON ic.Index_Owner = i.Owner AND ic.Index_Name = i.Index_Name
+                            JOIN   Tab_Columns tc ON tc.Owner = i.Table_Owner AND tc.Table_Name = i.Table_Name AND tc.Column_Name = ic.Column_Name
+                            JOIN   Segments  seg ON seg.Owner = i.Owner AND seg.Segment_Name = i.Index_Name
+                            WHERE  i.Num_Rows/DECODE(tc.Num_Distinct,0,1,tc.Num_Distinct) > :P2
                             AND    (i.Compression = 'DISABLED' OR i.Prefix_Length < ic.Column_Position)
                            )
-                    ORDER BY Column_Position, NVL(Avg_Col_Len, 5) * NVL(Avg_Col_Len, 5) * Num_Rows * Num_Rows/DECODE(Num_Distinct,0,1,Num_Distinct)/DECODE(Partitions, 0, 1, Partitions) DESC NULLS LAST</pre><div>Parameter :P1: Minimum number of rows of index to be considered in this selection</div><div>Parameter :P2: Minimum number of index rows per DISTINCT Key of single index column</div>
+                    ORDER BY "Column Pos.", NVL("Avg Col Len", 5) * NVL("Avg Col Len", 5) * Num_Rows * Num_Rows/CASE WHEN "Num. Distinct" > 0 AND "Num. Distinct" < 1000 THEN "Num. Distinct" ELSE 1000 END/DECODE(Partitions, 0, 1, Partitions) DESC NULLS LAST</pre><div>Parameter :P1: Minimum number of rows of index to be considered in this selection</div><div>Parameter :P2: Minimum number of index rows per DISTINCT Key of single index column</div>

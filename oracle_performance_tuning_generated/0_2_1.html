@@ -1,27 +1,26 @@
-<h3>Local-partitioning of unique indexes with partition-key = index-column</h3>
-Also unique indexes may be local partitioned if partition key is in identical order leading part of index.<br/>
-This way partition pruning may be used for access on unique indexes plus possible decrease of index' BLevel.<pre style='background-color: #FFFFCC;'>SELECT /* DB-Tools Ramm Partitionierung Unique Indizes */
-                              t.Owner, t.Table_Name, i.Uniqueness, tc.Column_Name Partition_Key1, i.Index_Name, t.Num_Rows, seg.MBytes
-                      FROM   DBA_Tables t
-                             JOIN DBA_Part_Key_Columns tc
-                             ON (    tc.Owner           = t.Owner
-                                 AND tc.Name            = t.Table_Name
-                                 AND tc.Object_Type     = 'TABLE'
-                                 AND tc.Column_Position = 1
-                                 /* Nur erste Spalte prüfen, danach manuell */
-                                )
-                             JOIN DBA_Ind_Columns ic
-                             ON (    ic.Table_Owner     = t.Owner
-                                 AND ic.Table_Name      = t.Table_Name
-                                 AND ic.Column_Name     = tc.Column_Name
-                                 AND ic.Column_Position = 1
-                                )
-                             JOIN DBA_Indexes i
-                             ON (    i.Owner            = ic.Index_Owner
-                                 AND i.Index_Name       = ic.Index_Name
-                                )
-                             JOIN (SELECT Owner, Segment_Name, ROUND(SUM(bytes)/(1024*1024),1) MBytes FROM DBA_Segments GROUP BY Owner, Segment_Name
-                                  ) seg ON seg.Owner = i.Owner AND seg.Segment_Name = i.Index_Name
-                      WHERE t.Partitioned = 'YES'
-                      AND   i.Partitioned = 'NO'
-                      ORDER BY t.Num_Rows DESC NULLS LAST</pre>
+<h3>Possibly unnecessary columns of indexes that are also partition keys</h3>
+If partition keys are unique or selective enough for efficient partition pruning, than where is often no need to hold this columns in index in addition.<br/>
+Partition pruning e.g. for list partitions is more efficient than B-tree access in index.<br/>
+Removal of this columns from index reduces size of index and also effort for index scan.<br/>
+Exception: For unique indexes this columns have to be part of index nethertheless.<br/>
+<pre style='background-color: #FFFFCC;'>SELECT i.Table_Owner, i.Table_Name, i.Owner, i.Index_Name, s.MBytes, i.Num_Rows, pc.Column_Name,
+       pc.Column_Position Part_Col_Position, ic.Column_Position Ind_Col_Position, pc.Part_Type,
+       pi.Partitioning_Type, pi.SubPartitioning_Type
+FROM   DBA_Indexes i
+JOIN   (SELECT Owner, Name, Object_Type, Column_Name, Column_Position, 'Partition' Part_Type FROM DBA_Part_Key_Columns
+        UNION ALL
+        SELECT Owner, Name, Object_Type, Column_Name, Column_Position, 'Sub-Partition' Part_Type FROM DBA_SubPart_Key_Columns
+       ) pc ON pc.Owner = i.Owner AND pc.Name = i.Index_Name AND pc.Object_Type = 'INDEX'
+JOIN   DBA_Ind_Columns ic ON ic.Index_Owner = i.Owner AND ic.Index_Name = i.Index_Name AND ic.Column_Name = pc.Column_Name
+LEFT OUTER JOIN (SELECT /*+ NO_MERGE */ Owner, Segment_Name, ROUND(SUM(bytes)/(1024*1024),1) MBytes
+                 FROM   DBA_Segments
+                 WHERE  Segment_type IN ('INDEX PARTITION', 'INDEX SUBPARTITION')
+                 GROUP BY Owner, Segment_Name
+                ) s ON s.Owner = i.Owner AND s.Segment_Name = i.Index_Name
+LEFT OUTER JOIN DBA_Part_Indexes pi ON pi.Owner = i.Owner AND pi.Index_Name = i.Index_Name
+WHERE  i.Partitioned = 'YES'
+AND    i.Uniqueness != 'UNIQUE'
+AND    i.Index_Type != 'IOT - TOP'
+AND    i.Owner NOT IN (SELECT /*+ NO_MERGE */ UserName FROM All_Users WHERE Oracle_Maintained = 'Y')
+ORDER BY NVL(s.MBytes, i.Num_Rows) DESC NULLS LAST, ic.Column_Position
+</pre>

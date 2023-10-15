@@ -35,7 +35,11 @@
   "state": { "opened": false }
 , "icon":"images/application-monitor.png"},{
   "id": "0_0_4",
-  "text": "5. Avoid data redundancy in primary key index (move to index-organized tables)",
+  "text": "5. Recommendations for ADVANCED HIGH index compression",
+  "state": { "opened": false }
+, "icon":"images/application-monitor.png"},{
+  "id": "0_0_5",
+  "text": "6. Avoid data redundancy in primary key index (move to index-organized tables)",
   "state": { "opened": false }
 , "icon":"images/application-monitor.png"} ]},{
   "id": "0_1",
@@ -63,99 +67,171 @@
   "state": { "opened": false }
 , "icon":"images/application-monitor.png"},{
   "id": "0_1_5",
-  "text": "6. Detection of indexes with unnecessary columns because of pure selectivity",
+  "text": "6. Coverage of foreign-key relations by indexes (detection of potentially unnecessary indexes)",
   "state": { "opened": false }
 , "icon":"images/application-monitor.png"},{
   "id": "0_1_6",
-  "text": "7. Coverage of foreign-key relations by indexes (detection of potentially unnecessary indexes)",
+  "text": "7. Indexes on partitioned tables with same columns like partition keys",
   "state": { "opened": false }
 , "icon":"images/application-monitor.png"},{
   "id": "0_1_7",
-  "text": "8. Indexes on partitioned tables with same columns like partition keys",
+  "text": "8. Removable indexes if column order of another multi-column index can be changed",
+  "state": { "opened": false }
+, "icon":"images/application-monitor.png"},{
+  "id": "0_1_8",
+  "text": "9. Tables with single-column primary key constraint which is not referenced by any foreign key constraint",
+  "state": { "opened": false }
+, "icon":"images/application-monitor.png"},{
+  "id": "0_1_9",
+  "text": "10. Detection of unused indexes by DBA_INDEX_USAGE (starting with Release 12.2)",
   "state": { "opened": false }
 , "icon":"images/application-monitor.png"} ]},{
   "id": "0_2",
-  "text": "3. Recommendations for index partitioning",
+  "text": "3. Detection of possibly unnecessary index columns",
   "state": { "opened": false }
 , "children": [{
   "id": "0_2_0",
-  "text": "1. Local-partitioning for NonUnique-indexes",
+  "text": "1. Detection of indexes with unnecessary columns because of pure selectivity",
   "state": { "opened": false }
 , "icon":"images/application-monitor.png"},{
   "id": "0_2_1",
-  "text": "2. Local-partitioning of unique indexes with partition-key = index-column",
-  "state": { "opened": false }
-, "icon":"images/application-monitor.png"},{
-  "id": "0_2_2",
-  "text": "3. Local-partitioning with overhead in access",
+  "text": "2. Possibly unnecessary columns of indexes that are also partition keys",
   "state": { "opened": false }
 , "icon":"images/application-monitor.png"} ]},{
   "id": "0_3",
-  "text": "4. Detection of unused tables or columns",
+  "text": "4. Recommendations for partitioning",
   "state": { "opened": false }
 , "children": [{
   "id": "0_3_0",
-  "text": "1. Detection of tables never accessed by SELECT statements",
+  "text": "1. Local-partitioning for NonUnique-indexes",
   "state": { "opened": false }
 , "icon":"images/application-monitor.png"},{
   "id": "0_3_1",
-  "text": "2. Missing housekeeping for mass data",
+  "text": "2. Local-partitioning of unique indexes with partition-key = index-column",
   "state": { "opened": false }
 , "icon":"images/application-monitor.png"},{
   "id": "0_3_2",
-  "text": "3. Tables without write access (DML) since last analysis",
+  "text": "3. Local-partitioning of indexes with overhead in access",
   "state": { "opened": false }
 , "icon":"images/application-monitor.png"},{
   "id": "0_3_3",
-  "text": "4. Detection of not used columns (all values = NULL)",
+  "text": "4. Partitioning for expensive full table scans with filters",
   "state": { "opened": false }
 , "icon":"images/application-monitor.png"},{
   "id": "0_3_4",
-  "text": "5. Detection of less informative columns",
+  "text": "5. Partitioning for expensive access filtered by columns with low number of distinct values",
   "state": { "opened": false }
 , "icon":"images/application-monitor.png"},{
   "id": "0_3_5",
-  "text": "6. Unused marked but not physical deleted columns",
-  "state": { "opened": false }
-, "icon":"images/application-monitor.png"},{
-  "id": "0_3_6",
-  "text": "7. Dropped tables in recycle bin",
-  "state": { "opened": false }
-, "icon":"images/application-monitor.png"},{
-  "id": "0_3_7",
-  "text": "8. CHAR-columns filled with unnecessary blanks",
+  "text": "6. Recommendations for automatic LIST partitioning",
   "state": { "opened": false }
 , "icon":"images/application-monitor.png"} ]},{
   "id": "0_4",
-  "text": "5. Possibly useful compression of tables",
+  "text": "5. Detection of unused tables or columns",
+  "state": { "opened": false }
+, "children": [{
+  "id": "0_4_0",
+  "text": "1. Detection of tables never accessed by SELECT statements",
   "state": { "opened": false }
 , "icon":"images/application-monitor.png"},{
+  "id": "0_4_1",
+  "text": "2. Missing housekeeping for mass data",
+  "state": { "opened": false }
+, "icon":"images/application-monitor.png"},{
+  "id": "0_4_2",
+  "text": "3. Tables without write access (DML) since last analysis",
+  "state": { "opened": false }
+, "icon":"images/application-monitor.png"},{
+  "id": "0_4_3",
+  "text": "4. Detection of not used columns (all values = NULL)",
+  "state": { "opened": false }
+, "icon":"images/application-monitor.png"},{
+  "id": "0_4_4",
+  "text": "5. Detection of less informative columns",
+  "state": { "opened": false }
+, "icon":"images/application-monitor.png"},{
+  "id": "0_4_5",
+  "text": "6. Unused marked but not physical deleted columns",
+  "state": { "opened": false }
+, "icon":"images/application-monitor.png"},{
+  "id": "0_4_6",
+  "text": "7. Dropped tables in recycle bin",
+  "state": { "opened": false }
+, "icon":"images/application-monitor.png"},{
+  "id": "0_4_7",
+  "text": "8. CHAR-columns filled with unnecessary blanks",
+  "state": { "opened": false }
+, "icon":"images/application-monitor.png"},{
+  "id": "0_4_8",
+  "text": "9. Empty partitions or subpartitions",
+  "state": { "opened": false }
+, "icon":"images/application-monitor.png"} ]},{
   "id": "0_5",
-  "text": "6. Coverage of foreign-key relations by indexes (detection of potentially missing indexes)",
+  "text": "6. Materialized_views",
+  "state": { "opened": false }
+, "children": [{
+  "id": "0_5_0",
+  "text": "1. Orphaned materialized view logs",
   "state": { "opened": false }
 , "icon":"images/application-monitor.png"},{
+  "id": "0_5_1",
+  "text": "2. Registered materialized views without relation to MV-log",
+  "state": { "opened": false }
+, "icon":"images/application-monitor.png"} ]},{
   "id": "0_6",
-  "text": "7. Relevance of access on migrated / chained rows compared to total amount of table access",
+  "text": "7. Foreign Key Constraints",
+  "state": { "opened": false }
+, "children": [{
+  "id": "0_6_0",
+  "text": "1. Coverage of foreign-key relations by indexes (detection of potentially missing indexes)",
   "state": { "opened": false }
 , "icon":"images/application-monitor.png"},{
+  "id": "0_6_1",
+  "text": "2. Non validated foreign key constraints",
+  "state": { "opened": false }
+, "icon":"images/application-monitor.png"},{
+  "id": "0_6_2",
+  "text": "3. Unnecessary primary keys without referencing foreign keys",
+  "state": { "opened": false }
+, "icon":"images/application-monitor.png"} ]},{
   "id": "0_7",
-  "text": "8. Detection of chained rows of tables",
+  "text": "8. Recommendations for possibly useful OLTP-compression of tables",
   "state": { "opened": false }
 , "icon":"images/application-monitor.png"},{
   "id": "0_8",
-  "text": "9. Table access by rowid replaceable by index lookup (from current SGA)",
+  "text": "9. Possibly suboptimal OLTP-compression of tables",
   "state": { "opened": false }
 , "icon":"images/application-monitor.png"},{
   "id": "0_9",
-  "text": "10. Table access by rowid replaceable by index lookup (from AWR history)",
+  "text": "10. Tables with PCT_FREE > 0 but without update-DML",
   "state": { "opened": false }
 , "icon":"images/application-monitor.png"},{
   "id": "0_10",
-  "text": "11. Possibly expensive TABLE ACCESS BY INDEX ROWID with additional filter predicates on table",
+  "text": "11. Relevance of access on migrated / chained rows compared to total amount of table access",
   "state": { "opened": false }
 , "icon":"images/application-monitor.png"},{
   "id": "0_11",
-  "text": "12. Possibly missing NOT NULL constraint, although there are no NULL values in column",
+  "text": "12. Detection of chained rows of tables",
+  "state": { "opened": false }
+, "icon":"images/application-monitor.png"},{
+  "id": "0_12",
+  "text": "13. Table access by rowid replaceable by index lookup (from current SGA)",
+  "state": { "opened": false }
+, "icon":"images/application-monitor.png"},{
+  "id": "0_13",
+  "text": "14. Table access by rowid replaceable by index lookup (from AWR history)",
+  "state": { "opened": false }
+, "icon":"images/application-monitor.png"},{
+  "id": "0_14",
+  "text": "15. Possibly expensive TABLE ACCESS BY INDEX ROWID with additional filter predicates on table",
+  "state": { "opened": false }
+, "icon":"images/application-monitor.png"},{
+  "id": "0_15",
+  "text": "16. Possibly missing NOT NULL constraint, although there are no NULL values in column",
+  "state": { "opened": false }
+, "icon":"images/application-monitor.png"},{
+  "id": "0_16",
+  "text": "17. Possibly compressable but currently uncompressed LOB-segments",
   "state": { "opened": false }
 , "icon":"images/application-monitor.png"} ]},{
   "id": "1",
@@ -171,11 +247,11 @@
   "state": { "opened": false }
 , "icon":"images/application-monitor.png"},{
   "id": "1_0_1",
-  "text": "2. Optimizable full table scan operations by executions",
+  "text": "2. Full table scans  with less result records: possibly missing indexes ",
   "state": { "opened": false }
 , "icon":"images/application-monitor.png"},{
   "id": "1_0_2",
-  "text": "3. Optimizable full table scans operations by executions and rows processed",
+  "text": "3. Full table scans  with small cardinality: possibly missing indexes ",
   "state": { "opened": false }
 , "icon":"images/application-monitor.png"},{
   "id": "1_0_3",
@@ -183,11 +259,11 @@
   "state": { "opened": false }
 , "icon":"images/application-monitor.png"},{
   "id": "1_0_4",
-  "text": "5. Long running full table scans caused by IS NULL selection (from 11g)",
+  "text": "5. Long running full table scans caused by IS NULL selection",
   "state": { "opened": false }
 , "icon":"images/application-monitor.png"} ]},{
   "id": "1_1",
-  "text": "2. Potential problems with parallel query",
+  "text": "2. Potential for improvement in the use of Parallel Query",
   "state": { "opened": false }
 , "children": [{
   "id": "1_1_0",
@@ -224,6 +300,14 @@
 , "icon":"images/application-monitor.png"},{
   "id": "1_1_8",
   "text": "9. Problematic usage of parallel query for short running SQLs (Current SGA)",
+  "state": { "opened": false }
+, "icon":"images/application-monitor.png"},{
+  "id": "1_1_9",
+  "text": "10. Problematic usage of parallel query for short running SQLs (by SQL Monitor)",
+  "state": { "opened": false }
+, "icon":"images/application-monitor.png"},{
+  "id": "1_1_10",
+  "text": "11. Possible elimination of HASH JOIN BUFFERED by Parallel Shared Hash Join",
   "state": { "opened": false }
 , "icon":"images/application-monitor.png"} ]},{
   "id": "1_2",
@@ -291,7 +375,7 @@
   "state": { "opened": false }
 , "icon":"images/application-monitor.png"},{
   "id": "1_7",
-  "text": "8. Iteration in nested-loop join against full scan operation",
+  "text": "8. Iteration in nested-loop join against full scan operation (current SGA)",
   "state": { "opened": false }
 , "icon":"images/application-monitor.png"},{
   "id": "1_8",
@@ -311,95 +395,107 @@
   "state": { "opened": false }
 , "icon":"images/application-monitor.png"} ]},{
   "id": "2",
-  "text": "3. Tuning of / load rejection from SGA, PGA",
+  "text": "3. Detection of long running SQLs",
   "state": { "opened": false }
 , "children": [{
   "id": "2_0",
-  "text": "1. Identification of hot blocks in DB-cache: frequent access on small objects",
-  "state": { "opened": false }
-, "icon":"images/application-monitor.png"},{
-  "id": "2_1",
-  "text": "2. Identification of hot blocks in DB-cache: suboptimal indexes",
-  "state": { "opened": false }
-, "icon":"images/application-monitor.png"},{
-  "id": "2_2",
-  "text": "3. Check necessity of update for indexed columns",
-  "state": { "opened": false }
-, "icon":"images/application-monitor.png"},{
-  "id": "2_3",
-  "text": "4. System-statistics: Check for up-to-date system analyze info",
-  "state": { "opened": false }
-, "icon":"images/application-monitor.png"},{
-  "id": "2_4",
-  "text": "5. Objekt statistics: Check on up-to-date analyze info (Tables)",
-  "state": { "opened": false }
-, "icon":"images/application-monitor.png"},{
-  "id": "2_5",
-  "text": "6. Objekt statistics: Check on up-to-date analyze info (Indexes)",
-  "state": { "opened": false }
-, "icon":"images/application-monitor.png"},{
-  "id": "2_6",
-  "text": "7. PGA-Usage: Historic utilization of PGA-structures",
-  "state": { "opened": false }
-, "icon":"images/application-monitor.png"},{
-  "id": "2_7",
-  "text": "8. Concurrency on memory, latches: insufficient cached sequences from DBA_Sequences",
-  "state": { "opened": false }
-, "icon":"images/application-monitor.png"},{
-  "id": "2_8",
-  "text": "9. Concurrency on memory, latches: Overview over usage of sequences by SQLs",
-  "state": { "opened": false }
-, "icon":"images/application-monitor.png"},{
-  "id": "2_9",
-  "text": "10. Active sessions (from AWR history DBA_Hist_Active_Sess_History)",
-  "state": { "opened": false }
-, "icon":"images/application-monitor.png"},{
-  "id": "2_10",
-  "text": "11. Parse activity",
-  "state": { "opened": false }
-, "icon":"images/application-monitor.png"},{
-  "id": "2_11",
-  "text": "12. Non-optimal database configuration parameters",
+  "text": "1. Long running single executions of SQL statements",
   "state": { "opened": false }
 , "icon":"images/application-monitor.png"} ]},{
   "id": "3",
-  "text": "4. Redundant cursors / usage of bind variables",
+  "text": "4. Tuning of / load rejection from SGA, PGA",
   "state": { "opened": false }
 , "children": [{
   "id": "3_0",
-  "text": "1. Missing usage of bind variables: Detection by identical plan-hash-value from Active Session History",
+  "text": "1. Redundant cursors / usage of bind variables",
+  "state": { "opened": false }
+, "children": [{
+  "id": "3_0_0",
+  "text": "1. Missing usage of bind variables: Detection by identical plan-hash-value from Active Session History (SGA and AWR)",
   "state": { "opened": false }
 , "icon":"images/application-monitor.png"},{
+  "id": "3_0_1",
+  "text": "2. Missing usage of bind variables: Detection by identical plan-hash-value from SQL Area in SGA",
+  "state": { "opened": false }
+, "icon":"images/application-monitor.png"},{
+  "id": "3_0_2",
+  "text": "3. Missing usage of bind variables: Detection by identical force matching signature from SGA",
+  "state": { "opened": false }
+, "icon":"images/application-monitor.png"},{
+  "id": "3_0_3",
+  "text": "4. Missing usage of bind variables: Detection by identical force matching signature from AWR history",
+  "state": { "opened": false }
+, "icon":"images/application-monitor.png"},{
+  "id": "3_0_4",
+  "text": "5. Missing usage of bind variables: Detection by identical part of SQL-text",
+  "state": { "opened": false }
+, "icon":"images/application-monitor.png"},{
+  "id": "3_0_5",
+  "text": "6. Number of distinct SQL-IDs per time in time line",
+  "state": { "opened": false }
+, "icon":"images/application-monitor.png"},{
+  "id": "3_0_6",
+  "text": "7. Multiple open cursor: overview over SQL",
+  "state": { "opened": false }
+, "icon":"images/application-monitor.png"},{
+  "id": "3_0_7",
+  "text": "8. Multiple open cursor: SQLs opened multiple in session",
+  "state": { "opened": false }
+, "icon":"images/application-monitor.png"},{
+  "id": "3_0_8",
+  "text": "9. Concurrency on memory: sqeezing out in shared pool",
+  "state": { "opened": false }
+, "icon":"images/application-monitor.png"},{
+  "id": "3_0_9",
+  "text": "10. Problems with function based index if cursor_sharing != EXACT",
+  "state": { "opened": false }
+, "icon":"images/application-monitor.png"},{
+  "id": "3_0_10",
+  "text": "11. Critical amount of child cursors per SQL-ID",
+  "state": { "opened": false }
+, "icon":"images/application-monitor.png"} ]},{
   "id": "3_1",
-  "text": "2. Missing usage of bind variables: Detection by identical plan-hash-value from SGA",
+  "text": "2. Soft parse activities / SQL statement cursor caching",
+  "state": { "opened": false }
+, "children": [{
+  "id": "3_1_0",
+  "text": "1. Parse activity",
   "state": { "opened": false }
 , "icon":"images/application-monitor.png"},{
+  "id": "3_1_1",
+  "text": "2. JDBC client statement cache probably not used (Evaluation of SGA)",
+  "state": { "opened": false }
+, "icon":"images/application-monitor.png"},{
+  "id": "3_1_2",
+  "text": "3. JDBC client statement cache probably not used (Evaluation of AWR history)",
+  "state": { "opened": false }
+, "icon":"images/application-monitor.png"} ]},{
   "id": "3_2",
-  "text": "3. Missing usage of bind variables: Detection by identical part of SQL-text",
+  "text": "3. Identification of hot blocks in DB-cache: frequent access on small objects",
   "state": { "opened": false }
 , "icon":"images/application-monitor.png"},{
   "id": "3_3",
-  "text": "4. Number of distinct SQL-IDs per time in time line",
+  "text": "4. Identification of hot blocks in DB-cache: suboptimal indexes",
   "state": { "opened": false }
 , "icon":"images/application-monitor.png"},{
   "id": "3_4",
-  "text": "5. Multiple open cursor: overview over SQL",
+  "text": "5. Check necessity of update for indexed columns",
   "state": { "opened": false }
 , "icon":"images/application-monitor.png"},{
   "id": "3_5",
-  "text": "6. Multiple open cursor: SQLs opened multiple in session",
+  "text": "6. Concurrency on memory, latches: insufficient cached sequences from DBA_Sequences",
   "state": { "opened": false }
 , "icon":"images/application-monitor.png"},{
   "id": "3_6",
-  "text": "7. Concurrency on memory: sqeezing out in shared pool",
+  "text": "7. Concurrency on memory, latches: Overview over usage of sequences by SQLs",
   "state": { "opened": false }
 , "icon":"images/application-monitor.png"},{
   "id": "3_7",
-  "text": "8. Problems with function based index if cursor_sharing != EXACT",
+  "text": "8. Active sessions (from AWR history DBA_Hist_Active_Sess_History)",
   "state": { "opened": false }
 , "icon":"images/application-monitor.png"},{
   "id": "3_8",
-  "text": "9. Critical amount of child cursors per SQL-ID",
+  "text": "9. Non-optimal database configuration parameters",
   "state": { "opened": false }
 , "icon":"images/application-monitor.png"} ]},{
   "id": "4",
@@ -447,7 +543,7 @@
   "state": { "opened": false }
 , "icon":"images/application-monitor.png"} ]},{
   "id": "5_0_1",
-  "text": "2. Views with ORDER BY in View-SQL",
+  "text": "2. Views with outer ORDER BY in View-SQL",
   "state": { "opened": false }
 , "icon":"images/application-monitor.png"} ]},{
   "id": "5_1",
@@ -481,6 +577,22 @@
   "id": "5_8",
   "text": "9. Excessive logon operations (by listener-log)",
   "state": { "opened": false }
+, "icon":"images/application-monitor.png"},{
+  "id": "5_9",
+  "text": "10. Excessive logon operations (by current gv$Session)",
+  "state": { "opened": false }
+, "icon":"images/application-monitor.png"},{
+  "id": "5_10",
+  "text": "11. Possibly missing guaranty of uniqueness by unique index or unique / primary key constraint",
+  "state": { "opened": false }
+, "icon":"images/application-monitor.png"},{
+  "id": "5_11",
+  "text": "12. Possibly probematic NULL-handling in bind variables (:A1 IS NULL OR Column = :A1)",
+  "state": { "opened": false }
+, "icon":"images/application-monitor.png"},{
+  "id": "5_12",
+  "text": "13. Volatile columns in result due to 'SELECT * FROM table'",
+  "state": { "opened": false }
 , "icon":"images/application-monitor.png"} ]},{
   "id": "6",
   "text": "7. PL/SQL-usage hints",
@@ -493,13 +605,45 @@
   "id": "6_1",
   "text": "2. Identification of probably unused PL/SQL-objects",
   "state": { "opened": false }
+, "icon":"images/application-monitor.png"},{
+  "id": "6_2",
+  "text": "3. Candidates for PRAGMA UDF in pure user-defined PL/SQL functions",
+  "state": { "opened": false }
+, "icon":"images/application-monitor.png"},{
+  "id": "6_3",
+  "text": "4. Candidates for DETERMINISTIC in user-defined PL/SQL functions",
+  "state": { "opened": false }
 , "icon":"images/application-monitor.png"} ]},{
   "id": "7",
-  "text": "8. Instance-setup and instance-tuning",
+  "text": "8. Instance-setup, tuning and monitoring",
   "state": { "opened": false }
 , "children": [{
   "id": "7_0",
-  "text": "1. Inconsistent dependency timestamps between dependcy and parent object",
+  "text": "1. Parallel query usage",
+  "state": { "opened": false }
+, "children": [{
+  "id": "7_0_0",
+  "text": "1. Current usage of parallel query by PQ coordinator sessions",
+  "state": { "opened": false }
+, "icon":"images/application-monitor.png"},{
+  "id": "7_0_1",
+  "text": "2. Active parallel query slave (PQ) sessions from Active Session History (ASH)",
+  "state": { "opened": false }
+, "icon":"images/application-monitor.png"} ]},{
+  "id": "7_1",
+  "text": "2. Inconsistent dependency timestamps between dependency and parent object",
+  "state": { "opened": false }
+, "icon":"images/application-monitor.png"},{
+  "id": "7_2",
+  "text": "3. System-statistics: Check for up-to-date system analyze info",
+  "state": { "opened": false }
+, "icon":"images/application-monitor.png"},{
+  "id": "7_3",
+  "text": "4. Objekt statistics: Check on up-to-date analyze info (Tables)",
+  "state": { "opened": false }
+, "icon":"images/application-monitor.png"},{
+  "id": "7_4",
+  "text": "5. Objekt statistics: Check on up-to-date analyze info (Indexes)",
   "state": { "opened": false }
 , "icon":"images/application-monitor.png"} ]} ]
           }

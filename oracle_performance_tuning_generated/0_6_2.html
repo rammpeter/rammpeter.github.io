@@ -1,0 +1,28 @@
+<h3>Unnecessary primary keys without referencing foreign keys</h3>
+Primary key constraint including PK-index and PK-column may be obsolete and can be dropped if:<br/>
+- Purpose of this primary key is only technical nature (not ensuring business-driven uniqueness)<br/>
+- No foreign keys are referencing this primary key<br/>
+- No access occurs by using the primary key index<br/>
+<br/>
+Precondition for this selection is that index usage is monitored by ALTER INDEX ... MONITORING USAGE.<pre style='background-color: #FFFFCC;'>WITH Cons AS (SELECT /*+ NO_MERGE MATERIALIZE */ cc.Owner, cc.Constraint_Name, cc.Table_Name, MIN(cc.Column_Name) Column_Name,
+                     MIN(Index_Owner) Index_Owner, MIN(Index_Name) Index_Name
+              FROM   DBA_Cons_Columns cc
+              JOIN   DBA_Constraints c ON c.Owner = cc.Owner AND c.Table_Name = cc.Table_Name AND c.Constraint_Name = cc.Constraint_Name
+              WHERE  c.Constraint_Type = 'P'
+              GROUP BY cc.Owner, cc.Constraint_Name, cc.Table_Name
+              HAVING COUNT(*) = 1
+             ),
+     RefCons AS (SELECT /*+ NO_MERGE  MATERIALIZE */ r_Owner, r_Constraint_Name FROM DBA_Constraints WHERE Constraint_Type = 'R'),
+     Usage AS (
+
+                SELECT Owner, Index_Name, Table_Name, Monitoring, Used, Start_Monitoring, End_Monitoring
+                FROM   DBA_Object_Usage
+                   )
+SELECT c.Owner, c.Table_Name, c.Constraint_Name, c.Column_Name, c.Index_Name, i.Index_Type, i.Num_Rows, u.Start_Monitoring
+FROM   Cons c
+JOIN   DBA_Indexes i ON i.Owner = c.Index_Owner AND i.Index_Name = c.Index_name
+JOIN   Usage u ON u.Owner = c.Index_Owner AND u.Index_Name = c.Index_Name
+WHERE  TO_DATE(u.Start_Monitoring, 'MM/DD/YYYY HH24:MI:SS') < SYSDATE - :P1
+AND    u.Used='NO' AND u.Monitoring='YES'
+AND    (c.Owner, c.Constraint_Name) NOT IN (SELECT r_Owner, r_Constraint_Name FROM RefCons)
+ORDER BY i.Num_Rows DESC NULLS LAST</pre><div>Parameter :P1: Minumin age in days of Start-Monitoring timestamp of unused index</div>

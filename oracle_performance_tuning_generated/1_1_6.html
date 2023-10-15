@@ -15,8 +15,9 @@ Overallocation of PQ servers may result in serial processing og other SQLs estim
                               FROM dba_hist_active_sess_history
                               WHERE  QC_Session_ID IS NOT NULL
                               AND    Sample_Time > SYSDATE - :P1
+                              AND    DBID = &your_DBID  /* do not count multiple times for multipe different DBIDs/ConIDs */
                               GROUP BY Instance_Number, QC_Instance_ID, qc_session_id, QC_Session_Serial#, Sample_ID, SQL_ID
-                              HAVING count(*) > 16
+                              HAVING count(*) > :P2
                              ) g
                       LEFT OUTER JOIN DBA_Users u ON U.USER_ID = g.User_ID
                       GROUP BY Instance_Number, SQL_ID, u.UserName

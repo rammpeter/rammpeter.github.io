@@ -1,7 +1,7 @@
 <h3>Frequent access on small objects</h3>
 For frequent executed SELECT-statements on small objects it may be worth to cache this content instead of accessong by SQL.<br/>
 This reduces CPU-contention and the risk of „Cache Buffers Chains“ latch-waits.<br/>
-Beginning with 11g stored functions with function result caching or selects/subselects with result caching may be used for this purpose.<br/>
+Stored functions with function result caching or selects/subselects with result caching may be used for this purpose.<br/>
 <pre style='background-color: #FFFFCC;'>SELECT /*+ USE_NL(t) "DB-Tools Ramm Zugriff kleiner Objekte" */ obj.Owner, Obj.Name, obj.Num_Rows, s.*, t.SQL_Text "SQL-Text"
                       FROM  (
                                SELECT /*+ NO_MERGE ORDERED */ s.DBID, s.SQL_ID, MIN(snap.Begin_Interval_Time) First_Occurrence, MAX(snap.End_Interval_Time) Last_Occurrence,
@@ -42,5 +42,5 @@ Beginning with 11g stored functions with function result caching or selects/subs
                                     SELECT Owner, Index_Name Name, Num_Rows FROM DBA_Indexes WHERE Num_Rows < 100000
                                    ) obj ON (obj.Owner = p.Object_Owner AND obj.Name = p.Object_Name)
                             JOIN   DBA_Hist_SQLText t  ON (t.DBID=s.DBID AND t.SQL_ID=s.SQL_ID)
-                      WHERE Owner NOT IN ('SYS')
+                      WHERE Owner NOT IN (SELECT /*+ NO_MERGE */ UserName FROM All_Users WHERE Oracle_Maintained = 'Y')
                       ORDER BY s."Executions"/DECODE(obj.Num_Rows, 0, 1, obj.Num_Rows) DESC NULLS LAST</pre><div>Parameter :P1: Number of days in history backward from now for consideration</div><div>Parameter :P2: Minimum number of executions for consideration in selection</div>

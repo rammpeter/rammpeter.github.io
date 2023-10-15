@@ -1,17 +1,27 @@
-<h3>Missing housekeeping for mass data</h3>
-For many constellations it is essential to remove not productive used aged data from the system m System.<br/>
-If last analyze table was far enough in history this selection may help to detect gaps in housekeeping.<br/>
-Stated here are inserts and updates since last GATHER_TABLE_STATS for tables without any delete operations.<br/>
-<pre style='background-color: #FFFFCC;'>SELECT /* DB-Tools Ramm Housekeeping*/
-                             m.Table_Owner, m.Table_Name, m.TimeStamp, t.Last_analyzed,
-                             ROUND(m.Timestamp - t.Last_Analyzed, 2) Days_After_Analyze,
-                             m.Inserts, m.Updates, m.Deletes, m.Truncated, m.Drop_Segments
-                      FROM   (SELECT Table_Owner, Table_Name, MAX(Timestamp) Timestamp,
-                                     SUM(Inserts) Inserts, SUM(Updates) Updates, SUM(Deletes) Deletes,
-                                     MAX(Truncated) Truncated, SUM(Drop_Segments) Drop_Segments
-                              FROM sys.DBA_Tab_Modifications
-                              GROUP BY Table_Owner, Table_Name
-                             ) m
-                      JOIN   DBA_Tables t ON t.Owner = m.Table_Owner AND t.Table_Name = m.Table_Name
-                      WHERE m.Deletes = 0 AND m.Truncated = 'NO'
-                      ORDER BY m.Inserts+m.Updates+m.Deletes DESC NULLS LAST</pre>
+<h3>Local-partitioning of unique indexes with partition-key = index-column</h3>
+Also unique indexes may be local partitioned if partition key is in identical order leading part of index.<br/>
+This way partition pruning may be used for access on unique indexes plus possible decrease of index' BLevel.<pre style='background-color: #FFFFCC;'>SELECT /* DB-Tools Ramm Partitionierung Unique Indizes */
+                              t.Owner, t.Table_Name, i.Uniqueness, tc.Column_Name Partition_Key1, i.Index_Name, t.Num_Rows, seg.MBytes
+                      FROM   DBA_Tables t
+                             JOIN DBA_Part_Key_Columns tc
+                             ON (    tc.Owner           = t.Owner
+                                 AND tc.Name            = t.Table_Name
+                                 AND tc.Object_Type     = 'TABLE'
+                                 AND tc.Column_Position = 1
+                                 /* Nur erste Spalte prüfen, danach manuell */
+                                )
+                             JOIN DBA_Ind_Columns ic
+                             ON (    ic.Table_Owner     = t.Owner
+                                 AND ic.Table_Name      = t.Table_Name
+                                 AND ic.Column_Name     = tc.Column_Name
+                                 AND ic.Column_Position = 1
+                                )
+                             JOIN DBA_Indexes i
+                             ON (    i.Owner            = ic.Index_Owner
+                                 AND i.Index_Name       = ic.Index_Name
+                                )
+                             JOIN (SELECT Owner, Segment_Name, ROUND(SUM(bytes)/(1024*1024),1) MBytes FROM DBA_Segments GROUP BY Owner, Segment_Name
+                                  ) seg ON seg.Owner = i.Owner AND seg.Segment_Name = i.Index_Name
+                      WHERE t.Partitioned = 'YES'
+                      AND   i.Partitioned = 'NO'
+                      ORDER BY t.Num_Rows DESC NULLS LAST</pre>

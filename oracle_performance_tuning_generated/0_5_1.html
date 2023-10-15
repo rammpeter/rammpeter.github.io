@@ -1,0 +1,13 @@
+<h3>Registered materialized views without relation to MV-log</h3>
+Registered materialized views with Can_Use_Log != 'NO' should have a relation to one or more materialized view logs via DBA_Snapshot_Logs, espeacially if they are fast refreshable.<br/>
+Missing of this relation can be a hint for orphaned registrations of MVs.<br/>
+<br/>
+Possible solutions to fix this issue is deregistration of MV by calling DMBS_MVIEW.UNREGISTER_MVIEW<br/>
+<pre style='background-color: #FFFFCC;'>SELECT m.Owner, m.Name MView_Name, m.MView_Site, m.Can_Use_Log, m.Updatable, m.Refresh_Method, m.MView_ID, m.Version ,
+       mv.Master_Link, mv.Refresh_Mode, mv.Refresh_Method Refresh_Method_MV, mv.Compile_State
+FROM DBA_Registered_MViews m
+LEFT OUTER JOIN DBA_Snapshot_Logs sl ON sl.Snapshot_ID = m.MView_ID
+LEFT OUTER JOIN DBA_MViews mv        ON mv.Owner = m.Owner AND mv.MView_Name = m.Name AND m.MView_Site = (SELECT Name FROM v$Database)
+WHERE Can_Use_Log != 'NO'
+AND   sl.Snapshot_ID IS NULL    /* No Snapshot Log exists */
+            </pre>

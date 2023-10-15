@@ -1,25 +1,45 @@
-<h3>Missing usage of bind variables: Detection by identical part of SQL-text</h3>
-Usage of literals instead of bind variables with high number of different literals leads to high parse counts and flooding of SQL-Area in SGA.<br/>
-You may reduce the problem by setting cursor_sharing != EXACT, but you still need large amount of SGA-memory to match your SQL with the corresponding SQL with replaced bind variables.<br/>
-So strong suggestion is: Use bind variables!<br/>
-This selection looks for statements in SGA which differentiate themself only by literals. It compares the first x characters of SQL to identify similar statements.<br/>
-The length of the compared substring may be varied.<pre style='background-color: #FFFFCC;'>WITH Len AS (SELECT :P1 Substr_Len FROM DUAL)
-                       SELECT g.*, s.SQL_Text "Beispiel SQL-Text"
-                       FROM   (
-                               SELECT COUNT(*) Variationen, Inst_ID, MIN(Parsing_Schema_Name) UserName, COUNT(DISTINCT Parsing_Schema_Name) Anzahl_User,
-                                      SUBSTR(s.SQL_Text, 1, Len.Substr_Len) SubSQL_Text,
-                                      ROUND(SUM(Sharable_Mem+Persistent_Mem+Runtime_Mem)/(1024*1024),3) "Memory (MB)",
-                                      MIN(s.SQL_ID) SQL_ID,
-                                      MIN(TO_DATE(s.First_Load_Time, 'YYYY-MM-DD/HH24:MI:SS')) Min_First_Load,
-                                      MIN(Last_Load_Time) Min_Last_Load,
-                                      MAX(Last_Load_Time) Max_Last_Load,
-                                      MAX(Last_Active_Time) Max_Last_Active,
-                                      MIN(Parsing_Schema_Name) Parsing_Schema_Name,
-                                      COUNT(DISTINCT Parsing_Schema_Name) "Different pars. schema names"
-                               FROM   gv$SQLArea s, Len
-                               GROUP BY Inst_ID, SUBSTR(s.SQL_Text, 1, Len.Substr_Len)
-                               HAVING COUNT(*) > 10
-                              ) g
-                       JOIN gv$SQLArea s ON s.Inst_ID = g.Inst_ID AND s.SQL_ID = g.SQL_ID
-                       ORDER BY "Memory (MB)" DESC NULLS LAST
-             </pre><div>Parameter :P1: Number of characters for comparison of SQLs (beginning at left side of statement)</div>
+<h3>Identification of hot blocks in DB-cache: frequent access on small objects</h3>
+Statements with frequent read blocks in DB-cache cause risk of 'cache buffers chains' latch waits.<br/>
+This selection scans for objects with high block access rate compared to size of object.<pre style='background-color: #FFFFCC;'>SELECT /*+ NO_MERGE USE_HASH(o s) */ /* DB-Tools Ramm Hot-Blocks im DB-Cache */
+                             s.Instance_Number Inst, o.Owner, o.Object_Name, o.SubObject_Name,
+                             o.Object_Type,
+                             s.Logical_Reads,
+                             Num_Rows,
+                             ROUND(s.Logical_Reads/Num_Rows,2) "LReads/Row",
+                             Buffer_Busy_Waits "BufBusyW", DB_Block_Changes "BlockChg", Physical_Reads "Phys.Reads",
+                             Physical_Writes "Phys.Writes", Physical_Reads_Direct "Phys.Rd.Dir",
+                             Physical_Writes_Direct "Phys.Wr.Dir", ITL_Waits, Row_Lock_Waits
+                      FROM   (SELECT /*+ NO_MERGE */
+                                     s.Instance_Number, s.Obj#, SUM(s.Logical_Reads_Delta) Logical_Reads,
+                                     SUM(Buffer_Busy_Waits_Delta) Buffer_Busy_Waits,
+                                     SUM(DB_Block_Changes_Delta) DB_Block_Changes,
+                                     SUM(Physical_Reads_Delta) Physical_Reads,
+                                     SUM(Physical_Writes_Delta) Physical_Writes,
+                                     SUM(Physical_Reads_Direct_Delta) Physical_Reads_Direct,
+                                     SUM(Physical_Writes_Direct_Delta) Physical_Writes_Direct,
+                                     SUM(ITL_Waits_Delta) ITL_Waits,
+                                     SUM(Row_Lock_Waits_Delta) Row_Lock_Waits
+                              FROM   DBA_Hist_Seg_Stat s
+                              JOIN   DBA_Hist_Snapshot t ON t.DBID = s.DBID AND t.Instance_Number = s.Instance_Number AND t.Snap_ID = s.Snap_ID
+                              WHERE  t.Begin_Interval_Time > SYSDATE-:P1 /* Anzahl Tage der Betrachtung rueckwirkend */
+                              GROUP BY s.Instance_Number, s.Obj#
+                             )s,
+                             (SELECT /*+ NO_MERGE */ o.Owner, o.Object_Name, o.SubObject_Name, o.Object_Type, o.Object_ID,
+                                     CASE
+                                     WHEN Object_Type = 'TABLE' THEN t.Num_Rows
+                                     WHEN Object_Type = 'INDEX' THEN i.Num_Rows
+                                     WHEN Object_Type = 'TABLE PARTITION' THEN tp.Num_Rows
+                                     WHEN Object_Type = 'INDEX PARTITION' THEN ip.Num_Rows
+                                     END Num_Rows
+                              FROM   DBA_Objects o
+                              LEFT OUTER JOIN DBA_Tables          t  ON t.Owner = o.Owner AND t.Table_Name = O.Object_Name AND o.Object_Type = 'TABLE'
+                              LEFT OUTER JOIN DBA_Indexes         i  ON i.Owner = o.Owner AND i.Index_Name = O.Object_Name AND o.Object_Type = 'INDEX'
+                              LEFT OUTER JOIN DBA_Tab_Partitions  tp ON tp.Table_Owner = o.Owner AND tp.Table_Name = O.Object_Name AND tp.Partition_Name = o.SubObject_Name AND o.Object_Type = 'TABLE PARTITION'
+                              LEFT OUTER JOIN DBA_Ind_Partitions  ip ON ip.Index_Owner = o.Owner AND ip.Index_Name = O.Object_Name AND ip.Partition_Name = o.SubObject_Name AND o.Object_Type = 'INDEX PARTITION'
+                             ) o
+                      WHERE  o.Object_ID = s.Obj#
+                      AND    o.Num_Rows IS NOT NULL
+                      AND    o.Num_Rows > 0               /* gewichtete Aussage wird wertlos*/
+                      AND    o.Num_Rows < :P2
+                      AND    s.Logical_Reads > 0
+                      ORDER BY Logical_Reads/Num_Rows DESC NULLS LAST</pre><div>Parameter :P1: Number of days in history backward from now for consideration</div><div>Parameter :P2: Maximum number of rows of table for consideration in result</div>

@@ -12,6 +12,7 @@ Units for time consideration are defined by date format picture of TRUNC-functio
                WHERE  Sample_Time > SYSDATE-:P2
                AND    Instance_Number = :P3
                AND    NVL(Event, 'Hugo') NOT IN ('PX Deq Credit: send blkd')
+               AND    h.DBID = &your_DBID  /* do not count multiple times for multipe different DBIDs/ConIDs */
                GROUP BY TRUNC(Sample_Time, picture), Module
               )
            SELECT Module,

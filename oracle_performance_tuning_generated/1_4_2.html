@@ -1,5 +1,5 @@
 <h3>Excessive filtering after TABLE ACCESS BY ROWID due to weak index access criteria (AWR history)</h3>
-INDEX RANGE SCAN with high number of rows returned and restrictive filter after TABLE ACCESS BY ROWID leads to unnecessary effort for table access before rejecting table records from result.<br/>
+INDEX RANGE|SKIP SCAN with high number of rows returned and restrictive filter after TABLE ACCESS BY ROWID leads to unnecessary effort for table access before rejecting table records from result.<br/>
 You should consider to expand index by filter criterias of table access to reduce number of TABLE ACCESS BY ROWID.<br/>
 This selection evaluates the AWR history.<br/>
 Result is sorted by time effort for operation TABLE ACCESS BY ROWID.<br/>
@@ -7,16 +7,17 @@ Result is sorted by time effort for operation TABLE ACCESS BY ROWID.<br/>
                              ir.Access_Predicates Access_Index, ir.Filter_Predicates Filter_Index, ta.Access_Predicates Access_Index, ta.Filter_Predicates Filter_Index, ROUND(ir.Cardinality/ta.Cardinality) Cardinality_Ratio, ash.Seconds Elapsed_Seconds
                       FROM   (SELECT /*+ MO_MERGE */ DBID, SQL_ID, Plan_Hash_Value, Access_Predicates, Filter_Predicates, ID, Cardinality, Object_Owner, Object_Name
                               FROM   DBA_Hist_SQL_Plan
-                              WHERE  Operation = 'TABLE ACCESS' AND Options LIKE 'BY%INDEX ROWID'  /* should also catch BY LOCAL INDEX ROWID */
+                              WHERE  Operation = 'TABLE ACCESS' AND Options LIKE 'BY%INDEX ROWID%'  /* should also catch BY LOCAL INDEX ROWID and INDEX ROWID BATCHED */
                              ) ta
                       JOIN   (SELECT /*+ MO_MERGE */ DBID, SQL_ID, Plan_Hash_Value, Access_Predicates, Filter_Predicates, Parent_ID, Cardinality, Object_Owner, Object_Name
                               FROM   DBA_Hist_SQL_Plan
-                              WHERE  Operation = 'INDEX' AND Options = 'RANGE SCAN'
+                              WHERE  Operation = 'INDEX' AND Options IN ('RANGE SCAN', 'SKIP SCAN')
                              ) ir ON ir.DBID=ta.DBID AND ir.SQL_ID=ta.SQL_ID AND ir.Plan_Hash_Value=ta.Plan_Hash_Value AND ir.Parent_ID=ta.ID
                       JOIN   (SELECT /*+ NO_MERGE */ DBID, Instance_Number, SQL_ID, SQL_Child_Number, SQL_Plan_Hash_Value, SQL_Plan_Line_ID, COUNT(*) Seconds
                               FROM   DBA_Hist_Active_Sess_History
                               WHERE  Sample_Time > SYSDATE - :P1
-                              AND    SQL_Plan_Operation = 'TABLE ACCESS' AND SQL_Plan_Options LIKE 'BY%INDEX ROWID'
+                              AND    SQL_Plan_Operation = 'TABLE ACCESS' AND SQL_Plan_Options LIKE 'BY%INDEX ROWID%'
+                              AND    DBID = &your_DBID  /* do not count multiple times for multipe different DBIDs/ConIDs */
                               GROUP BY DBID, Instance_Number, SQL_ID, SQL_Child_Number, SQL_Plan_Hash_Value, SQL_Plan_Line_ID
                               HAVING COUNT(*) > :P2
                              ) ash ON ash.DBID=ta.DBID AND ash.SQL_ID=ta.SQL_ID AND ash.SQL_Plan_Hash_Value=ta.Plan_Hash_Value AND ash.SQL_Plan_Line_ID=ta.ID

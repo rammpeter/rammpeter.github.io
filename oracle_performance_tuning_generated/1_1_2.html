@@ -1,7 +1,8 @@
 <h3>Statements with parallel query but with not parallelized contents (evaluation of SGA)</h3>
 If using parallelel query accidentally not parallelized accesses on large structures may dramatically increase runtime of statement.<br/>
 Leading INDEX-RANGE-SCAN for cascading nested loop joins should be transferred to WITH … /*+ MATERIALIZE */ and selected in main statement in parallel.<br/>
-Selection considers current SGA.<pre style='background-color: #FFFFCC;'>SELECT /*+ "DBTools Ramm Nichtparallel Anteile bei PQ" */ p.*,
+Selection considers current SGA.<pre style='background-color: #FFFFCC;'>WITH SQL_Plan AS (SELECT /*+ NO_MERGE MATERIALIZE */ Inst_ID, SQL_ID, Operation, Options, Object_Owner, Object_Name, Other_Tag FROM gv$SQL_Plan)
+                     SELECT /*+ "DBTools Ramm Nichtparallel Anteile bei PQ" */ p.*,
                              s.Last_active_Time,
                              s.Executions,
                              s.Elapsed_Time/1000000 Elapsed_Secs,
@@ -16,23 +17,24 @@ Selection considers current SGA.<pre style='background-color: #FFFFCC;'>SELECT /
                                      ps.*
                               FROM   (
                                       SELECT Inst_ID, SQL_ID
-                                      FROM   gv$SQL_PLan
+                                      FROM   SQL_PLan
                                       WHERE  Other_Tag LIKE 'PARALLEL%'
-                                      AND    Object_Owner != 'SYS'
+                                      AND    Object_Owner NOT IN (SELECT /*+ NO_MERGE */ UserName FROM All_Users WHERE Oracle_Maintained = 'Y')
                                       GROUP BY Inst_ID, SQL_ID
                                      ) pp,
                                      (
                                       SELECT Inst_ID, SQL_ID, Operation, Options, Object_Owner, Object_Name
-                                      FROM   gv$SQL_PLan
+                                      FROM   SQL_PLan
                                       WHERE  (Other_Tag IS NULL OR Other_Tag NOT LIKE 'PARALLEL%')
                                       AND    Operation NOT IN ('PX COORDINATOR', 'SORT', 'VIEW', 'MERGE JOIN')
                                       AND    Operation NOT LIKE 'UPDATE%'
                                       AND    Operation NOT LIKE 'SELECT%'
-                                      AND    Object_Owner != 'SYS'
+                                      AND    Object_Owner NOT IN (SELECT /*+ NO_MERGE */ UserName FROM All_Users WHERE Oracle_Maintained = 'Y')
                                      ) ps
                               WHERE  ps.Inst_ID = pp.Inst_ID
                               AND    ps.SQL_ID  = pp.SQL_ID
                             ) p
                       JOIN  GV$SQLArea s ON s.Inst_ID=p.Inst_ID AND s.SQL_ID=p.SQL_ID
                       WHERE s.SQL_Text NOT LIKE '%dbms_stats cursor_sharing_exact%'
-                      ORDER BY Num_Rows DESC NULLS LAST</pre>
+                      AND   s.Elapsed_Time/1000000 > :P1
+                      ORDER BY Num_Rows DESC NULLS LAST</pre><div>Parameter :P1: Minimum number of elapsed seconds since first occurrence in SGA for consideration in selection</div>

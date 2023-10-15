@@ -1,28 +1,44 @@
 <h3>Problematic usage of cartesian joins (from AWR history)</h3>
 Cartesian joins may be problematic in case of joining two large results without join condition.<br/>
 Problems may be targeted by execution time of SQL or size of affected tables.<br/>
-Results are from DBA_Hist_SQL_Plan<pre style='background-color: #FFFFCC;'>SELECT ps.*,
+Results are from DBA_Hist_SQL_Plan<pre style='background-color: #FFFFCC;'>WITH Min_Time AS (SELECT SYSDATE - :P1 min_time FROM DUAL)
+                      SELECT ps.*, h.Seconds Seconds_ASH_Cartesian,
                              (SELECT Num_Rows FROM DBA_Indexes i WHERE i.Owner = ps.Object_Owner AND i.Index_Name = ps.Object_Name) Num_Rows_Index,
                              (SELECT Num_Rows FROM  DBA_Tables t WHERE t.Owner = ps.Object_Owner AND t.Table_Name = ps.Object_Name) Num_Rows_Table
                       FROM   (
-                              SELECT /*+ LEADING(p) */ s.Instance_Number, p.SQL_ID, p.Plan_Hash_Value, p.Operation, p.Options, p.Object_Owner, p.Object_Name, p.ID Line_ID, p.Parent_ID,
-                                     SUM(s.Executions_Delta) Executions, SUM(s.Elapsed_Time_Delta/1000000) Elapsed_Time_Secs
-                              FROM   (WITH plans AS (SELECT /*+ NO_MERGE MATERIALIZE */ o.*
-                                                     FROM   (SELECT /*+ PARALLEL(i,2) */ DISTINCT DBID, SQL_ID, Plan_Hash_Value FROM DBA_Hist_SQL_Plan i WHERE options = 'CARTESIAN') i
-                                                     JOIN   DBA_Hist_SQL_Plan o ON o.DBID=i.DBID AND o.SQL_ID=I.SQL_ID AND o.Plan_Hash_Value = i.Plan_Hash_Value
+                              SELECT /*+ LEADING(p) */ s.Instance_Number, p.SQL_ID, p.Plan_Hash_Value, p.Operation, p.Options, p.Object_Owner, p.Object_Name, p.ID Line_ID, p.Parent_ID, p.Cartesian_Line_ID,
+                                     SUM(s.Executions_Delta) Executions, ROUND(SUM(s.Elapsed_Time_Delta/1000000), 1) Elapsed_Time_Secs
+                              FROM   (
+                                      WITH  SQL_Plan AS (SELECT /*+ NO_MERGE MATERIALIZE */ DBID, SQL_ID, Plan_Hash_Value, Operation, Options, Object_Owner, Object_Name, ID, Parent_ID FROM DBA_Hist_SQL_Plan),
+                                            Cartesian AS (SELECT /*+ NO_MERGE MATERIALIZE */ DISTINCT DBID, SQL_ID, Plan_Hash_Value FROM SQL_Plan WHERE options = 'CARTESIAN'),
+                                            plans AS (SELECT /*+ NO_MERGE MATERIALIZE */ o.*
+                                                     FROM   Cartesian  i
+                                                     JOIN   SQL_Plan o ON o.DBID=i.DBID AND o.SQL_ID=I.SQL_ID AND o.Plan_Hash_Value = i.Plan_Hash_Value
                                                     )
-                                      SELECT /*+ NO_MERGE */ Level, plans.*
+                                      SELECT /*+ NO_MERGE */ Level, plans.*, CONNECT_BY_ROOT ID Cartesian_Line_ID
                                       FROM   plans
                                       CONNECT BY PRIOR DBID = DBID AND PRIOR SQL_ID=SQL_ID AND  PRIOR Plan_Hash_Value = Plan_Hash_Value AND PRIOR  id = parent_id AND PRIOR Object_Name IS NULL  -- Nur Nachfolger suchen so lange Vorgänger kein Object_Name hat
                                       START WITH options = 'CARTESIAN'
                                      ) p
                               JOIN   DBA_Hist_SQLStat s ON s.DBID = p.DBID AND s.SQL_ID = p.SQL_ID AND s.Plan_Hash_Value = p.Plan_Hash_Value
                               JOIN   DBA_Hist_Snapshot ss ON ss.DBID = p.DBID AND ss.Instance_Number = s.Instance_Number AND ss.Snap_ID = s.Snap_ID
+                              CROSS JOIN min_Time
                               WHERE Object_Name IS NOT NULL -- Erstes Vorkommen von ObjectName in der Parent-Hierarchie nutzen
-                              AND   ss.Begin_Interval_Time > SYSDATE - :P1
-                              AND   p.Object_Owner != NVL(:P2, 'Hugo')
-                              GROUP BY s.Instance_Number, p.SQL_ID, p.Plan_Hash_Value, p.Operation, p.Options, p.Object_Owner, p.Object_Name, p.ID, p.ID, p.Parent_ID
+                              AND   ss.Begin_Interval_Time > min_time.min_time
+                              AND   p.Object_Owner NOT IN (SELECT /*+ NO_MERGE */ UserName FROM All_Users WHERE Oracle_Maintained = 'Y')
+                              GROUP BY s.Instance_Number, p.SQL_ID, p.Plan_Hash_Value, p.Operation, p.Options, p.Object_Owner, p.Object_Name, p.ID, p.ID, p.Parent_ID, p.Cartesian_Line_ID
                              ) ps
-                      WHERE   Elapsed_Time_Secs > :P3
-                      ORDER BY Elapsed_Time_Secs DESC, SQL_ID, Plan_Hash_Value
-                      </pre><div>Parameter :P1: Number of days in history backward from now for consideration</div><div>Parameter :P2: Exclusion of single object owners from result</div><div>Parameter :P3: Minimum total execution time of SQL in SGA in seconds</div>
+                      LEFT OUTER JOIN (SELECT h.Instance_Number, h.SQL_ID, h.SQL_Plan_Hash_Value, h.SQL_Plan_Line_ID, COUNT(*)*10 Seconds
+                                       FROM   DBA_Hist_Snapshot ss
+                                       JOIN   DBA_Hist_Active_Sess_History h ON h.DBID = ss.DBID AND h.Instance_Number = ss.Instance_Number AND h.Snap_ID = ss.Snap_ID
+                                       JOIN   All_Users u ON u.User_ID = h.User_ID
+                                       CROSS JOIN min_Time
+                                       WHERE  ss.Begin_Interval_Time > min_time.min_time
+                                       AND    u.UserName NOT IN (SELECT /*+ NO_MERGE */ UserName FROM All_Users WHERE Oracle_Maintained = 'Y')
+                                       AND    h.DBID = &your_DBID  /* do not count multiple times for multipe different DBIDs/ConIDs */
+                                       GROUP BY h.Instance_Number, h.SQL_ID, h.SQL_Plan_Hash_Value, h.SQL_Plan_Line_ID
+                                     ) h ON h.Instance_Number = ps.Instance_Number AND h.SQL_ID = ps.SQL_ID AND h.SQL_Plan_Hash_Value = ps.Plan_Hash_Value AND h.SQL_Plan_Line_ID = ps.Cartesian_Line_ID
+
+                      WHERE   ps.Elapsed_Time_Secs > :P2
+                      ORDER BY h.Seconds DESC NULLS LAST, ps.Elapsed_Time_Secs DESC, ps.SQL_ID, ps.Plan_Hash_Value
+                      </pre><div>Parameter :P1: Number of days in history backward from now for consideration</div><div>Parameter :P2: Minimum total execution time of SQL in SGA in seconds</div>

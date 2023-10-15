@@ -7,7 +7,7 @@ Selection considers AWR history.<pre style='background-color: #FFFFCC;'>SELECT /
                              WHEN ps.Object_Type LIKE 'TABLE%' THEN (SELECT Num_Rows FROM DBA_Tables t WHERE t.Owner=ps.Object_Owner AND t.Table_Name=ps.Object_Name)
                              WHEN ps.Object_Type LIKE 'INDEX%' THEN (SELECT Num_Rows FROM DBA_Indexes i WHERE i.Owner=ps.Object_Owner AND i.Index_Name=ps.Object_Name)
                              ELSE NULL END Num_Rows,
-                            (SELECT SQL_Text FROM DBA_Hist_SQLText t WHERE t.DBID=x.DBID AND t.SQL_ID=x.SQL_ID) SQLText
+                            (SELECT SQL_Text FROM DBA_Hist_SQLText t WHERE t.DBID=x.DBID AND t.SQL_ID=x.SQL_ID AND RowNum < 2) SQLText
                       FROM
                              (
                               SELECT /*+ NO_MERGE ORDERED */
@@ -20,7 +20,7 @@ Selection considers AWR history.<pre style='background-color: #FFFFCC;'>SELECT /
                               FROM   (
                                       SELECT /*+ PARALLEL(DBA_Hist_SQL_Plan,2) */ DBID, SQL_ID, Plan_Hash_Value
                                       FROM   DBA_Hist_SQL_Plan
-                                      WHERE  Object_Owner != 'SYS'
+                                      WHERE  Object_Owner NOT IN (SELECT /*+ NO_MERGE */ UserName FROM All_Users WHERE Oracle_Maintained = 'Y')
                                       GROUP BY DBID, SQL_ID, Plan_Hash_Value
                                       HAVING SUM(CASE WHEN Other_Tag LIKE 'PARALLEL%' THEN 1 ELSE 0 END) > 0  -- enthält parallele Anteile
                                       AND    SUM(CASE WHEN (Other_Tag IS NULL OR Other_Tag NOT LIKE 'PARALLEL%')
