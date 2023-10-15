@@ -1,0 +1,62 @@
+<h3>Full table scans  with less result records: possibly missing indexes </h3>
+Access by full table scan is critical if only small parts of table are relevant for selection, otherwise are adequate for processing of whole table data.<br/>
+They are out of place for OLTP-like access (small access time, many executions).<br/>
+Placing an index may reduce runtime significant.<br/>
+Calculated by high runtime and less result records.<br/>
+<pre style='background-color: #FFFFCC;'>WITH Backward AS (SELECT :P1 Days FROM Dual)
+SELECT /* DB-Tools Ramm FullTableScans */
+       SQL_ID, Object_Owner, Object_Name, Num_Rows,
+       Executions,
+       ROUND(Elapsed_Time_Secs)                   "Elapsed secs for SQL total",
+       Seconds_Active                             "ASH secs for table total",
+       ROUND(Rows_per_Exec, 1)                    "Rows per Exec",
+       ROUND(Elapsed_Time_Secs/Executions,2)      "Elapsed Secs per Exec",
+       ROUND(Seconds_Active/Executions, 2)        "ASH secs for table per Exec",
+       ROUND(Disk_Reads/Executions,1)             "Disk reads per Exec",
+       ROUND(Buffer_Gets/Executions)              "Buffer gets per Exec",
+       SQL_Text
+FROM   (
+        SELECT i.*, h.Seconds_Active, i.Rows_Processed/i.Executions Rows_per_Exec,
+               (SELECT SQL_Text FROM DBA_Hist_SQLText t WHERE t.DBID=i.DBID AND t.SQL_ID=i.SQL_ID AND RowNum < 2) SQL_Text
+        FROM   (
+                SELECT /*+ PARALLEL(p,4) PARALLEL(s,4) PARALLEL(ss.4) */
+                       s.DBID, s.SQL_ID, p.Object_Owner, p.Object_Name,
+                       SUM(Executions_Delta)     Executions,
+                       SUM(Disk_Reads_Delta)     Disk_Reads,
+                       SUM(Buffer_Gets_Delta)    Buffer_Gets,
+                       SUM(Rows_Processed_Delta) Rows_Processed,
+                       MIN(t.Num_Rows) Num_Rows,
+                       ROUND(SUM(s.Elapsed_Time_Delta)/1000000,2) Elapsed_Time_Secs
+                FROM   DBA_Hist_SQL_Plan p
+                JOIN   DBA_Hist_SQLStat s   ON s.DBID=p.DBID AND s.SQL_ID=p.SQL_ID AND s.Plan_Hash_Value=p.Plan_Hash_Value
+                JOIN   DBA_Hist_Snapshot ss ON ss.DBID=s.DBID AND ss.Instance_Number=s.Instance_Number AND ss.Snap_ID=s.Snap_ID
+                JOIN   DBA_Tables t         ON t.Owner=p.Object_Owner AND t.Table_Name=p.Object_Name
+                WHERE  p.Operation = 'TABLE ACCESS'
+                AND    p.Options LIKE '%FULL'           /* Auch STORAGE FULL der Exadata mit inkludieren */
+                AND    ss.Begin_Interval_Time > SYSDATE - (SELECT Days FROM Backward)
+                AND    p.Object_Owner NOT IN (SELECT /*+ NO_MERGE */ UserName FROM All_Users WHERE Oracle_Maintained = 'Y')
+                AND    t.Num_Rows >= :P2
+                GROUP BY s.DBID, s.SQL_ID, p.Object_Owner, p.Object_Name
+               ) i
+        LEFT OUTER JOIN  (SELECT /*+ NO_MERGE */ h.DBID, h.SQL_ID, o.Owner, o.Object_Name, SUM(Seconds_Active) Seconds_Active
+                          FROM   (SELECT /*+ PARALLEL(2) NO_MERGE */ h.DBID, h.SQL_ID, h.Current_Obj#, COUNT(*) * 10 Seconds_Active
+                                  FROM   DBA_Hist_Active_Sess_History h
+                                  JOIN   DBA_Hist_Snapshot ss ON ss.DBID = h.DBID AND ss.Instance_Number = h.Instance_Number AND ss.Snap_ID = h.Snap_ID
+                                  WHERE  ss.Begin_Interval_Time > SYSDATE - (SELECT Days FROM Backward)
+                                  AND    h.SQL_Plan_Operation = 'TABLE ACCESS'
+                                  AND    h.SQL_Plan_Options LIKE '%FULL'  /* also include Exadata variants */
+                                  AND    h.User_ID NOT IN (SELECT /*+ NO_MERGE */ User_ID FROM All_Users WHERE Oracle_Maintained = 'Y')
+                                  AND    h.Current_Obj# != -1
+                                  AND    h.DBID = &your_DBID  /* do not count multiple times for multipe different DBIDs/ConIDs */
+                                  GROUP BY h.DBID, h.SQL_ID, h.Current_Obj#
+                                 ) h
+                          JOIN   DBA_Objects o ON o.Object_ID = h.Current_Obj#
+                          GROUP BY h.DBID, h.SQL_ID, o.Owner, o.Object_Name
+                         ) h ON h.DBID = i.DBID AND h.SQL_ID = i.SQL_ID AND h.Owner = i.Object_Owner AND h.Object_Name = i.Object_Name
+        WHERE  i.Rows_Processed > 0
+        AND    i.Executions >= :P3
+       )
+WHERE  SQL_Text NOT LIKE '%dbms_stats%'
+--ORDER BY Rows_per_Exec/Num_Rows/Executions/Elapsed_Time_Secs
+ORDER BY Elapsed_Time_Secs * Num_Rows * NVL(Seconds_Active, 1)/DECODE(Rows_per_Exec, 0, 1, Rows_per_Exec)  DESC
+              </pre><div>Parameter :P1: Number of days in history backward from now for consideration</div><div>Parameter :P2: Minimum number of rows in table for consideration in selection</div><div>Parameter :P3: Minimum number of executions within time period for consideration in result</div>

@@ -1,0 +1,25 @@
+<h3>Unnecessary high fetch count because of missing usage of array-fetch: evaluation of AWH history</h3>
+For larger results per execution it is worth to access multiple records per fetch with bulk operation instead of single fetches.<br/>
+This earns little reduction of CPU-contention and runtime.<br/>
+<pre style='background-color: #FFFFCC;'>SELECT s.*, (SELECT SQL_Text FROM DBA_Hist_SQLText t WHERE t.DBID=s.DBID AND t.SQL_ID=s.SQL_ID AND RowNum < 2) SQL_Text
+                      FROM (
+                      SELECT s.Instance_Number Instance, s.DBID, Parsing_Schema_Name, Module,
+                             SQL_ID, SUM(Executions_Delta) Executions, SUM(Fetches_Delta) Fetches,
+                             SUM(End_Of_Fetch_Count_Delta) End_Of_Fetch_Count, SUM(Rows_Processed_Delta) "Rows Processed",
+                             ROUND(SUM(Rows_Processed_Delta)/SUM(Executions_Delta),2) "Rows per Exec",
+                             ROUND(SUM(Fetches_Delta)/SUM(Executions_Delta),2)        "Fetches per exec",
+                             ROUND(SUM(Rows_Processed_Delta)/SUM(Fetches_Delta),2)    "Rows per Fetch",
+                             ROUND(SUM(Elapsed_Time_Delta)/1000000,2)                 "Elapsed Time (Secs)",
+                             ROUND(SUM(Executions_delta) * (MOD(SUM(Rows_Processed_Delta)/SUM(Executions_Delta), 1000) /
+                               (SUM(Rows_Processed_Delta)/SUM(Fetches_Delta)) -1))    "Additional Fetches"
+                      FROM   DBA_Hist_SQLStat s
+                      JOIN   DBA_Hist_Snapshot ss ON ss.DBID=s.DBID AND ss.Snap_ID=s.Snap_ID AND ss.Instance_Number=s.Instance_Number
+                                                  AND ss.Begin_Interval_Time > SYSDATE - :P1
+                      GROUP BY s.Instance_Number, s.DBID, s.Parsing_Schema_Name, s.Module, s.SQL_ID
+                      HAVING SUM(Fetches_Delta) > SUM(Executions_Delta)
+                      AND    SUM(Fetches_Delta) > 1
+                      AND    SUM(Executions_Delta) > 0
+                      AND    SUM(Rows_Processed_Delta) > 0
+                      ) s
+                      WHERE "Fetches per exec" > :P2
+                      ORDER BY "Additional Fetches" DESC NULLS LAST</pre><div>Parameter :P1: Number of days in history backward from now for consideration</div><div>Parameter :P2: Minimum number of fetches per execution for consideration in result</div>

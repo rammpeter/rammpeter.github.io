@@ -1,0 +1,27 @@
+<h3>Local-partitioning of unique indexes with partition-key = index-column</h3>
+Also unique indexes may be local partitioned if partition key is in identical order leading part of index.<br/>
+This way partition pruning may be used for access on unique indexes plus possible decrease of index' BLevel.<pre style='background-color: #FFFFCC;'>SELECT /* DB-Tools Ramm Partitionierung Unique Indizes */
+                              t.Owner, t.Table_Name, i.Uniqueness, tc.Column_Name Partition_Key1, i.Index_Name, t.Num_Rows, seg.MBytes
+                      FROM   DBA_Tables t
+                             JOIN DBA_Part_Key_Columns tc
+                             ON (    tc.Owner           = t.Owner
+                                 AND tc.Name            = t.Table_Name
+                                 AND tc.Object_Type     = 'TABLE'
+                                 AND tc.Column_Position = 1
+                                 /* Nur erste Spalte prüfen, danach manuell */
+                                )
+                             JOIN DBA_Ind_Columns ic
+                             ON (    ic.Table_Owner     = t.Owner
+                                 AND ic.Table_Name      = t.Table_Name
+                                 AND ic.Column_Name     = tc.Column_Name
+                                 AND ic.Column_Position = 1
+                                )
+                             JOIN DBA_Indexes i
+                             ON (    i.Owner            = ic.Index_Owner
+                                 AND i.Index_Name       = ic.Index_Name
+                                )
+                             JOIN (SELECT Owner, Segment_Name, ROUND(SUM(bytes)/(1024*1024),1) MBytes FROM DBA_Segments GROUP BY Owner, Segment_Name
+                                  ) seg ON seg.Owner = i.Owner AND seg.Segment_Name = i.Index_Name
+                      WHERE t.Partitioned = 'YES'
+                      AND   i.Partitioned = 'NO'
+                      ORDER BY t.Num_Rows DESC NULLS LAST</pre>

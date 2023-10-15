@@ -1,0 +1,39 @@
+<h3>Tables with single-column primary key constraint which is not referenced by any foreign key constraint</h3>
+An ID-column with primary key constraint and related index may by unnecessary if primary key constraint is not referenced by any foreign key constraint.<br/>
+Often this is the case if:<br/>
+- there are multi-column unique constraints or unique indexes for transaction data, which may be used as alternative unique access criteria<br/>
+- or there is no need for accessing single records<br/>
+- the used frameworks don't require the existence of technical ID<br/>
+<pre style='background-color: #FFFFCC;'>WITH Constraints AS (SELECT /*+ NO_MERGE MATERIALIZE */ Owner, Constraint_Name, Constraint_Type, Table_Name, r_Owner, r_Constraint_Name, Index_Owner, Index_Name
+                     FROM   DBA_Constraints
+                     WHERE  Constraint_Type IN ('P', 'R', 'U')
+                    ),
+     Indexes AS (SELECT /*+ NO_MERGE MATERIALIZE */ Owner, Table_Owner, Table_Name, Index_Name, Uniqueness, Index_Type
+                 FROM   DBA_Indexes
+                ),
+     Tab_Columns AS (SELECT /*+ NO_MERGE MATERIALIZE */ Owner, Table_Name, Column_Name, Avg_Col_Len
+                     FROM   DBA_Tab_Columns
+                    ),
+     Segments AS (SELECT /*+ NO_MERGE MATERIALIZE */ Owner, Segment_Name, SUM(Bytes)/(1024*1024) Size_MB
+                  FROM   DBA_Segments
+                  GROUP BY Owner, Segment_Name
+                 )
+SELECT c.Owner, c.Table_Name, cc.Column_Name PKey_Column, c.Constraint_Name, t.Num_Rows,
+       si.Size_MB Size_MB_PK_Index, (t.Num_Rows * tc.Avg_Col_Len)/(1024*1024) Size_MB_PK_Column,
+       uc.Constraint_Name Alternative_Unique_Constraint, ui.Index_Name Alternative_Unique_Index
+FROM   (
+        SELECT /*+ NO_MERGE */ Owner, Constraint_Name, Table_Name, MIN(Column_Name) Column_Name
+        FROM   DBA_Cons_Columns
+        GROUP BY Owner, Constraint_Name, Table_Name
+        HAVING COUNT(*) = 1  /* exactly one column in PK-Constraint */
+       ) cc
+JOIN   Constraints c  ON c.Owner = cc.Owner AND c.Constraint_Name = cc.Constraint_Name AND c.Table_Name = cc.Table_Name AND c.Constraint_Type = 'P'
+JOIN   DBA_Tables t   ON t.Owner = c.Owner AND t.Table_Name = c.Table_Name
+JOIN   Indexes pi     ON pi.Owner = c.Index_Owner AND pi.Index_Name = c.Index_Name
+JOIN   Tab_Columns tc ON tc.Owner = c.Owner AND tc.Table_Name = c.Table_Name AND tc.Column_Name = cc.Column_Name
+LEFT OUTER JOIN Segments si    ON si.Owner = pi.Owner AND si.Segment_Name = pi.Index_Name
+LEFT OUTER JOIN Constraints uc ON uc.Owner = c.Owner AND uc.Table_Name = c.Table_Name AND c.Constraint_Type = 'U'
+LEFT OUTER JOIN Indexes ui     ON ui.Table_Owner = c.Owner AND ui.Table_Name = c.Table_Name AND ui.Uniqueness = 'UNIQUE' AND ui.Index_Type NOT IN ('LOB') AND ui.Index_Name != pi.Index_Name
+AND    (c.Owner, c.Constraint_Name) NOT IN (SELECT r_Owner, r_Constraint_Name FROM Constraints WHERE Constraint_Type = 'R')
+ORDER BY t.Num_Rows DESC NULLS LAST
+</pre>

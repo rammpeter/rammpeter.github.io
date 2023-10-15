@@ -1,0 +1,25 @@
+<h3>Recommendations for index-compression, test by selectivity</h3>
+Index-compression (COMPRESS) is usefull by reduction of physical footprint for OLTP-indexes with poor selectivity (column level).<br/>
+  For poor selective indexes reduction of size by 1/4 to 1/3 is possible.<pre style='background-color: #FFFFCC;'>WITH Segments AS (SELECT /*+ NO_MERGE MATERIALIZE */ Owner, Segment_Name, ROUND(SUM(bytes)/(1024*1024),1) MBytes FROM DBA_Segments WHERE Owner NOT IN (SELECT /*+ NO_MERGE */ UserName FROM All_Users WHERE Oracle_Maintained = 'Y') GROUP BY Owner, Segment_Name)
+SELECT /* DB-Tools Ramm Komprimierung Indizes */  *
+FROM (
+            SELECT ROUND(i.Num_Rows/i.Distinct_Keys) Rows_Per_Key, i.Num_Rows, i.Owner, i.Index_Name, i.Index_Type, i.Table_Owner, i.Table_Name,
+                   t.IOT_Type, seg.MBytes, Distinct_Keys,
+            (SELECT SUM(tc.Avg_Col_Len)
+             FROM   DBA_Ind_Columns ic,
+                    DBA_Tab_Columns tc
+             WHERE  ic.Index_Owner      = i.Owner
+             AND    ic.Index_Name = i.Index_Name
+             AND tc.Owner = i.Table_Owner AND tc.Table_Name = i.Table_Name AND tc.Column_Name = ic.Column_Name
+            ) Avg_Col_Len
+            FROM   DBA_Indexes i
+            JOIN   DBA_Tables t ON t.Owner = i.Table_Owner AND t.Table_Name = i.Table_Name
+            JOIN   Segments seg ON seg.Owner = i.Owner AND seg.Segment_Name = i.Index_Name
+            WHERE  i.Compression='DISABLED'
+            AND    i.Distinct_Keys > 0
+            AND    i.Table_Owner NOT IN (SELECT /*+ NO_MERGE */ UserName FROM All_Users WHERE Oracle_Maintained = 'Y')
+            AND i.Num_Rows/DECODE(i.Distinct_Keys,0,1,i.Distinct_Keys) > :P1
+          ) i
+WHERE MBytes > :P2
+AND   Index_Type NOT IN ('BITMAP')
+ORDER BY NVL(Avg_Col_Len, 5) * Num_Rows * Num_Rows/Distinct_Keys DESC NULLS LAST</pre><div>Parameter :P1: Minimum number of index rows per DISTINCT Key</div><div>Parameter :P2: Selection of indexes excessing given size limit in MB</div>

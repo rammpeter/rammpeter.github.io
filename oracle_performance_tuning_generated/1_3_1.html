@@ -1,0 +1,46 @@
+<h3>Frequent access on small objects</h3>
+For frequent executed SELECT-statements on small objects it may be worth to cache this content instead of accessong by SQL.<br/>
+This reduces CPU-contention and the risk of „Cache Buffers Chains“ latch-waits.<br/>
+Stored functions with function result caching or selects/subselects with result caching may be used for this purpose.<br/>
+<pre style='background-color: #FFFFCC;'>SELECT /*+ USE_NL(t) "DB-Tools Ramm Zugriff kleiner Objekte" */ obj.Owner, Obj.Name, obj.Num_Rows, s.*, t.SQL_Text "SQL-Text"
+                      FROM  (
+                               SELECT /*+ NO_MERGE ORDERED */ s.DBID, s.SQL_ID, MIN(snap.Begin_Interval_Time) First_Occurrence, MAX(snap.End_Interval_Time) Last_Occurrence,
+                                      s.Plan_Hash_Value, s.Instance_number "Instance",
+                                      NVL(MIN(Parsing_Schema_Name), '[UNKNOWN]') "UserName", /* sollte immer gleich sein in Gruppe */
+                                      MAX(Buffer_Gets_Delta)                                         "max. BufferGets betw.snapshots",
+                                      SUM(Executions_Delta)                                          "Executions",
+                                      ROUND(SUM(Elapsed_Time_Delta)/1000000,4)                       "Elapsed Time (Sec)",
+                                      ROUND(SUM(ELAPSED_TIME_Delta/1000000) / DECODE(SUM(EXECUTIONS_Delta),
+                                          0, 1, SUM(EXECUTIONS_Delta)),6)                            "Elapsed Time per Execute (Sec)",
+                                      SUM(CPU_Time_Delta)/1000000                                    "CPU-Time (Secs)",
+                                      SUM(Disk_Reads_Delta)                                          "Disk Reads",
+                                      ROUND(SUM(DISK_READS_delta) / DECODE(SUM(EXECUTIONS_Delta),
+                                          0, 1, SUM(EXECUTIONS_Delta)),6)                            "Disk Reads per Execute",
+                                      ROUND(SUM(Executions_Delta) / DECODE(SUM(Disk_Reads_Delta),
+                                          0, 1, SUM(Disk_Reads_Delta)),6)                            "Executions per Disk Read",
+                                      SUM(Buffer_Gets_Delta)                                         "Buffer Gets",
+                                      ROUND(SUM(BUFFER_GETS_delta) / DECODE(SUM(EXECUTIONS_Delta),
+                                          0, 1, SUM(EXECUTIONS_delta)),2)                            "Buffer Gets per Execution",
+                                      ROUND(SUM(BUFFER_GETS_delta) / DECODE(SUM(Rows_Processed_Delta),
+                                          0, 1, SUM(Rows_Processed_Delta)),2)                        "Buffer Gets per Result-Row",
+                                      SUM(Rows_Processed_Delta)                                      "Rows Processed",
+                                      ROUND(SUM(Rows_Processed_Delta) / DECODE(SUM(EXECUTIONS_Delta),
+                                          0, 1, SUM(EXECUTIONS_Delta)),2)                            "Rows Processed per Execute",
+                                      ROUND(SUM(ClWait_Delta)/1000000,4)                             "Cluster Wait-Time (Sec)",
+                                      ROUND(SUM(IOWait_Delta)/1000000,4)                             "I/O Wait-Time (Sec)",
+                                      ROUND(SUM(CCWait_Delta)/1000000,4)                             "Concurrency Wait-Time (Sec)",
+                                      ROUND(SUM(PLSExec_Time_Delta)/1000000,4)                       "PL/SQL Wait-Time (Sec)"
+                               FROM   dba_hist_snapshot snap
+                               JOIN   DBA_Hist_SQLStat s ON (s.Snap_ID=snap.Snap_ID AND s.DBID=snap.DBID AND s.instance_number=snap.Instance_Number)
+                               WHERE  snap.Begin_Interval_time > SYSDATE - :P1
+                               GROUP BY s.DBID, s.SQL_ID, s.Plan_Hash_Value, s.Instance_number
+                               HAVING SUM(Executions_Delta) > :P2
+                               ) s
+                            JOIN   DBA_Hist_SQL_Plan p ON (p.DBID=s.DBID AND p.SQL_ID=s.SQL_ID AND p.Plan_Hash_Value=s.Plan_Hash_Value)
+                            JOIN   (SELECT Owner, Table_Name Name, Num_Rows FROM DBA_Tables WHERE Num_Rows < 100000
+                                    UNION ALL
+                                    SELECT Owner, Index_Name Name, Num_Rows FROM DBA_Indexes WHERE Num_Rows < 100000
+                                   ) obj ON (obj.Owner = p.Object_Owner AND obj.Name = p.Object_Name)
+                            JOIN   DBA_Hist_SQLText t  ON (t.DBID=s.DBID AND t.SQL_ID=s.SQL_ID)
+                      WHERE Owner NOT IN (SELECT /*+ NO_MERGE */ UserName FROM All_Users WHERE Oracle_Maintained = 'Y')
+                      ORDER BY s."Executions"/DECODE(obj.Num_Rows, 0, 1, obj.Num_Rows) DESC NULLS LAST</pre><div>Parameter :P1: Number of days in history backward from now for consideration</div><div>Parameter :P2: Minimum number of executions for consideration in selection</div>

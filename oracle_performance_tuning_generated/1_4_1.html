@@ -1,0 +1,26 @@
+<h3>Excessive filtering after TABLE ACCESS BY ROWID due to weak index access criteria (current SGA)</h3>
+INDEX RANGE|SKIP SCAN with high number of rows returned and restrictive filter after TABLE ACCESS BY ROWID leads to unnecessary effort for table access before rejecting table records from result.<br/>
+You should consider to expand index by filter criterias of table access to reduce number of TABLE ACCESS BY ROWID.<br/>
+This selection evaluates the current content of SGA.<br/>
+Result is sorted by time effort for operation TABLE ACCESS BY ROWID.<br/>
+<pre style='background-color: #FFFFCC;'> SELECT /* Panorama: cardinality_ratio index/table, thanks to Leonid Nossov */
+                             ta.Inst_ID, ta.SQL_ID, ta.Plan_Hash_Value, ta.ID SQL_Plan_Line_ID, ir.Object_Owner||'.'||ir.Object_Name Index_Name,  ta.Object_Owner||'.'||ta.Object_Name Table_Name, ir.Cardinality Cardinality_Index, ta.Cardinality Cardinality_Table,
+                             ir.Access_Predicates Access_Index, ir.Filter_Predicates Filter_Index, ta.Access_Predicates Access_Table, ta.Filter_Predicates Filter_Table, ROUND(ir.Cardinality/ta.Cardinality) Cardinality_Ratio, ash.Seconds Elapsed_Seconds,
+                             ash.Min_Sample_Time, ash.Max_Sample_Time
+                      FROM   (SELECT /*+ MO_MERGE */ Inst_ID, SQL_ID, Plan_Hash_Value, Child_Number, Address, Access_Predicates, Filter_Predicates, ID, Cardinality, Object_Owner, Object_Name
+                              FROM   gv$SQL_Plan
+                              WHERE  Operation = 'TABLE ACCESS' AND Options LIKE 'BY%INDEX ROWID%'           /* should also catch BY LOCAL INDEX ROWID and INDEX ROWID BATCHED */
+                             ) ta
+                      JOIN   (SELECT /*+ MO_MERGE */ Inst_ID, SQL_ID, Plan_Hash_Value, Child_Number, Address, Access_Predicates, Filter_Predicates, Parent_ID, Cardinality, Object_Owner, Object_Name
+                              FROM   gv$SQL_Plan
+                              WHERE  Operation = 'INDEX' AND Options IN ('RANGE SCAN', 'SKIP SCAN')
+                             ) ir ON ir.Inst_ID=ta.Inst_ID AND ir.SQL_ID=ta.SQL_ID AND ir.Plan_Hash_Value=ta.Plan_Hash_Value AND ir.Child_Number=ta.Child_Number AND ir.Address=ta.Address AND ir.Parent_ID=ta.ID
+                      JOIN   (SELECT /*+ NO_MERGE */ Inst_ID, SQL_ID, SQL_Child_Number, SQL_Plan_Hash_Value, SQL_Plan_Line_ID, COUNT(*) Seconds, MIN(Sample_Time) Min_Sample_Time, MAX(Sample_Time) Max_Sample_Time
+                              FROM   gv$Active_Session_History
+                              WHERE  SQL_Plan_Operation = 'TABLE ACCESS' AND SQL_Plan_Options LIKE 'BY%INDEX ROWID%'        /* only for this operation */
+                              GROUP BY Inst_ID, SQL_ID, SQL_Child_Number, SQL_Plan_Hash_Value, SQL_Plan_Line_ID
+                              HAVING COUNT(*) > :P1
+                             ) ash ON ash.Inst_ID=ta.Inst_ID AND ash.SQL_ID=ta.SQL_ID AND ash.SQL_Child_Number=ta.Child_Number AND ash.SQL_Plan_Hash_Value=ta.Plan_Hash_Value AND ash.SQL_Plan_Line_ID=ta.ID
+                      WHERE  ta.Cardinality < ir.Cardinality / :P2
+                      ORDER BY ash.Seconds DESC
+                    </pre><div>Parameter :P1: Minimum elapsed time in seconds for operation TABLE ACCESS BY ROWID in Active Session History to consider SQL in result</div><div>Parameter :P2: Minimum value for "cardinality of index / cardinality of table"</div>

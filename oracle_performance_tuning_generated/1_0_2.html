@@ -1,0 +1,34 @@
+<h3>Full table scans  with small cardinality: possibly missing indexes </h3>
+Access by full table scan is critical if only small parts of table are relevant for selection, otherwise are adequate for processing of whole table data.<br/>
+They are out of place for OLTP-like access (small access time, many executions).<br/>
+Placing an index may reduce runtime significant.<br/>
+Calculated by high runtime of full scan and small expected number of records from full scan (by optimizer's cardinality).<br/>
+Thie selection requires usage of AWR history with Diagnostics Pack.<br/>
+<pre style='background-color: #FFFFCC;'>SELECT h.Instance_Number "Inst.", u.UserName "SQL User", h.SQL_ID, p.Object_Owner Owner, p.Object_Name, p.Object_Type "Object Type", h.SQL_Plan_Line_ID "Plan Line ID",
+       p.Operation, p.Options, h.Elapsed_Secs "Elapsed Secs.", p.Cardinality, t.Num_Rows "Num Rows Table", t.Partitioned,
+       NVL(gp.Access_Predicates, '< no plan in SGA >') Access_Predicates,
+       NVL(gp.Filter_Predicates, '< no plan in SGA >') Filter_Predicates
+FROM   (SELECT /*+ NO_MERGE */ ss.DBID, ss.Instance_Number, h.User_ID, h.SQL_ID, h.SQL_Plan_Hash_Value, h.SQL_Plan_Line_ID, COUNT(*) * 10 Elapsed_Secs
+        FROM   DBA_Hist_Snapshot ss
+        JOIN   DBA_Hist_Active_Sess_History h ON h.DBID = ss.DBID AND h.Instance_Number = ss.Instance_Number AND h.Snap_ID = ss.Snap_ID
+        WHERE  ss.Begin_Interval_Time > SYSDATE - :P1
+        AND    h.SQL_Plan_Operation = 'TABLE ACCESS'
+        AND    h.SQL_Plan_Options LIKE '%FULL'  /* also include Exadata variants */
+        AND    h.User_ID NOT IN (SELECT /*+ NO_MERGE */ User_ID FROM All_Users WHERE Oracle_Maintained = 'Y')
+        AND    h.DBID = &your_DBID  /* do not count multiple times for multipe different DBIDs/ConIDs */
+        GROUP BY ss.DBID, ss.Instance_Number, h.User_ID, h.SQL_ID, h.SQL_Plan_Hash_Value, h.SQL_Plan_Line_ID
+       ) h
+JOIN   DBA_Hist_SQL_Plan p ON p.DBID = h.DBID AND p.SQL_ID = h.SQL_ID AND p.Plan_Hash_Value = h.SQL_Plan_Hash_Value AND p.ID = h.SQL_Plan_Line_ID
+LEFT OUTER JOIN DBA_Tables t ON t.Owner = p.Object_Owner AND t.Table_Name = p.Object_Name
+LEFT OUTER JOIN (SELECT SQL_ID, Plan_Hash_Value, ID, MIN(Access_Predicates) Access_Predicates, MIN(Filter_Predicates) Filter_Predicates
+                 FROM   gv$SQL_Plan gp
+                 WHERE  Operation = 'TABLE ACCESS'
+                 AND    Options LIKE '%FULL'  /* also include Exadata variants */
+                 AND    (Access_Predicates IS NOT NULL OR Filter_Predicates IS NOT NULL)
+                 GROUP BY SQL_ID, Plan_Hash_Value, ID
+                ) gp ON gp.SQL_ID = h.SQL_ID AND gp.Plan_Hash_Value = p.Plan_Hash_Value AND gp.ID = p.ID
+LEFT OUTER JOIN All_Users u ON u.User_ID = h.User_ID
+WHERE  h.Elapsed_Secs > :P2
+AND    p.Operation = 'TABLE ACCESS'
+AND    p.Options LIKE '%FULL'  /* also include Exadata variants */
+ORDER BY h.Elapsed_Secs/p.Cardinality DESC              </pre><div>Parameter :P1: Number of days in history backward from now for consideration</div><div>Parameter :P2: Minimum number of total elapsed seconds in considered period for full table scans on object</div>

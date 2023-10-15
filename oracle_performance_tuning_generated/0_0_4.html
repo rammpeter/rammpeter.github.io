@@ -1,0 +1,64 @@
+<h3>Recommendations for ADVANCED HIGH index compression</h3>
+Introduced with Oracle 12.2 the ADVANCED HIGH index compression as part of the Oracle Advanced Compression Option allows significant better compression than the other index key deduplication functions (COMPRESS, COMPRESS ADVANCED LOW).<br/>
+But the drawback is that index maintenence is more costly and index access costs more CPU effort and can become up to five times slower, especially for index scans with larger results.<br/>
+Therefore COMPRESS ADVANCED HIGH is especially suggested for less frequently used indexes on tables with less DML.<br/>
+This selection considers indexes with < x seconds in wait at SQLs accessing this index worth for possible COMPRESS ADVANCED HIGH.<br/>
+<pre style='background-color: #FFFFCC;'>WITH Segments AS (SELECT /*+ NO_MERGE MATERIALIZE */ Owner, Segment_Name, ROUND(SUM(bytes)/(1024*1024),1) MBytes
+                  FROM   DBA_Segments
+                  WHERE  Owner NOT IN (SELECT /*+ NO_MERGE */ UserName FROM All_Users WHERE Oracle_Maintained = 'Y')
+                  GROUP BY Owner, Segment_Name
+                 ),
+     Ind_Columns AS (SELECT  /*+ NO_MERGE MATERIALIZE */ Table_Owner, Table_Name, Index_Owner, Index_Name, Column_Name
+                     FROM    DBA_Ind_Columns i
+                     WHERE   Index_Owner NOT IN (SELECT /*+ NO_MERGE */ UserName FROM All_Users WHERE Oracle_Maintained = 'Y')
+                    ),
+     Tab_Columns AS (SELECT  /*+ NO_MERGE MATERIALIZE */ Owner, Table_Name, Column_Name, Avg_Col_Len
+                     FROM    DBA_Tab_Columns i
+                     WHERE   Owner NOT IN (SELECT /*+ NO_MERGE */ UserName FROM All_Users WHERE Oracle_Maintained = 'Y')
+                    ),
+     Indexes AS (SELECT /*+ NO_MERGE MATERIALIZE */ Owner, Index_Name, Table_Owner, Table_Name, Num_Rows, Distinct_Keys, Index_Type, Compression
+                 FROM   DBA_Indexes
+                 WHERE  Owner NOT IN (SELECT /*+ NO_MERGE */ UserName FROM All_Users WHERE Oracle_Maintained = 'Y')
+                 AND    Index_Type NOT IN ('BITMAP')
+                ),
+     Tables AS (SELECT /*+ NO_MERGE MATERIALIZE */ Owner, Table_Name, IOT_Type
+                FROM   DBA_Tables
+                WHERE  Owner NOT IN (SELECT /*+ NO_MERGE */ UserName FROM All_Users WHERE Oracle_Maintained = 'Y')
+               ),
+     ASH AS ( SELECT /*+ NO_MERGE MATERIALIZE */ o.Owner, o.Object_Name, SUM(h.Seconds_In_Wait) Seconds_In_Wait
+              FROM   (
+                      SELECT /*+ NO_MERGE */ Current_Obj#, SUM(10) Seconds_In_Wait
+                      FROM   DBA_Hist_Active_Sess_History h
+                      JOIN   (SELECT /*+ NO_MERGE */ Inst_ID, MIN(Sample_Time) Min_Sample_Time
+                              FROM gv$Active_Session_History
+                              GROUP BY Inst_ID
+                             ) mh ON mh.Inst_ID = h.Instance_Number
+                      WHERE  h.Sample_Time > SYSDATE -:P1
+                      AND    h.Sample_Time < mh.Min_Sample_Time
+                      AND    h.DBID = &your_DBID
+                      GROUP BY Current_Obj#
+                      UNION ALL
+                      SELECT /*+ NO_MERGE */ Current_Obj#, COUNT(*) Seconds_In_Wait
+                      FROM   gv$Active_Session_History
+                      GROUP BY Current_Obj#
+                     ) h
+              JOIN   DBA_Objects o ON o.Object_ID = h.Current_Obj#
+              WHERE  o.Owner NOT IN (SELECT /*+ NO_MERGE */ UserName FROM All_Users WHERE Oracle_Maintained = 'Y')
+              GROUP BY  o.Owner, o.Object_Name
+             )
+SELECT /* Advanced High Compression Suggestions */ i.Owner, i.Index_Name, i.Index_Type, i.Compression, i.Table_Owner, i.Table_Name,
+       ash.Seconds_In_Wait, t.IOT_Type, seg.MBytes, i.Num_Rows, Distinct_Keys, ROUND(i.Num_Rows/DECODE(i.Distinct_Keys,0,1,i.Distinct_Keys)) Rows_Per_Key, cs.Avg_Col_Len
+FROM   Indexes i
+JOIN   Tables t ON t.Owner = i.Table_Owner AND t.Table_Name = i.Table_Name
+JOIN   Segments seg ON seg.Owner = i.Owner AND seg.Segment_Name = i.Index_Name
+JOIN   (SELECT /*+ NO_MERGE */ ic.Index_Owner, ic.Index_Name, SUM(tc.Avg_Col_Len) Avg_Col_Len
+        FROM   Ind_Columns ic
+        JOIN   Tab_Columns tc ON tc.Owner = ic.Table_Owner AND tc.Table_Name = ic.Table_Name AND tc.Column_Name = ic.Column_Name
+        GROUP BY ic.Index_Owner, ic.Index_Name
+       ) cs ON cs.Index_Owner = i.Owner AND cs.Index_Name = i.Index_Name
+LEFT OUTER JOIN ash ON ash.Owner = i.Owner AND ash.Object_Name = i.Index_Name
+WHERE  i.Compression != 'ADVANCED HIGH'
+AND    seg.MBytes > :P2
+AND    NVL(ash.Seconds_In_Wait, 0) < :P3
+ORDER BY seg.MBytes DESC NULLS LAST
+          </pre><div>Parameter :P1: Number of last days in Active Session History to consider for calculation of seconds in wait for that index</div><div>Parameter :P2: Maximum number of seconds Active Session History has recorded in the considered period as session activity on index</div><div>Parameter :P3: Minimum size of index in MB to be considered in this selection</div>

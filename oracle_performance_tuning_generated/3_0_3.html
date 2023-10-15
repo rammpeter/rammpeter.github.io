@@ -1,0 +1,33 @@
+<h3>Missing usage of bind variables: Detection by identical force matching signature from AWR history</h3>
+Usage of literals instead of bind variables with high number of different literals leads to high parse counts and flooding of SQL-Area in SGA.<br/>
+You may reduce the problem by setting cursor_sharing != EXACT, but you still need large amount of SGA-memory to match your SQL with the corresponding SQL with replaced bind variables.<br/>
+So strong suggestion is: Use bind variables!<br/>
+This selection looks for statements with identical execution plans by force-matching-signature (or plan-hash-value if force-matching-signature = 0) from AWR history.<pre style='background-color: #FFFFCC;'>              SELECT Force_Matching_Signature,
+                     Plan_Hash_Value        "Plan hash value or no",
+                     u.UserName             Parsing_User,
+                     different_sql_IDs      "No. of different SQL-IDs",
+                     Last_Used_SQL_ID,
+                     Min_Time               "First occurrence in AWR",
+                     Max_Time               "Last occurrence in AWR",
+                     Executions,
+                     Elapsed_Secs           "Elapsed time (seconds)",
+                     (SELECT TO_CHAR(SUBSTR(t.SQL_Text, 1, 400)) FROM DBA_Hist_SQLText t WHERE t.DBID = x.DBID AND t.SQL_ID = x.Last_Used_SQL_ID) SQL_Text
+              FROM   (SELECT ss.DBID, MIN(s.Force_Matching_Signature)                             Force_Matching_Signature,
+                             CASE WHEN COUNT(DISTINCT s.Plan_Hash_Value) = 1 THEN TO_CHAR(MIN(s.Plan_Hash_Value)) ELSE '< '||COUNT(DISTINCT s.Plan_Hash_Value)||' >' END Plan_Hash_Value,
+                             s.Parsing_User_ID,
+                             COUNT(DISTINCT s.SQL_ID)                                             Different_SQL_IDs,
+                             MAX(s.SQL_ID) KEEP (DENSE_RANK LAST ORDER BY ss.Begin_Interval_Time) Last_Used_SQL_ID,
+                             MIN(ss.Begin_Interval_Time)                                          Min_Time,
+                             MAX(ss.End_Interval_Time)                                            Max_Time,
+                             ROUND(SUM(s.Elapsed_Time_Delta)/1000000)                             Elapsed_Secs,
+                             SUM(s.Executions_Delta)                                              Executions
+                      FROM   DBA_Hist_Snapshot ss
+                      JOIN   DBA_Hist_SQLStat s ON s.DBID = ss.DBID AND s.Instance_Number = ss.Instance_Number AND s.Snap_ID = ss.Snap_ID
+                      WHERE  ss.Begin_Interval_Time > SYSDATE - :P1
+                      AND    DECODE(s.Force_Matching_Signature, 0, s.Plan_Hash_Value, s.Force_Matching_Signature) > 0
+                      GROUP BY ss.DBID, DECODE(s.Force_Matching_Signature, 0, s.Plan_Hash_Value, s.Force_Matching_Signature), s.Parsing_User_ID
+                      HAVING COUNT(DISTINCT s.SQL_ID) > :P2
+                     ) x
+                     LEFT OUTER JOIN All_Users u ON u.User_ID = x.Parsing_User_ID
+              ORDER BY Different_SQL_IDs DESC
+            </pre><div>Parameter :P1: Number of days in history backward from now for consideration</div><div>Parameter :P2: Minimum number of different SQL-IDs per plan-hash-value for consideration in selection</div>

@@ -1,0 +1,21 @@
+<h3>Concurrency on memory, latches: Overview over usage of sequences by SQLs</h3>
+If sequences may be cached in application, next values must not be read from DB one by one.<br/>
+                                                              This may reduce the number of roundtrips between application and database.<pre style='background-color: #FFFFCC;'>SELECT ROUND(Rows_Processed_per_Day/DECODE(Cache_Size, 0, 1, Cache_Size)) Cache_Reloads_Per_Day,
+                           y.*
+                    FROM   (
+                            SELECT ROUND(Executions/CASE WHEN (Last_Active_Time - First_Load_Time) < 1 THEN 1 ELSE Last_Active_Time - First_Load_Time END) Executions_per_Day,
+                                   ROUND(Rows_Processed/CASE WHEN (Last_Active_Time - First_Load_Time) < 1 THEN 1 ELSE Last_Active_Time - First_Load_Time END) Rows_Processed_per_Day,
+                                   x.*
+                            FROM   (
+                                    SELECT /*+ ORDERED USE_HASH(p a s) */
+                                           p.Inst_ID, a.Executions, a.Rows_Processed,
+                                           ROUND(a.Rows_Processed/a.Executions,2) Rows_Per_Exec,
+                                           TO_DATE(a.First_Load_Time, 'YYYY-MM_DD/HH24:MI:SS') First_Load_Time, a.Last_Active_Time,
+                                           p.Object_Owner, p.Object_Name, s.Cache_Size,
+                                           a.SQL_ID, SUBSTR(a.SQL_Text, 1, 200) SQL_Text
+                                    FROM   (SELECT /*+ NO_MERGE */ * FROM gv$SQL_Plan WHERE Operation = 'SEQUENCE') p
+                                    JOIN   (SELECT /*+ NO_MERGE */ * FROM gV$SQL WHERE Executions > 0) a ON a.Inst_ID = p.Inst_ID AND a.SQL_ID = p.SQL_ID AND a.Child_Number = p.Child_Number
+                                    JOIN   (SELECT /*+ NO_MERGE */ * FROM DBA_Sequences) s ON s.Sequence_Owner = p.Object_Owner AND s.Sequence_Name = p.Object_Name
+                                   ) x
+                           ) y
+                    ORDER BY Rows_Processed_per_Day/DECODE(Cache_Size, 0, 1, Cache_Size) DESC NULLS LAST</pre>

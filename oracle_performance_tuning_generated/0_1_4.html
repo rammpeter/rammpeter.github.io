@@ -1,0 +1,28 @@
+<h3>Detection of indexes without MONITORING USAGE</h3>
+It is recommended to let the DB track usage of indexes by ALTER INDEX ... MONITORING USAGE<br/>
+so you may identify indexes that are never used for direct index access from SQL.<br/>
+This usage info should be refreshed from time to time to recognize also indexes that aren't used anymore.<br/>
+How to and scripts for activating MONITORING USAGE may be found here:<br/>
+<br/>
+  %{url}<br/>
+<br/>
+Index usage can be evaluated than via v$Object_Usage or with previous selection.<br/>
+<pre style='background-color: #FFFFCC;'>
+                    SELECT i.Owner, i.Table_Name, i.Index_Name, i.Index_Type, i.Num_Rows, i.Distinct_Keys, seg.MBytes, o.Created, o.Last_DDL_Time
+                    FROM   DBA_Indexes i
+                    LEFT OUTER JOIN (SELECT /*+ NO_MERGE */ Owner, Segment_Name, ROUND(SUM(bytes)/(1024*1024),1) MBytes FROM DBA_Segments GROUP BY Owner, Segment_Name
+                                    ) seg ON seg.Owner = i.Owner AND seg.Segment_Name = i.Index_Name
+                    LEFT OUTER JOIN (
+
+                                      SELECT Owner, Index_Name
+                                      FROM   DBA_Object_Usage ou
+                                        ) u ON u.Owner = i.Owner AND u.Index_Name = i.Index_Name
+                    LEFT OUTER JOIN DBA_Objects o ON o.Owner = i.Owner AND o.Object_Name = i.Index_Name AND o.Object_Type = 'INDEX'
+                    CROSS JOIN (SELECT :P1 Schema FROM DUAL) s
+                    WHERE u.Owner IS NULL AND u.Index_Name IS NULL
+                    AND   i.Owner NOT IN (SELECT /*+ NO_MERGE */ UserName FROM All_Users WHERE Oracle_Maintained = 'Y')
+                    AND   i.Index_Type != 'IOT - TOP'
+                    AND   seg.MBytes > :P2
+                    AND   (s.Schema IS NULL OR i.Owner = UPPER(s.Schema))
+                    ORDER BY seg.MBytes DESC NULLS LAST
+            </pre><div>Parameter :P1: List only indexes for this schema (optional)</div><div>Parameter :P2: Minumin size of index in MB to be considered in selection</div>

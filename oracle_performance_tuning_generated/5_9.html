@@ -1,0 +1,15 @@
+<h3>Excessive logon operations (by current gv$Session)</h3>
+An excessive number of logon operations may cause significant CPU-usage and possibly write I/O (e.g. for auditing).<br/>
+It also slows down the application waiting for the connect.<br/>
+Alternative solutions are usage of session pools, prevent subsequent LOGON/LOGOFF operations in loops.<br/>
+This selection shows sessions that were created shortly before.<br/>
+            <pre style='background-color: #FFFFCC;'>SELECT s.Inst_ID, s.SID, s.Serial#, s.AudSID, s.UserName, s.OSUser, s.Process,
+                       s.Machine, s.Port, s.Program, s.SQL_ID, s.SQL_Exec_Start, s.Module,
+                       s.Action, s.Client_Info, s.Logon_Time, s.Service_Name
+FROM   gv$Session s
+LEFT OUTER JOIN gv$PX_Session pxs ON pxs.Inst_ID = s.Inst_ID AND pxs.SID = s.SID AND pxs.Serial#=s.Serial#
+WHERE  s.Type = 'USER'
+AND    pxs.SID IS NULL
+    AND    Program NOT LIKE '%(PP%)'    /* Exclude own PQ processes that don't appear in gv$PX_Session while selecting from multiple RAC instances */
+    AND    Logon_Time > SYSDATE-1/(86400/:P1) /* Session not older than x seconds */
+           </pre><div>Parameter :P1: Maximum age of session in seconds (since v$Session.logon_time) to be considered in selection</div>

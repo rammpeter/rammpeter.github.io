@@ -1,0 +1,160 @@
+<h3>Detection of unused indexes by MONITORING USAGE</h3>
+The selection shows indexes monitored by MONITORING USAGE that have not been used by SQLs for x days.<br/>
+A recursive index lookup during a foreign key check does not count as usage with regard to MONITORING USAGE.<br/>
+Therefore, the list also contains indexes that are used exclusively to protect foreign key constraints.<br/>
+<br/>
+The query allows the evaluation of the four reasons for the existence of an index:<br/>
+1. use by SQL statements: then the index is not included in the list.<br/>
+2. use for securing uniqueness by Unique Index, Unique or Primary Key Constraints ( column "uniqueness" ).<br/>
+3. use for protection of a foreign key constraint (prevent lock propagation and full scan on detail table at delete on master table).<br/>
+The additional information in the list allows you to evaluate the need for an index to protect a foreign key constraint:<br/>
+Any existing foreign key constraints as well as the number of rows and DML operations since the last analysis of the referenced table.<br/>
+4. Identical index structures of the tables involved in Partition Exchange (column "Partition exchange possible").<br/>
+Shows the existence of further structure-identical tables with which partition exchange could theoretically take place.<br/>
+<br/>
+If none of the four reasons really requires the existence, the index can be removed without risk.<br/>
+<pre style='background-color: #FFFFCC;'>
+                    WITH Constraints AS        (SELECT /*+ NO_MERGE MATERIALIZE */ Owner, Constraint_Name, Constraint_Type, Table_Name, R_Owner, R_Constraint_Name FROM DBA_Constraints WHERE Owner NOT IN (SELECT /*+ NO_MERGE */ UserName FROM All_Users WHERE Oracle_Maintained = 'Y')),
+                         Indexes AS (SELECT /*+ NO_MERGE MATERIALIZE */ Owner, Index_Name, Table_Owner, Table_Name, Num_Rows, Last_Analyzed, Uniqueness, Index_Type, Tablespace_Name, Prefix_Length, Compression, Distinct_Keys, Partitioned
+                                     FROM   DBA_Indexes
+                                     WHERE  Owner NOT IN (SELECT /*+ NO_MERGE */ UserName FROM All_Users WHERE Oracle_Maintained = 'Y')
+                                    ),
+                         Ind_Columns AS        (SELECT /*+ NO_MERGE MATERIALIZE */ Index_Owner, Index_Name, Table_Owner, Table_Name, Column_name, Column_Position, Column_Length
+                                                FROM DBA_Ind_Columns
+                                                WHERE  Index_Owner NOT IN (SELECT /*+ NO_MERGE */ UserName FROM All_Users WHERE Oracle_Maintained = 'Y')
+                                               ),
+                         Ind_Columns_Group AS  (SELECT /*+ NO_MERGE MATERIALIZE */ Index_Owner, Index_Name,
+                                                       LISTAGG(Column_name, ', ') WITHIN GROUP (ORDER BY Column_Position) Columns
+                                                FROM   Ind_Columns
+                                                GROUP BY Index_Owner, Index_Name),
+                         Cons_Columns AS       (SELECT /*+ NO_MERGE MATERIALIZE */ Owner, Table_Name, Column_name, Position, Constraint_Name, COUNT(*) OVER (PARTITION BY Owner, Table_Name, Constraint_Name) Column_Count
+                                                FROM DBA_Cons_Columns
+                                                WHERE  Owner NOT IN (SELECT /*+ NO_MERGE */ UserName FROM All_Users WHERE Oracle_Maintained = 'Y')
+                                               ),
+                         Tables AS             (SELECT /*+ NO_MERGE MATERIALIZE */  Owner, Table_Name, Num_Rows, Last_analyzed, IOT_Type, Partitioned
+                                                FROM DBA_Tables
+                                                WHERE  Owner NOT IN (SELECT /*+ NO_MERGE */ UserName FROM All_Users WHERE Oracle_Maintained = 'Y')
+                                               ),
+                         Tab_Modifications AS  (SELECT /*+ NO_MERGE MATERIALIZE */  Table_Owner, Table_Name, Inserts, Updates, Deletes
+                                                FROM DBA_Tab_Modifications
+                                                WHERE Partition_Name IS NULL /* Summe der Partitionen wird noch einmal als Einzel-Zeile ausgewiesen */
+                                                AND   Table_Owner NOT IN (SELECT /*+ NO_MERGE */ UserName FROM All_Users WHERE Oracle_Maintained = 'Y')
+                                               ),
+                         PE_Tables AS (SELECT /*+ NO_MERGE MATERIALIZE */ tc.Owner, tc.Table_Name, COUNT(*) Columns,
+                                              SUM(ORA_HASH(tc.Data_Type) * tc.Column_ID * tc.Data_Length *
+                                              NVL(tc.Data_Precision,1) * NVL(DECODE(tc.Data_Scale, 0, -1, tc.Data_Scale),1)) Structure_Hash
+                                       FROM   DBA_Tab_Columns tc
+                                       JOIN   Tables t ON t.Owner = tc.Owner AND t.Table_Name = tc.Table_Name /* exclude views */
+                                       WHERE  tc.Owner NOT IN (SELECT /*+ NO_MERGE */ UserName FROM All_Users WHERE Oracle_Maintained = 'Y')
+                                       GROUP BY tc.Owner, tc.Table_Name
+                                      ),
+                         PE_Part_Tables AS (SELECT /*+ NO_MERGE MATERIALIZE */ t.Owner, t.Table_Name, t.Partitioned
+                                            FROM   Tables t
+                                            WHERE  t.Partitioned = 'YES'
+                                            AND NOT EXISTS (SELECT 1 FROM Indexes i WHERE i.Table_Owner = t.Owner AND i.Table_Name = t.Table_Name AND i.Partitioned = 'NO')
+                                           ),
+                         PE_Indexes as (SELECT /*+ NO_MERGE MATERIALIZE */ Table_Owner, Table_Name, COUNT(DISTINCT Index_Name) Indexes, COUNT(*) Ind_Columns,
+                                               SUM(Column_Position * Column_Length ) Structure_Hash
+                                        FROM   Ind_Columns ic
+                                        WHERE  Table_Owner NOT IN (SELECT /*+ NO_MERGE */ UserName FROM All_Users WHERE Oracle_Maintained = 'Y')
+                                        GROUP BY Table_Owner, Table_Name
+                                       ),
+                         PE_Result_Tables AS (SELECT /*+ NO_MERGE MATERIALIZE */ t.Owner, t.Table_Name,
+                                                     t.Structure_Hash Table_Structure_Hash,
+                                                     i.Structure_Hash Index_Structure_Hash,
+                                                     t.Columns, i.Indexes, i.Ind_Columns,
+                                                     dt.Partitioned
+                                              FROM PE_Tables t
+                                              LEFT OUTER JOIN PE_Part_Tables dt ON dt.Owner = t.Owner AND dt.Table_Name = t.Table_Name
+                                              LEFT OUTER JOIN PE_Indexes i ON i.Table_Owner = t.Owner AND i.Table_Name = t.Table_Name
+                                             ),
+                         PE_Candidates AS (
+                                            SELECT /*+ ORDERED NO_MERGE MATERIALIZE */ t.Owner, t.Table_Name
+                                            FROM   (
+                                                    SELECT Table_Structure_Hash, Index_Structure_Hash, Columns, Indexes, Ind_Columns
+                                                    FROM   PE_Result_Tables
+                                                    GROUP BY Table_Structure_Hash, Index_Structure_Hash, Columns, Indexes, Ind_Columns
+                                                    HAVING COUNT(Partitioned) > 0               /* at least one of the matching tables is partitioned */
+                                                    AND    COUNT(Partitioned) < COUNT(*)        /* not all tables are partitioned */
+                                                   ) p
+                                            JOIN   PE_Result_Tables t ON t.Table_Structure_Hash  = p.Table_Structure_Hash
+                                                                     AND t.Index_Structure_Hash  = p.Index_Structure_Hash
+                                                                     AND t.Columns               = p.Columns
+                                                                     AND t.Indexes               = p.Indexes
+                                                                     AND t.Ind_Columns           = p.Ind_Columns
+                                           ),
+                         I_Object_Usage AS (
+
+                            SELECT /*+ NO_MERGE MATERIALIZE */ ou.Owner, ou.Index_Name, ou.Table_Name, ou.Monitoring, ou.Used,
+                                   TO_DATE(ou.Start_Monitoring, 'MM/DD/YYYY HH24:MI:SS') "Start monitoring",
+                                   TO_DATE(ou.End_Monitoring, 'MM/DD/YYYY HH24:MI:SS')   "End monitoring"
+                            FROM   DBA_Object_Usage ou
+                            CROSS JOIN (SELECT UPPER(:P1) Name FROM DUAL) schema
+                            WHERE  TO_DATE(ou.Start_Monitoring, 'MM/DD/YYYY HH24:MI:SS') < SYSDATE-:P2
+                            AND    (schema.name IS NULL OR schema.Name = ou.Owner)
+                            AND    ou.Used='NO' AND ou.Monitoring='YES'
+                               ),
+                    Protected_FKs AS (SELECT /*+ NO_MERGE MATERIALIZE LEADING(fk c rc rt m) USE_HASH(fk c rc rt m) */ fk.Index_Owner, fk.Index_Name, fk.Constraint_Owner, fk.Constraint_Name,
+                                             rc.Owner r_Owner, rt.Table_Name r_Table_Name, rt.Num_rows r_Num_rows, rt.Last_Analyzed r_Last_analyzed, m.Inserts, m.Updates, m.Deletes
+                                      FROM   (SELECT /*+ NO_MERGE */ ic.Index_Owner, ic.Index_Name, cc.Owner Constraint_Owner, cc.Constraint_Name
+                                              FROM   Cons_Columns cc
+                                              LEFT OUTER JOIN Ind_Columns ic ON ic.Table_Owner = cc.Owner  AND ic.Table_Name = cc.Table_Name AND ic.Column_Name = cc.Column_Name
+                                              GROUP BY ic.Index_Owner, ic.Index_Name, cc.Owner, cc.Constraint_Name
+                                              HAVING COUNT(*) = COUNT(DISTINCT ic.Column_Name) /* First columns of index match constraint columns */
+                                              AND MAX(cc.Position) = MAX(ic.Column_Position)  /* all matching columns of an index are starting from left without gaps */
+                                             ) fk
+                                      JOIN   Constraints c     ON c.Owner = fk.Constraint_Owner AND c.Constraint_Name = fk.Constraint_Name AND c.Constraint_Type = 'R'
+                                      JOIN   Constraints rc    ON rc.Owner = c.R_Owner AND rc.Constraint_Name = c.R_Constraint_Name
+                                      JOIN   Tables rt         ON rt.Owner = rc.Owner AND rt.Table_Name = rc.Table_Name
+                                      LEFT OUTER JOIN Tab_Modifications m ON m.Table_Owner = rc.Owner AND m.Table_Name = rc.Table_Name
+                                     )
+                    SELECT /*+ NOPARALLEL USE_HASH(u i t ic icg fk uc c seg pec) OPT_PARAM('_bloom_filter_enabled' 'false') */ u.Owner, u.Table_Name, u.Index_Name,
+                           icg.Columns                                                                "Index Columns",
+                           u."Start monitoring",
+                           ROUND(NVL(u."End monitoring", SYSDATE)-u."Start monitoring", 1) "Days without usage",
+                           i.Num_Rows "Num. rows", i.Distinct_Keys "Distinct keys",
+                           CASE WHEN i.Distinct_Keys IS NULL OR  i.Distinct_Keys = 0 THEN NULL ELSE ROUND(i.Num_Rows/i.Distinct_Keys) END "Avg. rows per key",
+                           i.Compression||CASE WHEN i.Compression = 'ENABLED' THEN ' ('||i.Prefix_Length||')' END Compression,
+                           seg.MBytes,
+                           i.Uniqueness||CASE WHEN i.Uniqueness != 'UNIQUE' AND uc.Constraint_Name IS NOT NULL THEN ' enforcing '||uc.Constraint_Name END Uniqueness,
+                           fk.Constraint_Name                                                         "Foreign key protection",
+                           CASE WHEN fk.r_Table_Name IS NOT NULL THEN LOWER(fk.r_Owner)||'. '||fk.r_Table_Name END  "Referenced table",
+                           fk.r_Num_Rows                                                              "Num rows of referenced table",
+                           fk.r_Last_analyzed                                                         "Last analyze referenced table",
+                           fk.Inserts                                                                 "Inserts on ref. since anal.",
+                           fk.Updates                                                                 "Updates on ref. since anal.",
+                           fk.Deletes                                                                 "Deletes on ref. since anal.",
+                           CASE WHEN pec.Table_Name IS NOT NULL THEN 'Y' END                          "Partition exchange possible",
+                           seg.Tablespace_Name                                                        "Tablespace",
+                           u."End monitoring",
+                           i.Index_Type,
+                           t.IOT_Type                                                                 "IOT Type"
+                    FROM   I_Object_Usage u
+                    JOIN Indexes i                        ON i.Owner = u.Owner AND i.Index_Name = u.Index_Name AND i.Table_Name=u.Table_Name
+                    JOIN Tables t                         ON t.Owner = i.Table_Owner AND t.Table_Name = i.Table_Name
+                    LEFT OUTER JOIN Ind_Columns_Group icg ON icg.Index_Owner = u.Owner AND icg.Index_Name = u.Index_Name
+                    /* Indexes used for protection of FOREIGN KEY constraints */
+                    LEFT OUTER JOIN Protected_FKs fk      ON fk.Index_Owner = i.Owner AND fk.Index_Name = i.Index_Name
+                    /* Indexes used for enforcement of UNIQUE or PRIMARY KEY constraints */
+                    LEFT OUTER JOIN (SELECT /*+ NO_MERGE USE_HASH(cc c ic) */ ic.Index_Owner, ic.Index_Name, c.Constraint_Name
+                                     FROM   Cons_Columns cc
+                                     JOIN   Constraints c   ON c.Owner = cc.Owner AND c.Constraint_Name = cc.Constraint_Name AND c.Constraint_Type IN ('U', 'P')
+                                     JOIN Ind_Columns ic ON ic.Table_Owner = cc.Owner AND ic.Table_Name = cc.Table_Name  AND ic.Column_Name = cc.Column_Name /* Position of column in index does not matter for constraint */
+                                     GROUP BY ic.Index_Owner, ic.Index_Name, c.Constraint_Name
+                                     HAVING COUNT(DISTINCT ic.Column_Name) = MAX(cc.Column_Count) /* All constraint columns are covered by index columns, index may have additional columns */
+                                     AND    MAX(ic.Column_Position) = MAX(cc.Column_Count)               /* All additional columns of index are right from contraint columns */
+                                    ) uc ON uc.Index_Owner = u.Owner AND uc.Index_Name = u.Index_Name
+                    JOIN (SELECT /*+ NO_MERGE */ Owner, Segment_Name, ROUND(SUM(bytes)/(1024*1024),1) MBytes,
+                                 CASE WHEN COUNT(DISTINCT TableSpace_Name) > 1 THEN '< '||COUNT(DISTINCT TableSpace_Name)||' different >' ELSE MIN(TableSpace_Name) END TableSpace_Name
+                          FROM   DBA_Segments
+                          GROUP BY Owner, Segment_Name
+                          HAVING SUM(bytes)/(1024*1024) > :P3
+                         ) seg ON seg.Owner = u.Owner AND seg.Segment_Name = u.Index_Name
+                    LEFT OUTER JOIN PE_Candidates pec ON pec.Owner = i.Table_Owner AND pec.Table_Name = i.Table_Name
+                    CROSS JOIN (SELECT :P4 value FROM DUAL) Max_DML
+                    WHERE (fk.r_Num_Rows IS NULL OR fk.r_Num_Rows < :P5)
+                    AND   (:P6 = 'YES' OR i.Uniqueness != 'UNIQUE')
+                    AND   (Max_DML.Value IS NULL OR NVL(fk.Inserts + fk.Updates + fk.Deletes, 0) < Max_DML.Value)
+                    ORDER BY seg.MBytes DESC NULLS LAST
+                   </pre><div>Parameter :P1: List only indexes for this schema (optional)</div><div>Parameter :P2: Minumin age in days of Start-Monitoring timestamp of unused index</div><div>Parameter :P3: Minumin size of index in MB to be considered in selection</div><div>Parameter :P4: Maximum number of DML-operations (Inserts + Updates + Deletes) on referenced table since last analyze (optional, may be empty)</div><div>Parameter :P5: Maximum number rows in referenced table for consideration in selection.
+(to prevent from long running deletes if housekeeping of referenced table occurs)</div><div>Parameter :P6: Unique indexes are needed for uniqueness even if they are not used</div>

@@ -1,0 +1,12 @@
+<h3>Long running full table scans caused by IS NULL selection</h3>
+Selections with IS NULL in WHERE-condition often lead to fall table scan, although there are less NULL-Records to select.<br/>
+Solution can be: indexing of column accessed by IS NULL with function based index which also contains records with NUL value and usage of function expression in select instead of IS NULL.<br/>
+Example: Indexing with NVL(Column,0)<pre style='background-color: #FFFFCC;'>SELECT p.Inst_ID, p.SQL_ID, MIN(h.Sample_Time) First_Occurrence, MAX(h.Sample_Time) Last_Occurrence, COUNT(*) Wait_Time_Secs,
+                             p.Plan_Hash_Value, p.Operation, p.Options, p.Object_Type, p.Object_Owner, p.Object_Name, p.Filter_Predicates
+                      FROM   gv$SQL_Plan p
+                      JOIN   gv$Active_Session_History h ON h.SQL_ID=p.SQL_ID AND h.Inst_ID=p.Inst_ID AND h.SQL_Plan_Hash_Value = p.Plan_Hash_Value AND h.SQL_Plan_Line_ID=p.ID
+                      WHERE  UPPER(Filter_Predicates) LIKE '%IS NULL%'
+                      AND    Options LIKE '%FULL'
+                      GROUP BY p.Inst_ID, p.SQL_ID, p.Plan_Hash_Value, p.Operation, p.Options, p.Object_Type, p.Object_Owner, p.Object_Name, p.Filter_Predicates
+                      ORDER BY COUNT(*) DESC
+             </pre>

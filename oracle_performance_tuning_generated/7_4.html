@@ -1,0 +1,44 @@
+<h3>Objekt statistics: Check on up-to-date analyze info (Indexes)</h3>
+Sufficient up-to-date object statistics should exist for cost-based optimizers<pre style='background-color: #FFFFCC;'>SELECT CASE
+         WHEN Last_Analyzed IS NULL                       THEN 'Object never analyzed'
+         WHEN Last_Analyzed < SYSDATE-d.Min_Age           THEN 'Last analyzed too old'
+         WHEN x.Num_Rows = 0 AND x.MBytes > d.Min_MBytes  THEN 'Size does not match with rows=0'
+       END Possible_Problem,
+       x.*
+FROM   (
+        SELECT i.Owner, i.Table_Name, i.Index_Name, NULL Partition_Name, NULL SubPartition_Name, i.Num_Rows, i.Last_Analyzed,
+               ROUND(s.MBytes,2) MBytes
+        FROM   DBA_Indexes i
+        JOIN   DBA_Tables t ON t.Owner = i.Table_Owner AND t.Table_Name = i.Table_Name
+        LEFT OUTER JOIN (SELECT /*+ NO_MERGE */ Owner, Segment_Name, SUM(Bytes)/(1024*1024) MBytes
+                         FROM   DBA_Segments
+                         GROUP BY Owner, Segment_Name
+                        ) s ON s.Owner = i.Owner AND s.Segment_Name = i.Index_Name
+        WHERE  t.Temporary = 'N'
+        UNION ALL
+        SELECT ip.Index_Owner Owner, i.Table_Name, ip.Index_Name, ip.Partition_Name, NULL SubPartition_Name, ip.Num_Rows, ip.Last_Analyzed,
+               ROUND(s.MBytes,2) MBytes
+        FROM   DBA_Ind_Partitions ip
+        JOIN   DBA_Indexes i ON i.Owner = ip.Index_Owner AND i.Index_Name = ip.Index_Name
+        LEFT OUTER JOIN (SELECT /*+ NO_MERGE */ Owner, Segment_Name, Partition_Name, SUM(Bytes)/(1024*1024) MBytes
+                         FROM   DBA_Segments
+                         GROUP BY Owner, Segment_Name, Partition_Name
+                        ) s ON s.Owner = ip.Index_Owner AND s.Segment_Name = ip.Index_Name AND s.Partition_Name = ip.Partition_Name
+        UNION ALL
+        SELECT ip.Index_Owner Owner, i.Table_Name, ip.Index_Name, ip.Partition_Name, ip.SubPartition_Name, ip.Num_Rows, ip.Last_Analyzed,
+               ROUND(s.MBytes,2) MBytes
+        FROM   DBA_Ind_SubPartitions ip
+        JOIN   DBA_Indexes i ON i.Owner = ip.Index_Owner AND i.Index_Name = ip.Index_Name
+        LEFT OUTER JOIN (SELECT /*+ NO_MERGE */ Owner, Segment_Name, Partition_Name, SUM(Bytes)/(1024*1024) MBytes
+                         FROM   DBA_Segments
+                         GROUP BY Owner, Segment_Name, Partition_Name
+                        ) s ON s.Owner = ip.Index_Owner AND s.Segment_Name = ip.Index_Name AND s.Partition_Name = ip.SubPartition_Name
+       ) x
+CROSS JOIN (SELECT :P1 Min_Age, :P2 Min_Mbytes FROM DUAL) d
+WHERE  x.Owner NOT IN (SELECT /*+ NO_MERGE */ UserName FROM All_Users WHERE Oracle_Maintained = 'Y')
+AND   (   Last_Analyzed IS NULL
+       OR Last_Analyzed < SYSDATE-d.Min_Age
+       OR (x.Num_Rows = 0 AND x.MBytes > d.Min_MBytes)
+      )
+ORDER BY x.MBytes DESC NULLS LAST
+                    </pre><div>Parameter :P1: If analyze info exists: minimun age for consideration in selection</div><div>Parameter :P2: Minimum size of object in MB for check if num_rows=0 matches with size of object</div>

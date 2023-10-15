@@ -1,0 +1,45 @@
+<h3>Coverage of foreign-key relations by indexes (detection of potentially unnecessary indexes)</h3>
+Protection of existing foreign key constraint by index on referencing column may be unnecessary if:<br/>
+- there are no physical deletes on referenced table<br/>
+- full table scan on referencing table is acceptable during delete on referenced table<br/>
+- possible shared lock issues on referencing table due to not existing index are no problem<br/>
+Especially for references from large tables to small master data tables often there's no use for the effort of indexing referencing column.<br/>
+Due to the poor selectivity such indexes are mostly not useful for access optimization.<pre style='background-color: #FFFFCC;'>WITH Constraints AS (SELECT /*+ NO_MERGE MATERIALIZE */ Owner, Table_Name , Constraint_Name, Constraint_Type, R_Owner, R_Constraint_Name, Index_Name
+                     FROM   DBA_Constraints
+                     WHERE  Constraint_Type IN ('R', 'P', 'U')
+                     AND    Owner NOT IN (SELECT /*+ NO_MERGE */ UserName FROM All_Users WHERE Oracle_Maintained = 'Y')
+                    )
+                    SELECT /* DB-Tools Ramm Unnecessary index on Ref-Constraint*/
+                           ri.Owner, ri.Table_Name, ri.Index_Name, ri.Rows_Origin "No. of rows origin", s.Size_MB "Size of Index in MB", p.Constraint_Name, ri.Column_Name,
+                           ri.Position, pi.Table_Name Target_Table, pi.Index_Name Target_Index, pi.Num_Rows "No. of rows target", ri.No_of_Referencing_FK "No. of referencing fk"
+                    FROM   (SELECT /*+ NO_MERGE */
+                                   r.Owner, r.Table_Name, r.Constraint_Name, rc.Column_Name, rc.Position, ric.Index_Name,
+                                   r.R_Owner, r.R_Constraint_Name, ri.Num_Rows Rows_Origin
+                            FROM   Constraints r
+                            JOIN   DBA_Cons_Columns rc  ON rc.Owner            = r.Owner            /* Columns of foreign key */
+                                                       AND rc.Constraint_Name  = r.Constraint_Name
+                            JOIN   DBA_Ind_Columns ric  ON ric.Table_Owner     = r.Owner            /* matching columns of an index */
+                                                       AND ric.Table_Name      = r.Table_Name
+                                                       AND ric.Column_Name     = rc.Column_Name
+                                                       AND ric.Column_Position = rc.Position
+                            JOIN   DBA_Indexes ri       ON ri.Owner            = ric.Index_Owner
+                                                       AND ri.Index_Name       = ric.Index_Name
+                            WHERE  r.Constraint_Type  = 'R'
+                           ) ri                      -- Indizierte Foreign Key-Constraints
+                    JOIN   Constraints p   ON p.Owner            = ri.R_Owner                   /* referenced PKey-Constraint */
+                                          AND p.Constraint_Name  = ri.R_Constraint_Name
+                    JOIN   DBA_Indexes     pi  ON pi.Owner           = p.Owner
+                                              AND pi.Index_Name      = p.Index_Name
+                    JOIN   (SELECT /*+ NO_MERGE */ r_Owner, r_Constraint_Name, COUNT(*) No_of_Referencing_FK /* Limit fk-target to max. x referencing tables */
+                            FROM   Constraints
+                            WHERE  Constraint_Type = 'R'
+                            GROUP BY r_Owner, r_Constraint_Name
+                           ) ri ON ri.r_owner = p.Owner AND ri.R_Constraint_Name=p.Constraint_Name
+                    LEFT OUTER JOIN (SELECT /*+ NO_MERGE */ Owner, Segment_Name, ROUND(SUM(Bytes)/(1024*1024)) Size_MB
+                                     FROM   DBA_Segments
+                                     WHERE  Segment_Type LIKE 'INDEX%'
+                                     GROUP BY Owner, Segment_Name
+                                    ) s ON s.Owner = ri.Owner AND s.Segment_Name = ri.Index_Name
+                    WHERE  pi.Num_Rows < :P1                                                          /* Limit to small referenced tables */
+                    AND    ri.Rows_Origin > :P2                                                       /* Limit to huge referencing tables */
+                    ORDER BY Rows_Origin DESC NULLS LAST</pre><div>Parameter :P1: Max. number of rows in referenced table</div><div>Parameter :P2: Minimun number of rows in referencing table</div>

@@ -1,0 +1,26 @@
+<h3>Concurrency on memory: sqeezing out in shared pool</h3>
+This view lists objects which squeezed out others from shared pool to get place.<br/>
+While selecting this view it's contents in SGA will be deleted. That means, this view shows replacement since the last execution of this view (only one time).<br/>
+Value for 'No. Items flushed from shared pool' from 7..8 is normal, higher values indicate problems to find place in shared pool.<br/>
+Role DBA is required to execute this selection.<br/>
+<pre style='background-color: #FFFFCC;'>SELECT /* DB-Tools Ramm  Verdreaengung Shared Pool */
+                         RAWTOHEX(Addr)         "row-address in array or SGA",
+                         Indx         "index in fixed table array",
+                         Inst_ID      "Instance",
+                         KsmLrIdx,
+                         KsmLrDur,
+                         KsmLrShrPool,
+                         KsmLrCom     "Type of allocation",
+                         KsmLrSiz     "Size of Allocation in Bytes",
+                         KsmLrNum     "No. items flushed from sh.pool",
+                         KsmLrHon     "Name of object beeing loaded",
+                         KsmLrOHV     "HashValue of object",
+                         RAWTOHEX(KsmLrSes)     "Session Raw (V$Session.SAddr)",
+                         KsmLrADU,
+                         KsmLRNID,
+                         KSMLRNsd,
+                         KSMLRNcd,
+                         KsmLRNed
+                  FROM   x$ksmlru
+                  WHERE  ksmlrnum>0
+                  ORDER BY KsmLrNum DESC NULLS LAST</pre>

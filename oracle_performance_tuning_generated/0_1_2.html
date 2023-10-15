@@ -1,0 +1,42 @@
+<h3>Detection of indexes with multiple indexed columns</h3>
+This selection looks for indexes where one index indexes a subset of the columns of the other index, both starting with the same columns.<br/>
+The purpose of the index with the smaller column set can regularly be covered by the second index with the larger column set (including protection of foreign key constraints).<br/>
+So the first index often can be dropped without loss of function.<br/>
+The effect of less indexes to maintain and less objects in database cache with better cache hit rate for the remaining objects in cache is mostly higher rated than the possible overhead of using range scan on index with larger column set.<br/>
+<br/>
+If the index with the smaller column set ensures uniqueness, than an unique constraint with this column set based on the second index with the larger column set can also cover this task.<br/>
+<pre style='background-color: #FFFFCC;'>
+WITH Ind_Cols AS (SELECT /*+ NO_MERGE MATERIALIZE */ Index_Owner, Index_Name, Listagg(Column_Name, ',') WITHIN GROUP (ORDER BY Column_Position) Columns
+                  FROM   DBA_Ind_Columns
+                  WHERE  Index_Owner NOT IN (SELECT /*+ NO_MERGE */ UserName FROM All_Users WHERE Oracle_Maintained = 'Y')
+                  GROUP BY Index_Owner, Index_Name
+                 ),
+     Indexes AS (SELECT /*+ NO_MERGE MATERIALIZE */ Owner, Index_Name, Table_Owner, Table_Name, Num_Rows, Uniqueness
+                 FROM   DBA_Indexes
+                 WHERE  OWNER NOT IN (SELECT /*+ NO_MERGE */ UserName FROM All_Users WHERE Oracle_Maintained = 'Y')
+                ),
+     IndexFull AS (SELECT /*+ NO_MERGE MATERIALIZE */ i.Owner, i.Index_Name, i.Table_Owner, i.Table_Name, i.Num_Rows, i.Uniqueness, ic.Columns
+                   FROM   Indexes i
+                   JOIN   Ind_Cols ic  ON ic.Index_Owner = i.Owner AND ic.Index_Name = i.Index_Name
+                  ),
+     Segments AS (SELECT /*+ NO_MERGE MATERIALIZE */ Owner, Segment_Name, SUM(Bytes)/(1024*1024) MBytes
+                  FROM   DBA_Segments
+                  WHERE  Owner NOT IN (SELECT /*+ NO_MERGE */ UserName FROM All_Users WHERE Oracle_Maintained = 'Y')
+                  GROUP BY Owner, Segment_Name
+                 ),
+     Constraints AS (SELECT  /*+ NO_MERGE MATERIALIZE */ Owner, Table_Name, Index_Name, Constraint_Name FROM DBA_Constraints WHERE Index_Name IS NOT NULL AND Owner NOT IN (SELECT /*+ NO_MERGE */ UserName FROM All_Users WHERE Oracle_Maintained = 'Y'))
+SELECT x.*, ROUND(s.MBytes, 2) Size_MB_Index1, c.Constraint_Name "Constr. Enforcement by idx1"
+FROM   (
+        SELECT i1.owner, i1.Table_Owner, i1.Table_Name,
+               i1.Index_Name Index_1, i1.Columns Columns_1, i1.Num_Rows Num_Rows_1, i1.Uniqueness Uniqueness_1,
+               i2.Index_Name Index_2, i2.Columns Columns_2, i2.Num_Rows Num_Rows_2, i2.Uniqueness Uniqueness_2
+        FROM   IndexFull i1
+        JOIN   IndexFull i2 ON i2.Table_Owner = i1.Table_Owner AND i2.Table_Name = i1.Table_Name
+        WHERE  i1.Index_Name != i2.Index_Name
+        AND    i2.Columns LIKE i1.Columns || ',%' /* Columns of i1 are already indexed by i2 */
+        AND    i1.Num_Rows > :P1
+       ) x
+LEFT OUTER JOIN Constraints c ON c.Owner = x.Table_Owner AND c.Table_Name = x.Table_Name AND c.Index_Name = x.Index_1
+LEFT OUTER JOIN segments s    ON s.Owner = x.Owner AND s.Segment_Name = x.Index_1
+ORDER BY s.MBytes DESC NULLS LAST
+            </pre><div>Parameter :P1: Minimum number of rows of index for consideration in result</div>

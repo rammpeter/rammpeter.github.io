@@ -1,0 +1,44 @@
+<h3>Active parallel query slave (PQ) sessions from Active Session History (ASH)</h3>
+This selection shows the number of active sessions from PQ servers<pre style='background-color: #FFFFCC;'>SELECT x.*, u.UserName Max_UserName
+FROM   (SELECT Start_Sample, MIN(Min_Sessions) Min_active_PQ_Sessions, MAX(Max_Sessions) Max_active_PQ_Sessions,
+               MAX(Max_SQL_ID)  KEEP (DENSE_RANK LAST ORDER BY Max_SQLID_User_Sessions) Max_SQL_ID,
+               MAX(Max_User_ID) KEEP (DENSE_RANK LAST ORDER BY Max_SQLID_User_Sessions) Max_User_ID,
+               MAX(Max_SQLID_User_Sessions) Max_SQLID_User_Sessions
+        FROM   (
+                SELECT Sample_Time, TRUNC(Sample_Time, :P1) Start_Sample, SUM(Sessions) Min_Sessions, SUM(Sessions) Max_Sessions,
+                       MAX(SQL_ID)  KEEP (DENSE_RANK LAST ORDER BY Sessions) Max_SQL_ID,
+                       MAX(User_ID) KEEP (DENSE_RANK LAST ORDER BY Sessions) Max_User_ID,
+                       MAX(Sessions) Max_SQLID_User_Sessions
+                FROM   (
+                        SELECT Instance_Number, Sample_Time, SQL_ID, User_ID, COUNT(*) Sessions
+                        FROM   (
+                                WITH ASH_Time AS (SELECT /*+ NO_MERGE MATERIALIZE */ i.Inst_ID, NVL(Min_Sample_Time, SYSTIMESTAMP) Min_Sample_Time
+                                                  FROM   gv$Instance i
+                                                  LEFT OUTER JOIN (SELECT Inst_ID, MIN(Sample_Time) Min_Sample_Time
+                                                                   FROM gv$Active_Session_History
+                                                                   GROUP BY Inst_ID
+                                                                  ) ash ON ash.Inst_ID = i.Inst_ID
+                                                 )
+                                SELECT /*+ NO_MERGE ORDERED */
+                                       Instance_Number, Sample_Time, SQL_ID, User_ID
+                                FROM   DBA_Hist_Active_Sess_History s
+                                WHERE  s.Sample_Time < (SELECT Min_Sample_Time FROM Ash_Time a WHERE a.Inst_ID = s.Instance_Number)  /* Nur Daten lesen, die nicht in gv$Active_Session_History vorkommen */
+                                AND    DBID = (SELECT DBID FROM v$Database) /* Suppress multiple occurrence of records in PDB environment */
+                                AND    QC_SESSION_ID IS NOT NULL
+                                AND    s.DBID = &your_DBID  /* do not count multiple times for multipe different DBIDs/ConIDs */
+                                UNION ALL
+                                SELECT Inst_ID Instance_Number, Sample_Time, SQL_ID, User_ID
+                                FROM gv$Active_Session_History
+                                WHERE  QC_SESSION_ID IS NOT NULL
+                               )
+                        GROUP BY Instance_Number, Sample_Time, SQL_ID, User_ID
+                       ) h
+                CROSS JOIN (SELECT :P2 Instance_Number FROM DUAL) d
+                WHERE  Sample_Time > SYSDATE - :P3
+                AND    (d.Instance_Number IS NULL OR h.Instance_Number = d.Instance_Number)
+                GROUP BY Sample_Time
+               )
+        GROUP BY Start_Sample
+       ) x
+LEFT OUTER JOIN All_Users u ON u.User_ID = x.Max_User_ID
+ORDER BY 1</pre><div>Parameter :P1: Format-picture of TRUNC function (DD=day, HH24=hour, MI=minute etc.)</div><div>Parameter :P2: RAC instance number to reduce result to one instance</div><div>Parameter :P3: Number of days in history backward from now for consideration</div>
