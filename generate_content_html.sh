@@ -1,13 +1,13 @@
 # Generate content page
 
-if [ -d Panorama_Gem ]; then
+if [ -d panorama ]; then
   (
     # Refresh existing git repository
-    cd Panorama_Gem
+    cd panorama
     git pull
   )
 else
-  git clone https://github.com/rammpeter/Panorama_Gem
+  git clone https://github.com/rammpeter/panorama
 fi
 
 ruby generate_content_html.rb

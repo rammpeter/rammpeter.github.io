@@ -1,6 +1,6 @@
 #!/usr/bin/ruby
 
-$LOAD_PATH << 'Panorama_Gem/app/helpers'
+$LOAD_PATH << 'panorama/app/helpers'
 
 require 'menu_extension_helper.rb'
 require 'menu_helper.rb'

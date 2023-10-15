@@ -1,12 +1,12 @@
 #!/usr/bin/ruby
 
-$LOAD_PATH << '../Panorama_Gem/app/helpers'
-$LOAD_PATH << '../Panorama_Gem/app/helpers/dragnet'
+$LOAD_PATH << '../panorama/app/helpers'
+$LOAD_PATH << '../panorama/app/helpers/dragnet'
 
 module Dragnet
 end
 
-Dir.foreach("../Panorama_Gem/app/helpers/dragnet") do |fname|
+Dir.foreach("../panorama/app/helpers/dragnet") do |fname|
   next if fname == '.' or fname == '..'
   require "dragnet/#{fname}"
 end

@@ -20,7 +20,7 @@
                     <a href="https://hub.docker.com/r/rammpeter/panorama/" title="Get Panorama as Docker image" target="_blank"><img src="images/docker.png" height="30px"></a>
                     <a href="https://www.slideshare.net/PeterRamm1" title="Show Panorama-tutorials at slideshare.net" target="_blank"><img src="images/slideshare.png" height="30px"></a>
                     <a href="http://158.101.168.240:8080" title="Run Panorama demo at Oracle cloud" target="_blank"><img src="images/play.png" height="30px"></a>
-                    <a href="https://github.com/rammpeter/Panorama" title="Github source code repository" target="_blank"><img src="images/github.png" height="30px"></a>
+                    <a href="https://github.com/rammpeter/panorama" title="Github source code repository" target="_blank"><img src="images/github.png" height="30px"></a>
                 </h1>
                 „Panorama” is my swiss army knife for performance analysis and troubleshooting on Oracle databases.<br/><br/>
                 Completed over many years it contains solutions for analysis workflows based on practical experience.<br/>
@@ -239,8 +239,8 @@
                 <ul>
                     <li>Panorama is an Ruby on Rails application that runs with JRuby. Web resources you can find here:
                         <ul>
-                            <li><a href="https://github.com/rammpeter/Panorama" target="_blank">Source code</a>, last commit is for release <span id="panorama_version"></span> from <span id="panorama_date"></span></li>
-                            <li><a href="https://gitcdn.link/repo/rammpeter/Panorama/master/app/views/help/version_history.html" target="_blank">Version history</a></li>
+                            <li><a href="https://github.com/rammpeter/panorama" target="_blank">Source code</a>, last commit is for release <span id="panorama_version"></span> from <span id="panorama_date"></span></li>
+                            <li><a href="https://gitcdn.link/repo/rammpeter/panorama/master/app/views/help/version_history.html" target="_blank">Version history</a></li>
                         </ul>
                     </li>
                     <li>If you use <pre style="display: inline;">tnsnames.ora</pre> for TNS name resolution it should be located at server site in <pre style="display: inline;">$ORACLE_HOME/network/admin</pre> or in a directory targeted by environment variable <pre style="display: inline;">TNS_ADMIN</pre>.</li>
@@ -272,7 +272,7 @@
 <script type="text/javascript">
     // Version und Datum ermitteln aus version.rb
     try {
-        $.get("https://github.com/rammpeter/Panorama/raw/master/lib/panorama/version.rb", function( version_html ) {
+        $.get("https://github.com/rammpeter/panorama/raw/master/lib/panorama/version.rb", function( version_html ) {
             var rest = version_html.substring(version_html.indexOf('VERSION =')+11);    // Begin of version in string
             jQuery('#panorama_version').html(rest.substring(0, rest.indexOf("'")));
 
