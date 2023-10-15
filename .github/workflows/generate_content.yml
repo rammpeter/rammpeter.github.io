@@ -36,7 +36,7 @@ jobs:
         run: git status
       - name: git stage
         run: |
-          git stage Oracle_performance_analysis_with_Panorama.html panorama_content_generated.html
+          git stage Oracle_performance_analysis_with_Panorama.html panorama_content_generated.html oracle_performance_tuning_generated/*
       - name: git commit
         run: git commit -m "Auto generating Oracle_performance_analysis_with_Panorama.html and panorama_content_generated.html"
       - name: git push

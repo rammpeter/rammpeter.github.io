@@ -1,5 +1,0 @@
-<h3>Dropped tables in recycle bin</h3>
-Use 'PURGE RECYCLEBIN' to free space of dropped tables from recycle bin<pre style='background-color: #FFFFCC;'>SELECT ROUND(r.Space * t.Block_Size / (1024*1024), 3) Size_MB, r.*
-                    FROM   DBA_RecycleBin r
-                    LEFT OUTER JOIN DBA_Tablespaces t ON t.TableSpace_Name = r.TS_Name
-                    ORDER BY Size_MB DESC NULLS LAST</pre>
