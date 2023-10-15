@@ -18,9 +18,13 @@ jobs:
           gem install --install-dir . asciidoctor
           find . -name asciidoctor
           ./bin/asciidoctor -o Oracle_performance_analysis_with_Panorama.html Oracle_performance_analysis_with_Panorama.adoc
+      - name: Clone panorama repo
+        run: |
+          rm -rf panorama
+          git clone https://github.com/rammpeter/panorama
       - name: Generate menu content
         run: |
-          ./generate_content_html.sh
+          ./generate_content_html.rb
       - name: Generate dragnet content
         run: |
           ./generate_dragnet_html.rb
