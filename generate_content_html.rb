@@ -34,10 +34,15 @@ class Generator
     []
   end
 
+  def admin_jwt_valid?
+    true
+  end
+
   def get_cached_panorama_object_sizes_exists
     true
   end
 
+  # create fake content of module
   module MenuHelper::PanoramaSamplerStructureCheck
     def self.object_sizes_exists?
       true
@@ -45,8 +50,9 @@ class Generator
 
     def self.panorama_table_exists?(table_name)
       true
-    end  
+    end
   end
+
 
   module MenuHelper::EngineConfig
     class Hugo
@@ -57,6 +63,20 @@ class Generator
 
     def self.config
       Hugo.new
+    end
+  end
+
+  module MenuHelper::Panorama
+    module Application
+      # return an anonymous class object with method panorama_master_password
+      def self.config
+        anon_class = Class.new do
+          def panorama_master_password
+            true
+          end
+        end
+        anon_class.new
+      end
     end
   end
 
