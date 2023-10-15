@@ -18,6 +18,9 @@ jobs:
           gem install --install-dir . asciidoctor
           find . -name asciidoctor
           ./bin/asciidoctor -o Oracle_performance_analysis_with_Panorama.html Oracle_performance_analysis_with_Panorama.adoc
+      - name: Generate menu content
+        run: |
+          ./generate_content_html.sh
       - name: git config
         run: |
           git config --global user.email "Peter@ramm-oberhermsdorf.de"
