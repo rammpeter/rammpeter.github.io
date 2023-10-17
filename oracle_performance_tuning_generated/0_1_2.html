@@ -4,7 +4,7 @@ The purpose of the index with the smaller column set can regularly be covered by
 So the first index often can be dropped without loss of function.<br/>
 The effect of less indexes to maintain and less objects in database cache with better cache hit rate for the remaining objects in cache is mostly higher rated than the possible overhead of using range scan on index with larger column set.<br/>
 <br/>
-If the index with the smaller column set ensures uniqueness, than an unique constraint with this column set based on the second index with the larger column set can also cover this task.<br/>
+If the index with the smaller column set ensures uniqueness, then an unique constraint with this column set based on the second index with the larger column set can also cover this task.<br/>
 <pre style='background-color: #FFFFCC;'>
 WITH Ind_Cols AS (SELECT /*+ NO_MERGE MATERIALIZE */ Index_Owner, Index_Name, Listagg(Column_Name, ',') WITHIN GROUP (ORDER BY Column_Position) Columns
                   FROM   DBA_Ind_Columns

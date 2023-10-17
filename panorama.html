@@ -226,11 +226,11 @@
                         </ul>
                         The key can contain all printable characters and should be at least 128 characters long.<br/>
                         Every change of the given key at server side leads to invalidation of all stored connection info.<br/><br/>
-                        If no fixed key is given by <pre style="display: inline;">SECRET_KEY_BASE</pre> or <pre style="display: inline;">SECRET_KEY_BASE_FILE</pre> than a system generated key is used for encryption.<br/>
+                        If no fixed key is given by <pre style="display: inline;">SECRET_KEY_BASE</pre> or <pre style="display: inline;">SECRET_KEY_BASE_FILE</pre> then a system generated key is used for encryption.<br/>
                         This system generated key is stored in the folder declared by <pre style="display: inline;">PANORAMA_VAR_HOME</pre>.
                     </li>
                     <li>
-                        Caution: If you don't set a value for <pre style="display: inline;">PANORAMA_VAR_HOME</pre> than your systems temporary folder is used to store the encyryption key base as well as the saved encrypted login credentials.<br/>
+                        Caution: If you don't set a value for <pre style="display: inline;">PANORAMA_VAR_HOME</pre> then your systems temporary folder is used to store the encyryption key base as well as the saved encrypted login credentials.<br/>
                         That means this information may be lost at OS or container restart!
                     </li>
                 </ul>
@@ -313,7 +313,7 @@
         [ "images/ash-graph_2.jpg",           "Active session history: Context menu function 'Stack single charts' from previous slide allows you to view values for single graphs and sum of all graphs at once." ],
         [ "images/ash-samples.jpg",           "Active session history: Click the link 'number of sample records' to view the single records of active session history selection.<br/>If the number of records is to large to view they will be grouped by hour." ],
         [ "images/ash-temp.jpg",              "Active session history: Click the link 'Max. Temp' or 'Max- PGA' to view the Temp and PGA-usage.<br/>'Grouping' allows you to change the time precision for each row. Click 'Samples' to view the records of selected time for drill down." ],
-        [ "images/ash-sqlid.jpg",             "Active session history: If you group your selection by SQL-ID than you may click the link 'SQL-ID' to evaluate this single SQL wthin your choosen time range.<br/>This allows you to change the scope from active session history to SQL evaluation." ],
+        [ "images/ash-sqlid.jpg",             "Active session history: If you group your selection by SQL-ID then you may click the link 'SQL-ID' to evaluate this single SQL wthin your choosen time range.<br/>This allows you to change the scope from active session history to SQL evaluation." ],
     ]
 
     lightBox_SlideShow("panorama_global", img_urls);
