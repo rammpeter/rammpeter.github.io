@@ -1,6 +1,6 @@
 <h3>Removable indexes if column order of another multi-column index can be changed</h3>
 This selection looks for multi-column indexes with first column with weak selectivity and second column with strong selectivity and another single-column index existing with the same column like the second column of the multi-column index.<br/>
-If column order of the multi-column index can be changed than the additional single-column index may become obsolete.<pre style='background-color: #FFFFCC;'>WITH Indexes AS (SELECT /*+ NO_MERGE MATERIALIZE */ Table_Owner, Table_Name, Owner, Index_Name, Uniqueness, Num_Rows
+If column order of the multi-column index can be changed then the additional single-column index may become obsolete.<pre style='background-color: #FFFFCC;'>WITH Indexes AS (SELECT /*+ NO_MERGE MATERIALIZE */ Table_Owner, Table_Name, Owner, Index_Name, Uniqueness, Num_Rows
                                      FROM   DBA_Indexes
                                     ),
                          Ind_Columns AS (SELECT /*+ NO_MERGE MATERIALIZE */ ic.Index_Owner, ic.Index_Name, ic.Table_Owner, ic.Table_Name, ic.Column_Name, ic.Column_Position, tc.Num_Distinct, tc.Avg_Col_Len
