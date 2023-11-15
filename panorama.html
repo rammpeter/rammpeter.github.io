@@ -5,7 +5,7 @@
         <title>Panorama for Oracle: Performance analysis tool</title>
 
     </head>
-<body onload="window.location = 'https://rammpeter.github.io/index.html?target=panorama';">
+<body nload="window.location = 'https://rammpeter.github.io/index.html?target=panorama';">
 
 <div style="position: relative;" xmlns="http://www.w3.org/1999/html">
     <div class="shadow opaque" style="width:100%; height: 100%; background-color: #99CC99; position:absolute; top:0px; left:0px; z-index:1;">
@@ -25,6 +25,8 @@
                 „Panorama” is my swiss army knife for performance analysis and troubleshooting on Oracle databases.<br/><br/>
                 Completed over many years it contains solutions for analysis workflows based on practical experience.<br/>
                 As a GUI-application it ensures quick reaction with predefined workflows instead off dealing by hand with lots of SQL scripts.
+                <br/><br/>
+                <image src="images/dashboard.png" width="100%"></image>
                 <h2>Content</h2>
                 <ul>
                     <li><a href="#what does it offer">What does Panorama offer?</a></li>
@@ -73,7 +75,7 @@
                     <li>Web browser with ES6-support to access Panorama-GUI (Firefox, Chrome, Safari, Edge)</li>
                     <li>Your Oracle-User used for login with Panorama requires at least the grant SELECT ANY DICTIONARY<br/>
                         Additional grants/privileges are required for some particular functions:
-                        <table  style="border: 1px solid;">
+                        <table  class="border">
                             <tr><th>Grant</th>                  <th>Reason for the grant</th></tr>
                             <tr><td>SELECT ANY DICTIONARY</td>  <td>Default grant for access on DBA_xxx-views. This is the minimum requirement to run Panorama</td></tr>
                             <tr><td>OEM_MONITOR</td>            <td>Starting with Oracle 11.2.0.4 you need this grant to generate Oracle's builtin AWR-reports and ASH-reports</td></tr>
@@ -84,7 +86,7 @@
                         </table>
                     </li>
                     <li>For non-admin users in the autonomous DB in the OCI cloud additional grants are required for some minor functions:
-                        <table style="border: 1px solid;">
+                        <table class="border">
                             <tr><th>Grant</th><th>Resaon for the grant</th></tr>
                             <tr><td>SELECT ON V$DIAG_ALERT_EXT</td><td>Allow read on particular table</td></tr>
                             <tr><td>READ ON SYS.DBMS_LOCK_ALLOCATED</td><td>Allow read access</td></tr>
@@ -147,7 +149,7 @@
 
                 <a name="customize"></a><h3>Options for customizing the Panorama application (Java + Docker)</h3>
                 Environment variables for customization:
-                <table  border="1">
+                <table  class="border">
                     <tr>
                         <td><pre style="display: inline;">MAX_CONNECTION_POOL_SIZE</pre></td>
                         <td>This setting allows you to define the maximum number of connections in Panorama's connection pool<br/>

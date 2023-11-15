@@ -1,5 +1,5 @@
 <h3>Partitioning for expensive access filtered by columns with low number of distinct values</h3>
-If expensive full table access is done with filter conditions then range or list partitioning by one or more of this filter conditions may significantly reduce runtime.<br/>
+If expensive full table access is done with filter conditions than range or list partitioning by one or more of this filter conditions may significantly reduce runtime.<br/>
 Especially with release 12.2 and above automatic list partitioning lets you easy handle the creation of needed partitions without operation effort.<br/>
 Conditions for useful partitioning by these filters are:<br/>
 - The potential partition key should significantly reduce the result (e.g. to less than 3/4 if used as filter condition)<br/>

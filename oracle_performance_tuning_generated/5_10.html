@@ -1,5 +1,5 @@
 <h3>Possibly missing guaranty of uniqueness by unique index or unique / primary key constraint</h3>
-If an implicit expectation for uniqueness of a column exists, then this should be safeguarded by an unique index or unique constraint.<br/>
+If an implicit expectation for uniqueness of a column exists, than this should be safeguarded by an unique index or unique constraint.<br/>
 This list shows all all columns with unique values at the time of last analysis if neither unqiue index nor unique constraint exists for this column.<br/>
             <pre style='background-color: #FFFFCC;'>
 WITH Constraints  AS (SELECT /*+ NO_MERGE MATERIALIZE */ Owner, Constraint_Name, Table_Name, Constraint_Type FROM DBA_Constraints WHERE Constraint_Type IN ('P', 'U')),
