@@ -19,7 +19,7 @@
   "state": { "opened": false }
 , "children": [{
   "id": "0_0_0",
-  "text": "1. Ensure PCTFree >= 10",
+  "text": "1. Check for PCTFree >= 10",
   "state": { "opened": false }
 , "icon":"images/application-monitor.png"},{
   "id": "0_0_1",

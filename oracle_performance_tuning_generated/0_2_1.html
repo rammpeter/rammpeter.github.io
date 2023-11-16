@@ -1,5 +1,5 @@
 <h3>Possibly unnecessary columns of indexes that are also partition keys</h3>
-If partition keys are unique or selective enough for efficient partition pruning, than where is often no need to hold this columns in index in addition.<br/>
+If partition keys are unique or selective enough for efficient partition pruning, then where is often no need to hold this columns in index in addition.<br/>
 Partition pruning e.g. for list partitions is more efficient than B-tree access in index.<br/>
 Removal of this columns from index reduces size of index and also effort for index scan.<br/>
 Exception: For unique indexes this columns have to be part of index nethertheless.<br/>

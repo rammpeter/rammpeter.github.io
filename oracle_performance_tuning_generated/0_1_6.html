@@ -1,6 +1,6 @@
 <h3>Indexes on partitioned tables with same columns like partition keys</h3>
 If an index on partitioned table indexes the same columns like partition key and partitioning itself is selective enough by partition pruning<br/>
-than this index can be removed<pre style='background-color: #FFFFCC;'>SELECT x.Owner, x.Index_Name, x.Table_Owner, x.Table_Name, x.Uniqueness, x.Index_Partitioned, x.Num_Rows, x.Distinct_Keys, x.Partition_Columns, x.Table_Partitions, x.MBytes
+then this index can be removed<pre style='background-color: #FFFFCC;'>SELECT x.Owner, x.Index_Name, x.Table_Owner, x.Table_Name, x.Uniqueness, x.Index_Partitioned, x.Num_Rows, x.Distinct_Keys, x.Partition_Columns, x.Table_Partitions, x.MBytes
                     FROM   (
                             SELECT i.Owner, i.Index_Name, i.Table_Owner, i.Table_Name, i.Uniqueness, i.Partitioned Index_Partitioned, i.Num_Rows, i.Distinct_Keys,
                                    COUNT(DISTINCT pc.Column_Name) Partition_Columns, COUNT(ic.Column_Name) Matching_Index_Columns,
