@@ -266,6 +266,7 @@
                     <li>Panorama renders one single web page via Ajax-calls. This way the back button of your browser is not supported to return to former page content.</li>
                     <li>Panorama writes short usage information to local plain text file 'Usage.log' in the directory targeted by environment variable <pre style="display: inline;">PANORAMA_VAR_HOME</pre><br/>
                         This log records cointain the client IP address, DB name, time, called function and used TNS alias/URL</br>
+                        Setting PANORAMA_USAGE_INFO_MAX_AGE = 0 disables this logging completely.<br/>
                         You can view this log info via <pre style="display: inline;">http://&lt;your&nbsp;server&nbsp;ip&gt;:8080/usage/info</pre>
                     </li>
                     <li>Panorama pools (reuses) DB-connections. You can view pooled connections at Panorama server via <pre style="display: inline;">http://&lt;your&nbsp;server&nbsp;ip&gt;:8080/usage/connection_pool</pre></li>
