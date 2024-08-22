@@ -176,7 +176,10 @@
                     </tr>
                     <tr>
                         <td><pre style="display: inline;">PANORAMA_USAGE_INFO_MAX_AGE</pre></td>
-                        <td>Maximum age in days for logging records in Usage.log to comply with european GDPR rules.</td>
+                        <td>
+                            Maximum age in days for logging records in Usage.log to comply with european GDPR rules.</br>
+                            Set to 0 to completely disable logging into Usage.log.<br/>
+                        </td>
                     </tr>
                     <tr>
                         <td><pre style="display: inline;">PANORAMA_VAR_HOME</pre></td>
@@ -267,7 +270,7 @@
                     <li>Panorama writes short usage information to local plain text file 'Usage.log' in the directory targeted by environment variable <pre style="display: inline;">PANORAMA_VAR_HOME</pre><br/>
                         This log records cointain the client IP address, DB name, time, called function and used TNS alias/URL</br>
                         Setting PANORAMA_USAGE_INFO_MAX_AGE = 0 disables this logging completely.<br/>
-                        You can view this log info via <pre style="display: inline;">http://&lt;your&nbsp;server&nbsp;ip&gt;:8080/usage/info</pre>
+                        You can find a menu item "Usage history" to view this log info if logged in as admin (see PANORAMA_MASTER_PASSWORD)</pre>
                     </li>
                     <li>Panorama pools (reuses) DB-connections. You can view pooled connections at Panorama server via <pre style="display: inline;">http://&lt;your&nbsp;server&nbsp;ip&gt;:8080/usage/connection_pool</pre></li>
                 </ul>
