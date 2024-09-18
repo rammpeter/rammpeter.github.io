@@ -1,0 +1,65 @@
+# Setup VM for panorama-test
+# Run: > ansible-playbook -i inventory.yml playbook_panorama-test.yml --extra-vars "datadog_api_key=<your API key>"
+- hosts: panorama-demo
+
+  vars_prompt:
+
+  tasks:
+    - name: set timezone to Europe/Berlin
+      become: true
+      timezone:
+        name: Europe/Berlin
+
+    - name: Update system
+      become: true
+      yum:
+        name: "*"
+        state: latest
+
+    - name: Install additional tools
+      become: true
+      yum:
+        name:
+          - traceroute
+          - dnf-automatic
+          - rng-tools
+          - git
+        state: latest
+
+    - name: Apply updates by dnf-automatic
+      become: true
+      ansible.builtin.lineinfile:
+        path: /etc/dnf/automatic.conf
+        regexp: '^apply_updates'
+        line: apply_updates = yes
+
+    - name: Enable and start dnf-automatic.timer service
+      become: true
+      service:
+        name: dnf-automatic.timer
+        enabled: yes
+        state: started
+
+    - name: Add the user 'panorama'
+      become: true
+      ansible.builtin.user:
+        name: panorama
+        comment: panorama demo user
+        groups: users
+
+    - name: Install or update sdkman and GraalVM for all users
+      become: 'true'
+      shell: |
+        export SDKMAN_DIR="/usr/local/sdkman" && curl -s "https://get.sdkman.io" | bash
+        source "/usr/local/sdkman/bin/sdkman-init.sh"
+        sdk selfupdate force
+        sdk install java 21-graal
+
+    - name: Source sdkman
+      become: 'true'
+      copy:
+        dest: "/etc/profile.d/sdkman.sh"
+        content: |
+          export SDKMAN_DIR="/usr/local/sdkman"
+          source "/usr/local/sdkman/bin/sdkman-init.sh"
+

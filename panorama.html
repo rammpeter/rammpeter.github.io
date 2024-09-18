@@ -223,9 +223,9 @@
 
                 <a name="security"></a><h2>What about security?</h2>
                 <ul>
-                    <li>For production purposes you should run Panorama with SSL-encrypted web traffic (https). Easiest way for SSL connections is to run Panorama in a configured Tomcat etc. or use Nginx/Apache as reverse proxy.</li>
+                    <li>For production purposes you should run Panorama with SSL-encrypted web traffic (https). Easiest way for SSL connections is to enclose Panorama behind a reverse proxy ( Nginx/Apache/Traefik).</li>
                     <li>Your Oracle DB connection's password is stored encrypted in server memory and will be decrypted shortly only for the process of establishing connection to your target database.<br/>
-                    The key used for this encryption consists of the server side key (<pre style="display: inline;">SECRET_KEY_BASE</pre>) which is salted with a unique client key specific to your browser instance.<br/>
+                    The key used for this encryption consists of the server side key (<pre style="display: inline;">SECRET_KEY_BASE</pre>) which is salted with a unique client key specific to your browser instance (stored as browser cookie).<br/>
                     This way only requests from your browser are able to reuse the stored connect info for reestablishing the database connection.</li>
                     <li>If you retain your login info for further fast logins (checkbox 'Save logins' in statup dialog), this info is stored in local server file system at <pre style="display: inline;">PANORAMA_VAR_HOME</pre> completely encrypted the same way like passwords.</li>
                     <li>You can customize the server side key used for encryption by one of the following:

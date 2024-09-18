@@ -1,0 +1,7 @@
+---
+all:
+  hosts:
+    panorama-demo:
+      ansible_host: 158.101.168.240
+      ansible_user: opc
+
