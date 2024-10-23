@@ -1,15 +1,51 @@
-<h3>Excessive logon operations (by current gv$Session)</h3>
+<h3>Excessive logon operations (by listener-log)</h3>
 An excessive number of logon operations may cause significant CPU-usage and possibly write I/O (e.g. for auditing).<br/>
 It also slows down the application waiting for the connect.<br/>
 Alternative solutions are usage of session pools, prevent subsequent LOGON/LOGOFF operations in loops.<br/>
-This selection shows sessions that were created shortly before.<br/>
-            <pre style='background-color: #FFFFCC;'>SELECT s.Inst_ID, s.SID, s.Serial#, s.AudSID, s.UserName, s.OSUser, s.Process,
-                       s.Machine, s.Port, s.Program, s.SQL_ID, s.SQL_Exec_Start, s.Module,
-                       s.Action, s.Client_Info, s.Logon_Time, s.Service_Name
-FROM   gv$Session s
-LEFT OUTER JOIN gv$PX_Session pxs ON pxs.Inst_ID = s.Inst_ID AND pxs.SID = s.SID AND pxs.Serial#=s.Serial#
-WHERE  s.Type = 'USER'
-AND    pxs.SID IS NULL
-    AND    Program NOT LIKE '%(PP%)'    /* Exclude own PQ processes that don't appear in gv$PX_Session while selecting from multiple RAC instances */
-    AND    Logon_Time > SYSDATE-1/(86400/:P1) /* Session not older than x seconds */
-           </pre><div>Parameter :P1: Maximum age of session in seconds (since v$Session.logon_time) to be considered in selection</div>
+This selection shows the logon operations per minute for the database instance you are connected on.<br/>
+For evaluation of RAC-systems you have to execute this selection once for every considered RAC-node directly connected to this node.<br/>
+Detailed information about LOGON operations is available via menu 'DBA general / Server Logs'<br/>
+            <pre style='background-color: #FFFFCC;'>
+              SELECT Timestamp, SUM(Connects) Connects_Total,
+                     MAX(Client_Host  ||' ('||Connects_Client_Host||')')   KEEP (DENSE_RANK LAST ORDER BY Connects_Client_Host)  Top_Client_Host,
+                     MAX(Client_IP    ||' ('||Connects_Client_IP||')')     KEEP (DENSE_RANK LAST ORDER BY Connects_Client_IP)    Top_Client_IP,
+                     MAX(Client_User  ||' ('||Connects_Client_User||')')   KEEP (DENSE_RANK LAST ORDER BY Connects_Client_User)  Top_Client_User,
+                     MAX(Service_Name ||' ('||Connects_Service_Name||')')  KEEP (DENSE_RANK LAST ORDER BY Connects_Service_Name) Top_Service_Name,
+                     MAX(Connects) Connects_by_Top_Combination
+              FROM   (
+                      SELECT TRUNC(Originating_Timestamp, 'MI') Timestamp, Client_IP, Client_User, Client_Host, Service_Name, COUNT(*) Connects,
+                             MAX(Connects_Client_IP)    Connects_Client_IP,
+                             MAX(Connects_Client_User)  Connects_Client_User,
+                             MAX(Connects_Client_Host)  Connects_Client_Host,
+                             MAX(Connects_Service_Name) Connects_Service_Name
+                      FROM   (
+                              SELECT Originating_Timestamp, Client_IP, Client_User, Client_Host, Service_Name,
+                                     SUM(DECODE(Client_IP,    NULL, 0, 1)) OVER (PARTITION BY TRUNC(Originating_Timestamp, 'MI'), Client_IP)    Connects_Client_IP,
+                                     SUM(DECODE(Client_User,  NULL, 0, 1)) OVER (PARTITION BY TRUNC(Originating_Timestamp, 'MI'), Client_User)  Connects_Client_User,
+                                     SUM(DECODE(Client_Host,  NULL, 0, 1)) OVER (PARTITION BY TRUNC(Originating_Timestamp, 'MI'), Client_Host)  Connects_Client_Host,
+                                     SUM(DECODE(Service_Name, NULL, 0, 1)) OVER (PARTITION BY TRUNC(Originating_Timestamp, 'MI'), Service_Name) Connects_Service_Name
+                              FROM   (
+                                      SELECT Originating_Timestamp,
+                                             SUBSTR(SUBSTR(Address, INSTR(Address, 'HOST=')+5), 1, INSTR(SUBSTR(Address, INSTR(Address, 'HOST=')+5), ')')-1) Client_IP,
+                                             SUBSTR(UserName, 1, INSTR(UserName, ')')-1)        Client_User,
+                                             SUBSTR(ClientHost, 1, INSTR(ClientHost, ')')-1)    Client_Host,
+                                             SUBSTR(ServiceName, 1, INSTR(ServiceName, ')')-1)  Service_Name
+                                      FROM   (
+                                              SELECT Originating_Timestamp, Message_Text,
+                                                     SUBSTR(Message_Text, INSTR(Message_Text, 'ADDRESS=')) Address,
+                                                     SUBSTR(Message_Text, INSTR(Message_Text, 'USER=')+5) UserName,
+                                                     CASE WHEN INSTR(Message_Text, 'SERVICE_NAME=') >0  THEN SUBSTR(Message_Text, INSTR(Message_Text, 'SERVICE_NAME=')+13) END ServiceName,
+                                                     SUBSTR(Message_Text, INSTR(Message_Text, 'HOST=')+5) ClientHost
+                                              FROM   V$DIAG_ALERT_EXT
+                                              WHERE  TRIM(Component_ID) = 'tnslsnr'
+                                              AND    Message_Text LIKE '%CONNECT_DATA%'
+                                              AND    Message_Text LIKE '%* establish *%'
+                                              AND    Originating_Timestamp > SYSDATE - :P1
+                                             )
+                                     )
+                             )
+                      GROUP BY TRUNC(Originating_Timestamp, 'MI'), Client_IP, Client_User, Client_Host, Service_Name
+                     )
+              GROUP BY Timestamp
+              ORDER BY Timestamp
+           </pre><div>Parameter :P1: Number of days in history backward from now for consideration</div>

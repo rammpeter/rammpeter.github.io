@@ -10,5 +10,5 @@ This selection looks for statements with identical execution plans by plan-hash-
 FROM   gv$SQL s
 WHERE  Plan_Hash_Value > 0
 GROUP BY s.Inst_ID, s.Parsing_Schema_Name, s.Plan_Hash_Value
-HAVING COUNT(*) > 10
+HAVING COUNT(*) > :P1
 ORDER BY Child_Cursors DESC</pre><div>Parameter :P1: Minimum number of different SQL-IDs per plan-hash-value for consideration in selection</div>

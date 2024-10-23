@@ -11,7 +11,7 @@ If you can exclude the need for allowing concurrent transactions in ITL-list abo
                            WHERE  Table_Owner NOT IN (SELECT /*+ NO_MERGE */ UserName FROM All_Users WHERE Oracle_Maintained = 'Y')
                           ),
      Tables AS (SELECT /*+ NO_MERGE MATERIALIZE */ Owner, Table_Name, PCT_Free, Num_Rows, Avg_Row_Len, Last_Analyzed, Ini_Trans, Max_Trans
-                FROM   DBA_Tables
+                FROM   DBA_All_Tables
                 WHERE  Owner NOT IN (SELECT /*+ NO_MERGE */ UserName FROM All_Users WHERE Oracle_Maintained = 'Y')
                 AND    Num_Rows > 0
                ),

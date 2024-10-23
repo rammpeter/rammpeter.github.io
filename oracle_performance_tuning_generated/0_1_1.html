@@ -14,7 +14,7 @@ Indexes with only one or little key values may be unnecessary.<br/>
                              WHERE  ic.Index_Owner = i.Owner AND ic.Index_Name = i.Index_Name
                             ) Nullable
                      FROM   DBA_Indexes i
-                     JOIN   DBA_Tables t ON t.Owner=i.Table_Owner AND t.Table_Name=i.Table_Name
+                     JOIN   DBA_All_Tables t ON t.Owner=i.Table_Owner AND t.Table_Name=i.Table_Name
                      LEFT OUTER JOIN (SELECT  /*+ NO_MERGE */ Owner, Segment_Name, ROUND(SUM(bytes)/(1024*1024),1) MBytes
                                       FROM   DBA_SEGMENTS s
                                       GROUP BY Owner, Segment_Name

@@ -9,7 +9,7 @@ For valid function of this selection table analysis should only be done if there
                             SELECT t.Owner, t.Table_Name, o.Max_Created, o.Max_Last_DDL_Time, t.Last_Analyzed,
                                    ROUND(SYSDATE - t.Last_Analyzed, 2) Days_After_Analyze,
                                    t.Num_Rows, s.Size_MB
-                            FROM   DBA_Tables t
+                            FROM   DBA_All_Tables t
                             LEFT OUTER JOIN (SELECT Table_Owner, Table_Name, MAX(Timestamp) Timestamp
                                              FROM sys.DBA_Tab_Modifications
                                              GROUP BY Table_Owner, Table_Name

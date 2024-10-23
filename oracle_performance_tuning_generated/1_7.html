@@ -40,7 +40,7 @@ Statement executes only for current connected RAC-Instance (due to runtime probl
                                       AND s.SQL_ID          = p.SQL_ID
                                       AND s.Child_Number    = p.Child_Number
                                       AND s.Plan_Hash_Value = p.Plan_Hash_Value
-                      LEFT OUTER JOIN DBA_Tables t ON t.Owner = p.Object_Owner AND t.Table_Name = p.Object_Name
+                      LEFT OUTER JOIN DBA_All_Tables t ON t.Owner = p.Object_Owner AND t.Table_Name = p.Object_Name
                       LEFT OUTER JOIN DBA_Indexes i ON i.Owner = p.Object_Owner AND i.Index_Name = p.Object_Name
                       WHERE  p.Object_Owner NOT IN (SELECT /*+ NO_MERGE */ UserName FROM All_Users WHERE Oracle_Maintained = 'Y')
                       ORDER BY Elapsed_Time DESC NULLS LAST</pre>

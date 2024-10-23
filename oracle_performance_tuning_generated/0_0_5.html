@@ -20,7 +20,7 @@ IOT-structure for tables is recommended if following criterias outbalance to pos
                                      t.Owner, t.Table_Name,
                                      t.Num_Rows,
                                      t.Avg_Row_Len
-                              FROM   DBA_Tables t
+                              FROM   DBA_All_Tables t
                               WHERE  t.IOT_Type Is NULL
                               AND    t.Num_Rows Is NOT NULL AND t.Num_Rows>0 /* nur analysierte Tabellen betrachten */
                               AND    (SELECT Count(*) FROM DBA_Tab_Columns c WHERE c.Owner=t.Owner AND c.Table_Name=t.Table_Name)<6

@@ -1,4 +1,4 @@
-<h3>Long running transactions from AWH-history (DBA_Hist_Active_Sess_History)</h3>
+<h3>Long running transactions from SGA (gv$Active_Session_History)</h3>
 Long running transactions contains the risk of lock escalations in OLTP-systems.<br/>
 Writing access should be suspended to the end of process transactions to keep lock time until commit as short as possible.<br/>
 Transaktions in OLTP-systems should be short enough to keep potential lock wait time below user's cognition limits.<br/>
@@ -23,13 +23,13 @@ Transaktions in OLTP-systems should be short enough to keep potential lock wait 
                              MIN(Action)                    "Action",
                              MIN(Client_ID)                 "Client-ID",
                              MAX(Event) KEEP (DENSE_RANK LAST ORDER BY Samples) "Main Event"
-                      FROM   (SELECT /*+ PARALLEL(s,2) */ XID, NVL(Event, Session_State) Event,
+                      FROM   (SELECT XID, NVL(Event, Session_State) Event,
                                      MIN(Sample_Time)               Min_Sample_Time,
                                      MAX(Sample_Time)               Max_Sample_Time,
                                      COUNT(*)                       Samples,
                                      MIN(SQL_ID) KEEP (DENSE_RANK FIRST ORDER BY Sample_Time)       Min_SQL_ID,
                                      MAX(SQL_ID) KEEP (DENSE_RANK FIRST ORDER BY Sample_Time)       Max_SQL_ID,
-                                     MIN(Instance_Number)                   Inst_ID,
+                                     MIN(Inst_ID)                   Inst_ID,
                                      MIN(Session_ID)                Session_ID,
                                      MIN(Session_Serial#)           Session_Serial#,
                                      MIN(Session_Type)              Session_Type,
@@ -38,14 +38,12 @@ Transaktions in OLTP-systems should be short enough to keep potential lock wait 
                                      MIN(Module)                    Module,
                                      MIN(Action)                    Action,
                                      MIN(Client_ID)                 Client_ID
-                              FROM   DBA_Hist_Active_Sess_History s
+                              FROM   gv$active_session_history s
                               WHERE  XID IS NOT NULL
-                              AND    Sample_Time > SYSDATE-:P1
-                              AND    s.DBID = &your_DBID  /* do not count multiple times for multipe different DBIDs/ConIDs */
                               GROUP BY XID, NVL(Event, Session_State)
                              )
                       GROUP BY XID
                      ) s
-              WHERE  "Duration (Secs.)" > :P2
+              WHERE  "Duration (Secs.)" > :P1
               ORDER BY "Duration (Secs.)" DESC
-           </pre><div>Parameter :P1: Number of days in history backward from now for consideration</div><div>Parameter :P2: Minimale Dauer der Transaktion in Sekunden für Aufnahme in Selektion</div>
+           </pre><div>Parameter :P1: Minimale Dauer der Transaktion in Sekunden für Aufnahme in Selektion</div>

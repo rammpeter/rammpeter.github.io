@@ -4,7 +4,7 @@ Leading INDEX-RANGE-SCAN for cascading nested loop joins should be transferred t
 Selection considers AWR history.<pre style='background-color: #FFFFCC;'>SELECT /* DB-Tools Ramm Nichparallel Anteile bei PQ */ * FROM (
                       SELECT /*+ NO_MERGE */ x.*, ps.Operation, ps.Options, ps.Object_Type, ps.Object_Owner, ps.Object_Name,
                              CASE
-                             WHEN ps.Object_Type LIKE 'TABLE%' THEN (SELECT Num_Rows FROM DBA_Tables t WHERE t.Owner=ps.Object_Owner AND t.Table_Name=ps.Object_Name)
+                             WHEN ps.Object_Type LIKE 'TABLE%' THEN (SELECT Num_Rows FROM DBA_All_Tables t WHERE t.Owner=ps.Object_Owner AND t.Table_Name=ps.Object_Name)
                              WHEN ps.Object_Type LIKE 'INDEX%' THEN (SELECT Num_Rows FROM DBA_Indexes i WHERE i.Owner=ps.Object_Owner AND i.Index_Name=ps.Object_Name)
                              ELSE NULL END Num_Rows,
                             (SELECT SQL_Text FROM DBA_Hist_SQLText t WHERE t.DBID=x.DBID AND t.SQL_ID=x.SQL_ID AND RowNum < 2) SQLText

@@ -11,7 +11,7 @@
             'multiple' : false,
             'data': [{
   "id": "0",
-  "text": "1. Potential in DB-structures",
+  "text": "1. Potential for improvement in DB-structures",
   "state": { "opened": false }
 , "children": [{
   "id": "0_0",
@@ -233,6 +233,10 @@
   "id": "0_16",
   "text": "17. Possibly compressable but currently uncompressed LOB-segments",
   "state": { "opened": false }
+, "icon":"images/application-monitor.png"},{
+  "id": "0_17",
+  "text": "18. Possible violations of DETERMINISTIC declared functions that are used in function-based indexes",
+  "state": { "opened": false }
 , "icon":"images/application-monitor.png"} ]},{
   "id": "1",
   "text": "2. Detection of SQL with problematic execution plan",
@@ -308,6 +312,10 @@
 , "icon":"images/application-monitor.png"},{
   "id": "1_1_10",
   "text": "11. Possible elimination of HASH JOIN BUFFERED by Parallel Shared Hash Join",
+  "state": { "opened": false }
+, "icon":"images/application-monitor.png"},{
+  "id": "1_1_11",
+  "text": "12. Suppressed use of possibly expected parallel DML or direct load",
   "state": { "opened": false }
 , "icon":"images/application-monitor.png"} ]},{
   "id": "1_2",
@@ -392,6 +400,10 @@
 , "icon":"images/application-monitor.png"},{
   "id": "1_11",
   "text": "12. DELETE-operations replaceable by TRUNCATE",
+  "state": { "opened": false }
+, "icon":"images/application-monitor.png"},{
+  "id": "1_12",
+  "text": "13. Possibly unnecessary scan of all partitions of a partitioned table or index",
   "state": { "opened": false }
 , "icon":"images/application-monitor.png"} ]},{
   "id": "2",
@@ -523,7 +535,7 @@
   "state": { "opened": false }
 , "children": [{
   "id": "5_0",
-  "text": "1. Potential in DB-Views",
+  "text": "1. Potential for improvement in DB-Views",
   "state": { "opened": false }
 , "children": [{
   "id": "5_0_0",
@@ -555,43 +567,47 @@
   "state": { "opened": false }
 , "icon":"images/application-monitor.png"},{
   "id": "5_3",
-  "text": "4. Missing suggested AUDIT-options",
+  "text": "4. Missing suggested AUDIT rules for standard auditing",
   "state": { "opened": false }
 , "icon":"images/application-monitor.png"},{
   "id": "5_4",
-  "text": "5. Long running transactions from SGA (gv$Active_Session_History)",
+  "text": "5. Missing suggested AUDIT rules for unified auditing",
   "state": { "opened": false }
 , "icon":"images/application-monitor.png"},{
   "id": "5_5",
-  "text": "6. Long running transactions from AWH-history (DBA_Hist_Active_Sess_History)",
+  "text": "6. Long running transactions from SGA (gv$Active_Session_History)",
   "state": { "opened": false }
 , "icon":"images/application-monitor.png"},{
   "id": "5_6",
-  "text": "7. Possibly unnecessary update of primary key columns",
+  "text": "7. Long running transactions from AWH-history (DBA_Hist_Active_Sess_History)",
   "state": { "opened": false }
 , "icon":"images/application-monitor.png"},{
   "id": "5_7",
-  "text": "8. Longer inactive sessions with continued active transactions",
+  "text": "8. Possibly unnecessary update of primary key columns",
   "state": { "opened": false }
 , "icon":"images/application-monitor.png"},{
   "id": "5_8",
-  "text": "9. Excessive logon operations (by listener-log)",
+  "text": "9. Longer inactive sessions with continued active transactions",
   "state": { "opened": false }
 , "icon":"images/application-monitor.png"},{
   "id": "5_9",
-  "text": "10. Excessive logon operations (by current gv$Session)",
+  "text": "10. Excessive logon operations (by listener-log)",
   "state": { "opened": false }
 , "icon":"images/application-monitor.png"},{
   "id": "5_10",
-  "text": "11. Possibly missing guaranty of uniqueness by unique index or unique / primary key constraint",
+  "text": "11. Excessive logon operations (by current gv$Session)",
   "state": { "opened": false }
 , "icon":"images/application-monitor.png"},{
   "id": "5_11",
-  "text": "12. Possibly probematic NULL-handling in bind variables (:A1 IS NULL OR Column = :A1)",
+  "text": "12. Possibly missing guaranty of uniqueness by unique index or unique / primary key constraint",
   "state": { "opened": false }
 , "icon":"images/application-monitor.png"},{
   "id": "5_12",
-  "text": "13. Volatile columns in result due to 'SELECT * FROM table'",
+  "text": "13. Possibly probematic NULL-handling in bind variables (:A1 IS NULL OR Column = :A1)",
+  "state": { "opened": false }
+, "icon":"images/application-monitor.png"},{
+  "id": "5_13",
+  "text": "14. Volatile columns in result due to 'SELECT * FROM table'",
   "state": { "opened": false }
 , "icon":"images/application-monitor.png"} ]},{
   "id": "6",
@@ -644,6 +660,10 @@
 , "icon":"images/application-monitor.png"},{
   "id": "7_4",
   "text": "5. Objekt statistics: Check on up-to-date analyze info (Indexes)",
+  "state": { "opened": false }
+, "icon":"images/application-monitor.png"},{
+  "id": "7_5",
+  "text": "6. TNS service usage by sessions",
   "state": { "opened": false }
 , "icon":"images/application-monitor.png"} ]} ]
           }

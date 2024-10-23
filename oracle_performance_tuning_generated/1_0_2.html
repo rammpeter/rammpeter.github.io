@@ -19,7 +19,7 @@ FROM   (SELECT /*+ NO_MERGE */ ss.DBID, ss.Instance_Number, h.User_ID, h.SQL_ID,
         GROUP BY ss.DBID, ss.Instance_Number, h.User_ID, h.SQL_ID, h.SQL_Plan_Hash_Value, h.SQL_Plan_Line_ID
        ) h
 JOIN   DBA_Hist_SQL_Plan p ON p.DBID = h.DBID AND p.SQL_ID = h.SQL_ID AND p.Plan_Hash_Value = h.SQL_Plan_Hash_Value AND p.ID = h.SQL_Plan_Line_ID
-LEFT OUTER JOIN DBA_Tables t ON t.Owner = p.Object_Owner AND t.Table_Name = p.Object_Name
+LEFT OUTER JOIN DBA_All_Tables t ON t.Owner = p.Object_Owner AND t.Table_Name = p.Object_Name
 LEFT OUTER JOIN (SELECT SQL_ID, Plan_Hash_Value, ID, MIN(Access_Predicates) Access_Predicates, MIN(Filter_Predicates) Filter_Predicates
                  FROM   gv$SQL_Plan gp
                  WHERE  Operation = 'TABLE ACCESS'

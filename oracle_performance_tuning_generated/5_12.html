@@ -1,38 +1,41 @@
-<h3>Volatile columns in result due to 'SELECT * FROM table'</h3>
-'SELECT * FROM table;' without specification of columns in the SELECT-list may cause volatile results if the table structure changes.<br/>
-Suggestion is to specify the columns in the SELECT-list if SQL is used in applications.<br/>
-Otherwise a sensible use of SELECT * instead of a fix column list could be in PL/SQL if working with %ROWTYPE.<br/>
+<h3>Possibly probematic NULL-handling in bind variables (:A1 IS NULL OR Column = :A1)</h3>
+To disable filtering on a certain column with NULL as bound value you often find a syntax like:<br/>
 <br/>
-This selection scans the current SGA and the AWR history for such SQLs.<br/>
-          <pre style='background-color: #FFFFCC;'>WITH Hist_SQL_Text AS (SELECT /*+ NO_MERGE MATERIALIZE */ SQL_ID, MIN(SQL_Text) SQL_Text
-                       FROM   (SELECT SQL_ID, TO_CHAR(SUBSTR(SQL_Text, 1, 100)) SQL_Text FROM DBA_Hist_SQLText)
-                       WHERE REGEXP_LIKE(UPPER(SQL_Text), '(^|\s)SELECT\s+\*')
-                       GROUP BY SQL_ID
-                      ),
-     Hist_SQLStat AS (SELECT /*+ NO_MERGE MATERIALIZE */ SQL_ID, Parsing_Schema_Name, SUM(Executions_Delta) Executions, SUM(Elapsed_Time_Delta) Elapsed_Time,
-                             MAX(Module) Module, MAX(Action) Action
-                      FROM   DBA_Hist_SQLStat
-                      WHERE  Snap_ID > (SELECT MIN(Snap_ID) FROM DBA_Hist_Snapshot WHERE Begin_Interval_Time > SYSDATE-:P1)
-                      GROUP BY SQL_ID, Parsing_Schema_Name
-                     )
-SELECT SQL_ID, Parsing_Schema_Name,
-       SUM(Executions_SGA)   Executions_SGA,   SUM(Executions_AWR)   Executions_AWR,
-       SUM(Elapsed_Secs_SGA) Elapsed_Secs_SGA, SUM(Elapsed_Secs_AWR) Elapsed_Secs_AWR,
-       MAX(Module) Module, MAX(Action) Action,
-       MIN(SQL_Text) SQL_Text
-FROM   (
-        SELECT SQL_ID, Parsing_Schema_Name, Executions Executions_SGA, 0 Executions_AWR,
-               ROUND(Elapsed_Time/1000000, 2) Elapsed_Secs_SGA, 0 Elapsed_Secs_AWR, Module, Action,
-               SUBSTR(SQL_Text, 1, 100) SQL_Text
-        FROM   gv$SQLArea
-        WHERE REGEXP_LIKE(UPPER(SQL_Text), '(^|\s)SELECT\s+\*')
-        UNION ALL
-        SELECT s.SQL_ID, s.Parsing_Schema_Name, 0 Executions_SGA, s.Executions Executions_AWR, 0 Elapsed_Secs_SGA, ROUND(s.Elapsed_Time/1000000, 2) Elapsed_Secs_AWR,
-               s.Module, s.Action, t.Sql_Text
-        FROM   Hist_SQLStat s
-        JOIN   Hist_SQL_Text t ON t.SQL_ID = s.SQL_ID
-       )
-WHERE  Parsing_Schema_Name NOT IN (SELECT /*+ NO_MERGE */ UserName FROM All_Users WHERE Oracle_Maintained = 'Y')
-GROUP BY SQL_ID, Parsing_Schema_Name
-ORDER BY NVL(Executions_SGA,0) + NVL(Executions_AWR,0) DESC
-           </pre><div>Parameter :P1: Number of days in history backward from now for consideration</div>
+SELECT * FROM table WHERE (:A1 IS NULL OR column = :A1);<br/>
+<br/>
+There can be huge drawbacks if using such OR-conditions.<br/>
+The optimizer calculates with a cardinality of 5% in this case and chooses a full table scan.<br/>
+This may be suboptimal because a possibly existing index on that column will not be used and also partition pruning cannot be used if the table is partitioned by that column.<br/>
+<br/>
+There are several alternatives with working usage of indexing or partition pruning:<br/>
+1. Use specific SQL syntax depending on the value of the bind variable and bind only the needed values.<br/>
+<br/>
+2. If the list ouf bound variables at execution time is fixed, place a dummy line in the SQL for the NULL case like "(1=1 OR 1=:A1)", otherwise "column = :A1" .<br/>
+<br/>
+3. Use SQL macros to get the according SQL syntax for the bound value.<br/>
+<br/>
+4. Use UNION ALL instead of OR. This executes the full scan only if the bound value is NULL and scans the index only if the bound value is not NULL.<br/>
+<br/>
+SELECT * FROM table WHERE :A1 IS NULL<br/>
+UNION ALL<br/>
+SELECT * FROM table WHERE column = :A1;<br/>
+          <pre style='background-color: #FFFFCC;'>WITH Plans AS (SELECT /*+ NO_MERGE MATERIALIZE */ SQL_ID, ID, Plan_Hash_Value, MIN(Filter_Predicates) Filter_Predicates
+               FROM   gv$SQL_Plan
+               WHERE  Operation = 'TABLE ACCESS'
+               AND    Options LIKE '%FULL' /* possibly STORAGE FULL */
+               AND    (   REGEXP_LIKE(UPPER(Filter_Predicates), '\( *:[a-zA-Z0-9]+ +IS +NULL +OR +')
+                       OR REGEXP_LIKE(UPPER(Filter_Predicates), 'OR +:[a-zA-Z0-9]+ +IS +NULL *\)')
+                      )
+               GROUP BY SQL_ID, ID, Plan_Hash_Value
+              ),
+     ASH AS (SELECT /*+ NO_MERGE MATERIALIZE */ SQL_ID, SQL_Plan_Line_ID, SQL_Plan_Hash_Value, COUNT(*) Seconds
+             FROM   gv$Active_Session_History
+             WHERE  SQL_Plan_Line_ID IS NOT NULL
+             GROUP BY SQL_ID, SQL_Plan_Line_ID, SQL_Plan_Hash_Value
+             HAVING COUNT(*) > :P1
+            )
+SELECT ash.SQL_ID, p.Plan_Hash_Value, ash.SQL_Plan_Line_ID, ash.Seconds "Runtime of line in seconds", p.Filter_Predicates
+FROM   Plans p
+JOIN   ASH ON ash.SQL_ID=p.SQL_ID AND ash.SQL_Plan_Line_ID = p.ID AND ash.SQL_Plan_Hash_Value = p.Plan_Hash_Value
+ORDER BY ash.Seconds DESC
+           </pre><div>Parameter :P1: Minimum runtime of SQL on particular plan line ID in seconds to be shown in selection</div>

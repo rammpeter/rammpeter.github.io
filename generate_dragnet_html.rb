@@ -27,6 +27,19 @@ end
 
 require 'dragnet_helper.rb'
 
+class ClientInfoStore
+  def self.read_for_client_key(a,b,c)
+    nil
+  end
+end
+
+module DragnetHelper
+  def get_decrypted_client_key
+    nil
+  end
+end
+
+
 module Panorama
   module Application
     # return an anonymous class object with method panorama_master_password

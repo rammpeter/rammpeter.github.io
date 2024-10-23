@@ -32,7 +32,7 @@ If none of the four reasons really requires the existence, the index can be remo
                                                 WHERE  Owner NOT IN (SELECT /*+ NO_MERGE */ UserName FROM All_Users WHERE Oracle_Maintained = 'Y')
                                                ),
                          Tables AS             (SELECT /*+ NO_MERGE MATERIALIZE */  Owner, Table_Name, Num_Rows, Last_analyzed, IOT_Type, Partitioned
-                                                FROM DBA_Tables
+                                                FROM DBA_All_Tables
                                                 WHERE  Owner NOT IN (SELECT /*+ NO_MERGE */ UserName FROM All_Users WHERE Oracle_Maintained = 'Y')
                                                ),
                          Tab_Modifications AS  (SELECT /*+ NO_MERGE MATERIALIZE */  Table_Owner, Table_Name, Inserts, Updates, Deletes
@@ -102,6 +102,8 @@ If none of the four reasons really requires the existence, the index can be remo
                                               GROUP BY ic.Index_Owner, ic.Index_Name, cc.Owner, cc.Constraint_Name
                                               HAVING COUNT(*) = COUNT(DISTINCT ic.Column_Name) /* First columns of index match constraint columns */
                                               AND MAX(cc.Position) = MAX(ic.Column_Position)  /* all matching columns of an index are starting from left without gaps */
+                                              AND MIN(cc.Position) = 1 /* Consider all constraint columns starting with the first */
+                                              AND MIN(cc.Column_Count) = COUNT(*) /* All columns of the constraint are contained in index */
                                              ) fk
                                       JOIN   Constraints c     ON c.Owner = fk.Constraint_Owner AND c.Constraint_Name = fk.Constraint_Name AND c.Constraint_Type = 'R'
                                       JOIN   Constraints rc    ON rc.Owner = c.R_Owner AND rc.Constraint_Name = c.R_Constraint_Name

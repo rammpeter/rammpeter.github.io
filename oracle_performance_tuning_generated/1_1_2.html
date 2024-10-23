@@ -12,7 +12,7 @@ Selection considers current SGA.<pre style='background-color: #FFFFCC;'>WITH SQL
                                      CASE WHEN Operation = 'INDEX' THEN
                                           (SELECT Num_Rows FROM DBA_Indexes i WHERE i.Owner=ps.Object_Owner AND i.Index_Name = ps.Object_Name)
                                           WHEN Operation = 'TABLE ACCESS' THEN
-                                          (SELECT Num_Rows FROM DBA_Tables t WHERE t.Owner=ps.Object_Owner AND t.Table_Name = ps.Object_Name)
+                                          (SELECT Num_Rows FROM DBA_All_Tables t WHERE t.Owner=ps.Object_Owner AND t.Table_Name = ps.Object_Name)
                                      ELSE 0 END Num_Rows,
                                      ps.*
                               FROM   (

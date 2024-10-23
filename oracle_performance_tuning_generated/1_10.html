@@ -4,7 +4,7 @@ Problems may be targeted by execution time of SQL or size of affected tables.<br
 Results are from DBA_Hist_SQL_Plan<pre style='background-color: #FFFFCC;'>WITH Min_Time AS (SELECT SYSDATE - :P1 min_time FROM DUAL)
                       SELECT ps.*, h.Seconds Seconds_ASH_Cartesian,
                              (SELECT Num_Rows FROM DBA_Indexes i WHERE i.Owner = ps.Object_Owner AND i.Index_Name = ps.Object_Name) Num_Rows_Index,
-                             (SELECT Num_Rows FROM  DBA_Tables t WHERE t.Owner = ps.Object_Owner AND t.Table_Name = ps.Object_Name) Num_Rows_Table
+                             (SELECT Num_Rows FROM  DBA_All_Tables t WHERE t.Owner = ps.Object_Owner AND t.Table_Name = ps.Object_Name) Num_Rows_Table
                       FROM   (
                               SELECT /*+ LEADING(p) */ s.Instance_Number, p.SQL_ID, p.Plan_Hash_Value, p.Operation, p.Options, p.Object_Owner, p.Object_Name, p.ID Line_ID, p.Parent_ID, p.Cartesian_Line_ID,
                                      SUM(s.Executions_Delta) Executions, ROUND(SUM(s.Elapsed_Time_Delta/1000000), 1) Elapsed_Time_Secs

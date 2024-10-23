@@ -11,7 +11,7 @@ The selection is based on two sample values per column (the lowest and the highe
                                     SELECT c.*, RTRIM(UTL_I18N.RAW_TO_CHAR(Low_Value)) Low_Value_Char, RTRIM(UTL_I18N.RAW_TO_CHAR(High_Value)) High_Value_Char,
                                            t.Num_Rows
                                     FROM   DBA_Tab_Columns c
-                                    JOIN   DBA_Tables t ON t.Owner = c.Owner AND t.Table_Name = c.Table_Name
+                                    JOIN   DBA_All_Tables t ON t.Owner = c.Owner AND t.Table_Name = c.Table_Name
                                     WHERE  c.Data_Type = 'CHAR'
                                     AND    c.Owner NOT IN (SELECT /*+ NO_MERGE */ UserName FROM All_Users WHERE Oracle_Maintained = 'Y')
                                     AND    c.Data_Length > 1

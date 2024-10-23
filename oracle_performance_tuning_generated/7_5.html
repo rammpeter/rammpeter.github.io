@@ -1,0 +1,15 @@
+<h3>TNS service usage by sessions</h3>
+Overview over TNS services and their usage by connected sessions<pre style='background-color: #FFFFCC;'>SELECT sv.Name, sv.Creation_Date, sv.PDB, sv.Con_ID,  sess.Sessions, sess.Users
+FROM   (SELECT Name, PDB, Con_ID, MIN(Creation_Date) Creation_Date
+        FROM   gv$Services
+        GROUP BY Name, PDB, Con_ID
+       ) sv
+LEFT OUTER JOIN (SELECT Service_Name, SUM(Sessions) Sessions, LISTAGG(UserName, ', ') WITHIN GROUP (ORDER BY UserName) Users
+                 FROM   (SELECT Service_Name, UserName, COUNT(*) Sessions
+                         FROM   gv$Session
+                         GROUP BY Service_Name, UserName
+                        )
+                 GROUP BY Service_Name
+                ) sess ON sess.Service_Name = sv.Name
+ORDER BY sv.Name
+</pre>

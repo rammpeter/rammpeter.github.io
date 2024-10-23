@@ -52,7 +52,7 @@ BEGIN
   DBMS_OUTPUT.PUT_LINE('===========================================');
   SELECT Statistic# INTO StatNum FROM v$StatName WHERE Name='consistent gets';
   FOR Rec IN (SELECT Owner, Table_Name, Num_Rows
-              FROM   DBA_Tables
+              FROM   DBA_All_Tables
               WHERE  IOT_Type IS NULL
               AND    Num_Rows > 10000   -- nur genügende große Tabellen testen
               AND    Owner NOT IN (SELECT /*+ NO_MERGE */ UserName FROM All_Users WHERE Oracle_Maintained = 'Y')

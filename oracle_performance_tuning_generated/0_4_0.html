@@ -5,7 +5,7 @@ This selections scans SGA as well as AWR history.<br/>
 <pre style='background-color: #FFFFCC;'>WITH Days AS (SELECT :P1 backward FROM DUAL),
                          Tab_Modifications AS (SELECT /*+ NO_MERGE MATERIALIZE */ * FROM   DBA_Tab_Modifications),
                          Tabs_Inds AS (SELECT /*+ NO_MERGE MATERIALIZE */ 'TABLE' Object_Type, Owner, Table_Name Object_Name, Last_Analyzed, Num_Rows
-                                       FROM   DBA_Tables
+                                       FROM   DBA_All_Tables
                                        WHERE  IOT_TYPE IS NULL AND Temporary='N'
                                        AND    Owner NOT IN (SELECT /*+ NO_MERGE */ UserName FROM All_Users WHERE Oracle_Maintained = 'Y')
                                        UNION ALL

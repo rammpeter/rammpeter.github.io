@@ -18,8 +18,8 @@ The length of the compared substring may be varied.<pre style='background-color:
                                       COUNT(DISTINCT Parsing_Schema_Name) "Different pars. schema names"
                                FROM   gv$SQLArea s, Len
                                GROUP BY Inst_ID, SUBSTR(s.SQL_Text, 1, Len.Substr_Len)
-                               HAVING COUNT(*) > 10
+                               HAVING COUNT(*) > :P2
                               ) g
                        JOIN gv$SQLArea s ON s.Inst_ID = g.Inst_ID AND s.SQL_ID = g.SQL_ID
                        ORDER BY "Memory (MB)" DESC NULLS LAST
-             </pre><div>Parameter :P1: Number of characters for comparison of SQLs (beginning at left side of statement)</div>
+             </pre><div>Parameter :P1: Number of characters for comparison of SQLs (beginning at left side of statement)</div><div>Parameter :P2: Minimum number of different SQL-IDs per plan-hash-value for consideration in selection</div>

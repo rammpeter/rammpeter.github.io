@@ -13,7 +13,7 @@ OLTP-compression requires licensing of Advanced Compression Option.<br/>
                  ),
      Tables AS   (SELECT /*+ NO_MERGE MATERIALIZE */ t.Owner, t.Table_Name, t.Num_Rows, t.Last_Analyzed, NULL Partition_Name,
                          m.Inserts, m.Updates, m.Deletes, m.Timestamp Last_DML, t.Compression
-                  FROM   DBA_Tables t
+                  FROM   DBA_All_Tables t
                   LEFT OUTER JOIN DBA_Tab_Modifications m ON m.Table_Owner = t.Owner AND m.Table_Name = t.Table_Name AND m.Partition_Name IS NULL
                   AND    t.Compression = 'DISABLED'
                  ),

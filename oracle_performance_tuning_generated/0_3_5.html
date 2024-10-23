@@ -12,7 +12,7 @@ Auto list partitioning helps to:<br/>
                      WHERE  Owner NOT IN (SELECT /*+ NO_MERGE */ UserName FROM All_Users WHERE Oracle_Maintained = 'Y')
                     ),
      Tables  AS     (SELECT /*+ NO_MERGE MATERIALIZE */ Owner, Table_Name, Num_Rows
-                     FROM   DBA_Tables
+                     FROM   DBA_All_Tables
                      WHERE  Owner NOT IN (SELECT /*+ NO_MERGE */ UserName FROM All_Users WHERE Oracle_Maintained = 'Y')
                     ),
      Ind_and_Tab AS (SELECT /*+ NO_MERGE MATERIALIZE */ Owner Object_Owner, Table_Name Object_Name, Owner Table_Owner, Table_Name, Num_Rows

@@ -2,7 +2,7 @@
 Also unique indexes may be local partitioned if partition key is in identical order leading part of index.<br/>
 This way partition pruning may be used for access on unique indexes plus possible decrease of index' BLevel.<pre style='background-color: #FFFFCC;'>SELECT /* DB-Tools Ramm Partitionierung Unique Indizes */
                               t.Owner, t.Table_Name, i.Uniqueness, tc.Column_Name Partition_Key1, i.Index_Name, t.Num_Rows, seg.MBytes
-                      FROM   DBA_Tables t
+                      FROM   DBA_All_Tables t
                              JOIN DBA_Part_Key_Columns tc
                              ON (    tc.Owner           = t.Owner
                                  AND tc.Name            = t.Table_Name
@@ -24,4 +24,5 @@ This way partition pruning may be used for access on unique indexes plus possibl
                                   ) seg ON seg.Owner = i.Owner AND seg.Segment_Name = i.Index_Name
                       WHERE t.Partitioned = 'YES'
                       AND   i.Partitioned = 'NO'
+                      AND   t.Owner NOT IN (SELECT /*+ NO_MERGE */ UserName FROM All_Users WHERE Oracle_Maintained = 'Y')
                       ORDER BY t.Num_Rows DESC NULLS LAST</pre>

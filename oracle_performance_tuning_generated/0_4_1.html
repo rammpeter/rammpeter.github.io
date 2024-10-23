@@ -12,7 +12,7 @@ Stated here are inserts and updates since last GATHER_TABLE_STATS for tables wit
                               FROM sys.DBA_Tab_Modifications
                               GROUP BY Table_Owner, Table_Name
                              ) m
-                      JOIN   DBA_Tables t ON t.Owner = m.Table_Owner AND t.Table_Name = m.Table_Name
+                      JOIN   DBA_All_Tables t ON t.Owner = m.Table_Owner AND t.Table_Name = m.Table_Name
                       LEFT OUTER JOIN (SELECT Owner, Segment_Name, ROUND(SUM(Bytes)/(1024*1024),1) Size_MB
                                        FROM DBA_Segments s
                                        WHERE Owner NOT IN (SELECT /*+ NO_MERGE */ UserName FROM All_Users WHERE Oracle_Maintained = 'Y')

@@ -5,7 +5,7 @@ May be it their value is redundant to other columns of that table. In this case 
                              c.Owner, c.Table_Name, c.Column_Name, t.Num_Rows, c.Num_Nulls, c.Num_Distinct, c.Avg_Col_Len,
                              ROUND((c.Avg_Col_Len*(Num_Rows-Num_Nulls)+Num_Nulls)/(1024*1024),2) Megabyte_Column
                       FROM   DBA_Tab_Columns c
-                      JOIN   DBA_Tables t ON t.Owner = c.Owner AND t.Table_Name = c.Table_Name
+                      JOIN   DBA_All_Tables t ON t.Owner = c.Owner AND t.Table_Name = c.Table_Name
                       WHERE  NVL(c.Num_Distinct,0) > 0
                       AND    NVL(c.Num_Distinct,0) <= :P1
                       AND    (c.Num_Nulls = 0 OR UPPER(:P2) = 'YES')

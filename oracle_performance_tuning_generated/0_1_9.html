@@ -13,7 +13,7 @@ Caution:<br/>
                                     ),
                          Ind_Columns AS        (SELECT /*+ NO_MERGE MATERIALIZE */ Index_Owner, Index_Name, Table_Owner, Table_Name, Column_name, Column_Position FROM DBA_Ind_Columns),
                          Cons_Columns AS       (SELECT /*+ NO_MERGE MATERIALIZE */ Owner, Table_Name, Column_name, Position, Constraint_Name FROM DBA_Cons_Columns),
-                         Tables AS             (SELECT /*+ NO_MERGE MATERIALIZE */  Owner, Table_Name, Num_Rows, Last_analyzed FROM DBA_Tables),
+                         Tables AS             (SELECT /*+ NO_MERGE MATERIALIZE */  Owner, Table_Name, Num_Rows, Last_analyzed FROM DBA_All_Tables),
                          Tab_Modifications AS  (SELECT /*+ NO_MERGE MATERIALIZE */  Table_Owner, Table_Name, Inserts, Updates, Deletes FROM DBA_Tab_Modifications WHERE Partition_Name IS NULL /* Summe der Partitionen wird noch einmal als Einzel-Zeile ausgewiesen */)
                     SELECT /*+ USE_HASH(i ic cc c rc rt) */ i.Owner, i.Table_Name, i.Index_Name,
                            ic.Column_Name                                                             "First Column name",
@@ -33,7 +33,7 @@ Caution:<br/>
                            cc.Deletes                                                                 "Deletes on ref. since anal.",
                            i.Tablespace_Name                                                          "Tablespace",
                            i.Index_Type,
-                           (SELECT IOT_Type FROM DBA_Tables t WHERE t.Owner = i.Table_Owner AND t.Table_Name = i.Table_Name) "IOT Type"
+                           (SELECT IOT_Type FROM DBA_All_Tables t WHERE t.Owner = i.Table_Owner AND t.Table_Name = i.Table_Name) "IOT Type"
                     FROM   Indexes i
                     JOIN   All_Users u ON u.UserName = i.Owner AND u.Oracle_Maintained = 'N'
                     JOIN   DBA_Objects o ON o.Owner = i.Owner AND o.Object_Name = i.Index_Name AND o.SubObject_Name IS NULL
@@ -62,7 +62,8 @@ Caution:<br/>
                           HAVING SUM(bytes)/(1024*1024) > :P2
                          ) seg ON seg.Owner = i.Owner AND seg.Segment_Name = i.Index_Name
                     CROSS JOIN (SELECT :P3 value FROM DUAL) Max_DML
-                    WHERE (:P4 = 'YES' OR i.Uniqueness != 'UNIQUE')
-                    AND   (Max_DML.Value IS NULL OR NVL(cc.Inserts + cc.Updates + cc.Deletes, 0) < Max_DML.Value)
+                    WHERE   iu.Name IS NULL /* Index not used since x days */
+                    AND     (:P4 = 'YES' OR i.Uniqueness != 'UNIQUE')
+                    AND     (Max_DML.Value IS NULL OR NVL(cc.Inserts + cc.Updates + cc.Deletes, 0) < Max_DML.Value)
                     ORDER BY seg.MBytes DESC NULLS LAST
                    </pre><div>Parameter :P1: Minumin age in days of Start-Monitoring timestamp of unused index</div><div>Parameter :P2: Minumin size of index in MB to be considered in selection</div><div>Parameter :P3: Maximum number of DML-operations (Inserts + Updates + Deletes) on referenced table since last analyze (optional)</div><div>Parameter :P4: Unique indexes are needed for uniqueness even if they are not used</div>

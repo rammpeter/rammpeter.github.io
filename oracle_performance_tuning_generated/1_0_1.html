@@ -30,7 +30,7 @@ FROM   (
                 FROM   DBA_Hist_SQL_Plan p
                 JOIN   DBA_Hist_SQLStat s   ON s.DBID=p.DBID AND s.SQL_ID=p.SQL_ID AND s.Plan_Hash_Value=p.Plan_Hash_Value
                 JOIN   DBA_Hist_Snapshot ss ON ss.DBID=s.DBID AND ss.Instance_Number=s.Instance_Number AND ss.Snap_ID=s.Snap_ID
-                JOIN   DBA_Tables t         ON t.Owner=p.Object_Owner AND t.Table_Name=p.Object_Name
+                JOIN   DBA_All_Tables t     ON t.Owner=p.Object_Owner AND t.Table_Name=p.Object_Name
                 WHERE  p.Operation = 'TABLE ACCESS'
                 AND    p.Options LIKE '%FULL'           /* Auch STORAGE FULL der Exadata mit inkludieren */
                 AND    ss.Begin_Interval_Time > SYSDATE - (SELECT Days FROM Backward)

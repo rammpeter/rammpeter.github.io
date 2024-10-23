@@ -72,7 +72,7 @@ Remind the diagram view via context menu 'Show column in diagram'.<pre style='ba
                  DECODE(Is_Replayed,          'Y', ', session replayed'), 3) Modus
                 , Con_ID
                     
-             FROM gv$Active_Session_History
+             FROM gv$Active_Session_History s
              
             )
       WHERE Sample_Time > SYSDATE - :P2

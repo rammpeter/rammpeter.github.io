@@ -4,7 +4,7 @@ But the drawback is that index maintenence is more costly and index access costs
 Therefore COMPRESS ADVANCED HIGH is especially suggested for less frequently used indexes on tables with less DML.<br/>
 This selection considers indexes with < x seconds in wait at SQLs accessing this index worth for possible COMPRESS ADVANCED HIGH.<br/>
 <pre style='background-color: #FFFFCC;'>WITH Days_Back AS (SELECT SYSDATE - :P1 Datum FROM DUAL),
-     SQLs AS (SELECT /*+ NO_MERGE MATERIALIZE */ sqls.Object_Owner, sqls.Object_Name, COUNT(*) SQLs, SUM(Executions) Executions
+     SQLs AS (SELECT /*+ NO_MERGE MATERIALIZE USE_HASH(s) USE_HASH(sqls) */ sqls.Object_Owner, sqls.Object_Name, COUNT(*) SQLs, SUM(Executions) Executions
               FROM   (SELECT /*+ NO_MERGE */ SQL_ID, SUM(Executions) Executions
                       FROM   (
                               SELECT /*+ NO_MERGE */ s.SQL_ID, SUM(Executions_Delta) Executions
@@ -55,7 +55,7 @@ This selection considers indexes with < x seconds in wait at SQLs accessing this
                  AND    Index_Type NOT IN ('BITMAP')
                 ),
      Tables AS (SELECT /*+ NO_MERGE MATERIALIZE */ Owner, Table_Name, IOT_Type
-                FROM   DBA_Tables
+                FROM   DBA_All_Tables
                 WHERE  Owner NOT IN (SELECT /*+ NO_MERGE */ UserName FROM All_Users WHERE Oracle_Maintained = 'Y')
                ),
      ASH AS ( SELECT /*+ NO_MERGE MATERIALIZE */ o.Owner, o.Object_Name, SUM(h.Seconds_In_Wait) Seconds_In_Wait
@@ -96,7 +96,7 @@ JOIN   (SELECT /*+ NO_MERGE */ ic.Index_Owner, ic.Index_Name, SUM(tc.Avg_Col_Len
        ) cs ON cs.Index_Owner = i.Owner AND cs.Index_Name = i.Index_Name
 LEFT OUTER JOIN ash ON ash.Owner = i.Owner AND ash.Object_Name = i.Index_Name
 LEFT OUTER JOIN sqls ON sqls.Object_Owner = i.Owner AND sqls.Object_Name = i.Index_Name
-LEFT OUTER JOIN DBA_Objects io ON io.Owner = i.Owner AND io.Object_Name = i.Index_Name
+LEFT OUTER JOIN DBA_Objects io ON io.Owner = i.Owner AND io.Object_Name = i.Index_Name AND io.SubObject_Name IS NULL
 WHERE  i.Compression != 'ADVANCED HIGH'
 AND    seg.MBytes > :P2
 AND    NVL(ash.Seconds_In_Wait, 0) < :P3

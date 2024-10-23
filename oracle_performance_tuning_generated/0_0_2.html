@@ -5,7 +5,7 @@ Index-compression (COMPRESS) allows reduction of physical size for OLTP-indexes 
                              ROUND(i.Num_Rows/i.Distinct_Keys) Rows_Per_Key,
                              Avg_Leaf_Blocks_Per_Key, Avg_Data_Blocks_Per_Key, i.Num_Rows, t.IOT_Type
                       FROM   DBA_Indexes i
-                      JOIN   DBA_Tables t ON t.Owner=i.Table_Owner AND t.Table_Name=i.Table_Name
+                      JOIN   DBA_All_Tables t ON t.Owner=i.Table_Owner AND t.Table_Name=i.Table_Name
                       WHERE  Avg_Leaf_Blocks_Per_Key > :P1
                       AND    i.Compression = 'DISABLED'
                       ORDER BY Avg_Leaf_Blocks_Per_Key*Num_Rows DESC NULLS LAST</pre><div>Parameter :P1: Minimum number of leaf-blocks / key</div>
