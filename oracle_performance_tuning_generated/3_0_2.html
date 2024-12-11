@@ -12,12 +12,16 @@ This selection looks for statements with identical execution plans by force-matc
                             MAX(a.Last_Active_Time)                                           "Youngest active time",
                             MIN(TO_DATE(a.First_Load_Time, 'YYYY-MM-DD/HH24:MI:SS'))          "First load time",
                             ROUND(SUM(a.Elapsed_Time)/1000000)                                "Elapsed time (seconds)",
-                            MAX(a.SQL_ID) KEEP (DENSE_RANK LAST ORDER BY Last_Active_Time)    "SQL_ID",
+                            MAX(a.SQL_ID) KEEP (DENSE_RANK LAST ORDER BY a.Last_Active_Time)  "SQL_ID",
                             ROUND(SUM(a.Sharable_Mem)  /(1024*1024), 2)                       "Sharable memory (MB)",
                             ROUND(SUM(a.Persistent_Mem)/(1024*1024), 2)                       "Persistent memory (MB)",
                             ROUND(SUM(a.Runtime_Mem)   /(1024*1024), 2)                       "Runtime memory (MB)",
-                            SUBSTR(MAX(a.SQL_Text) KEEP (DENSE_RANK LAST ORDER BY Last_Active_Time), 1, 400)  "SQL text"
+                            SUM(a.Loads)                                                      "Loads (hard parses)",
+                            ROUND(SUM(t.Avg_Hard_Parse_Time * a.Loads)/1000000 , 2)           Sum_Hard_Parse_Times_Secs,
+                            ROUND(SUM(t.Avg_Hard_Parse_Time * a.Loads)/SUM(a.Loads)/1000 , 2) Avg_Hard_Parse_Time_ms,
+                            SUBSTR(MAX(a.SQL_Text) KEEP (DENSE_RANK LAST ORDER BY a.Last_Active_Time), 1, 400)  "SQL text"
                      FROM   gv$SQLArea a
+                     LEFT OUTER JOIN   gv$SQLStats t ON t.Inst_ID = a.Inst_ID AND t.SQL_ID = a.SQL_ID
                      WHERE DECODE(a.Force_Matching_Signature, 0, a.Plan_Hash_Value, a.Force_Matching_Signature) != 0   /* Include INSERTs with Force_Matching_Signature = 0 via Plan_Hash_Value */
                      GROUP BY a.Inst_ID, DECODE(a.Force_Matching_Signature, 0, a.Plan_Hash_Value, a.Force_Matching_Signature), a.Parsing_Schema_Name
                      HAVING COUNT(*) > :P1
