@@ -83,7 +83,9 @@
                             <tr><td>SELECT_CATALOG_ROLE</td>    <td>For getting results from DBMS_METADATA.GET_DDL and for Autonomous Database in Oracle cloud you need this role</tr>
                             <tr><td>EM_EXPRESS_BASIC</td>       <td>For getting results from DBMS_PERF (Performance Hub report) you need this grant</td></tr>
                             <tr><td>ANALYZE ANY</td>            <td>For getting results from DBMS_SPACE.SPACE_USAGE you need the ANALYZE privilege on the particular object or the ANALYZE ANY privilege</td></tr>
-                            <tr><td>SELECT ANY TRANSACTION</td> <td>This grant is needed for selection on Flashback_Transaction_Query</td></tr>
+                            <tr><td>SELECT ANY TRANSACTION</td> <td>Needed for selection on Flashback_Transaction_Query</td></tr>
+                            <tr><td>ADVISOR</td>                <td>Needed for execution and result selection of the SQL Tuning Advisor using Package DBMS_SQLTUNE</td></tr>
+                            <tr><td>CREATE ANY SQL PROFILE</td> <td>Needed for creation of SQL profiles when using the SQL Tuning Advisor with Package DBMS_SQLTUNE</td></tr>
                         </table>
                     </li>
                     <li>For non-admin users in the autonomous DB in the OCI cloud additional grants are required for some minor functions:
