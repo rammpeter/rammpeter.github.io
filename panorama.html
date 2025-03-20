@@ -38,6 +38,7 @@
                     <li>
                         <ul>
                             <li><a href="#start running quickly">Start running quickly</a></li>
+                            <li><a href="#jar">Customize a Panorama instance running by "java -jar Panorama.jar"</a></li>
                             <li><a href="#docker">Customize a Panorama instance running as Docker container</a></li>
                             <li><a href="#customize">Options for customizing the Panorama application</a></li>
                             <li><a href="#run demo">Run demo installation</a></li>
@@ -132,6 +133,13 @@
                 To download the image and start the Panorama application as Docker container type:<br/>
                 <pre>docker run -p8080:8080 -d rammpeter/panorama</pre>
                 This starts the application within one or two minutes. Now you can connect to Panorama's login screen in your browser via <pre style="display: inline;">http://&lt;your&nbsp;server&gt;:8080</pre>
+
+                <a name="jar"></a><h3>Customize a Panorama instance running by "java -jar Panorama.jar"</h3>
+                Command line options for <pre>java -jar Panorama.jar &lt;options&gt;</pre>
+                <ul>
+                    <li><pre>-p or --port &lt;port&gt</pre></pr>Server listens on that port. Default port is 8080.</li>
+                    <li><pre>-b or --bind &lt;IP address&gt</pre></pr>Bind server to a specific address. Default is 0.0.0.0. (all addresses)</li>
+                </ul>
 
                 <a name="docker"></a><h3>Customize a Panorama instance running as Docker container</h3>
                 You can customize your Docker container:
