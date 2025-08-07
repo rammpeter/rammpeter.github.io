@@ -53,6 +53,11 @@ class Generator
     end
   end
 
+  module MenuHelper::PanoramaConnection
+    def self.rac?
+      true
+    end
+  end
 
   module MenuHelper::EngineConfig
     class Hugo
