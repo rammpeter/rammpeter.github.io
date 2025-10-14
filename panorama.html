@@ -15,11 +15,12 @@
             <div id="panorama_text" style="float:left;">
                 <h1 style="text-align: center">
                     <div>Panorama for Oracle databases</div>
-                    <a href="https://rammpeter.blogspot.de/search/label/Panorama%20How-To" title="Open blog about Panorama" target="_blank"><img src="images/blog.png" height="30px"></a>
                     <a href="https://github.com/rammpeter/panorama/releases/latest" title="Download the latest release of Panorama.jar" target="_blank"><img src="images/download.png" height="30px"></a>
                     <a href="https://hub.docker.com/r/rammpeter/panorama/" title="Get Panorama as Docker image" target="_blank"><img src="images/docker.png" height="30px"></a>
+                    <a href="https://rammpeter.blogspot.de/search/label/Panorama%20How-To" title="Open blog about Panorama" target="_blank"><img src="images/blog.png" height="30px"></a>
                     <a href="https://speakerdeck.com/rammpeter" title="Show Panorama-tutorials at speakerdeck.com" target="_blank"><img src="images/speakerdeck-icon.png" height="30px"></a>
                     <a href="https://www.slideshare.net/PeterRamm1" title="Show Panorama-tutorials at slideshare.net" target="_blank"><img src="images/slideshare_small.png" height="30px"></a>
+                    <a href="https://www.youtube.com/watch?v=JYHRArXagSg" title="Video of a presentation of Panorama's functions at ODTUG" target="_blank"><img src="images/youtube.png" height="30px"></a>
                     <a href="http://158.101.168.240:8080" title="Run Panorama demo at Oracle cloud" target="_blank"><img src="images/play.png" height="30px"></a>
                     <a href="https://github.com/rammpeter/panorama" title="Github source code repository" target="_blank"><img src="images/github_small.png" height="30px"></a>
                 </h1>
@@ -74,11 +75,12 @@
 
                 <a name="resources"></a><h2>Resources</h2>
                 <ul>
-                    <li><a href="https://rammpeter.blogspot.de/search/label/Panorama%20How-To" title="Open blog about Panorama" target="_blank"><img src="images/blog.png" style="height:1em"> Blog about Panorama</a></li>
                     <li><a href="https://github.com/rammpeter/panorama/releases/latest" title="Download the latest release of Panorama.jar" target="_blank"><img src="images/download.png" style="height:1em">Download latest release of Panorama.jar</a> </li>
                     <li><a href="https://hub.docker.com/r/rammpeter/panorama/" title="Get Panorama as Docker image" target="_blank"><img src="images/docker.png" style="height:1em"> Panorama as Docker image</a></li>
+                    <li><a href="https://rammpeter.blogspot.de/search/label/Panorama%20How-To" title="Open blog about Panorama" target="_blank"><img src="images/blog.png" style="height:1em"> Blog about Panorama</a></li>
                     <li><a href="https://speakerdeck.com/rammpeter" title="Show Panorama-tutorials at speakerdeck.com" target="_blank"><img src="images/speakerdeck-icon.png" style="height:1em"> Panorama-tutorials at speakerdeck.com</a></li>
                     <li><a href="https://www.slideshare.net/PeterRamm1" title="Show Panorama-tutorials at slideshare.net" target="_blank"><img src="images/slideshare_small.png" style="height:1em"> Panorama-tutorials at slideshare.net</a></li>
+                    <li><a href="https://www.youtube.com/watch?v=JYHRArXagSg" title="Video of a presentation of Panorama's functions at ODTUG" target="_blank"><img src="images/youtube.png" style="height:1em"> Video of a presentation of Panorama's functions at ODTUG</a></li>
                     <li><a href="http://158.101.168.240:8080" title="Run Panorama demo at Oracle cloud" target="_blank"><img src="images/play.png" style="height:1em"> Panorama demo</a></li>
                     <li><a href="https://github.com/rammpeter/panorama" title="Github source code repository" target="_blank"><img src="images/github_small.png" style="height:1em"> Github repository</a></li>
                 </ul>
@@ -131,7 +133,7 @@
                 </ul>
                 <h4>Run as Docker container</h4>
                 To download the image and start the Panorama application as Docker container type:<br/>
-                <pre>docker run -p8080:8080 -d rammpeter/panorama</pre>
+                <pre>docker run -p 8080:8080 -d rammpeter/panorama</pre>
                 This starts the application within one or two minutes. Now you can connect to Panorama's login screen in your browser via <pre style="display: inline;">http://&lt;your&nbsp;server&gt;:8080</pre>
 
                 <a name="jar"></a><h3>Customize a Panorama instance running by "java -jar Panorama.jar"</h3>
@@ -151,7 +153,7 @@
                     <li>Set additional customizing properties for Panorama application as Docker container environment variables</li>
                 </ul>
                 Example:
-                <pre>docker run --name panorama -p8080:8080 \
+                <pre>docker run --name panorama -p 8080:8080 \
   -v $TNS_ADMIN/tnsnames.ora:/etc/tnsnames.ora \
   -v /var/opt/my_panorama_config:/var/opt/panorama \
   -e TNS_ADMIN=/etc -e TZ="Europe/Berlin" \
