@@ -39,9 +39,10 @@
                     <li>
                         <ul>
                             <li><a href="#start running quickly">Start running quickly</a></li>
-                            <li><a href="#jar">Customize a Panorama instance running by "java -jar Panorama.jar"</a></li>
-                            <li><a href="#docker">Customize a Panorama instance running as Docker container</a></li>
-                            <li><a href="#customize">Options for customizing the Panorama application</a></li>
+                            <li><a href="#customize">Configuration options for customizing the Panorama application</a></li>
+                            <li><a href="#jar">Configure a Panorama instance running by "java -jar Panorama.jar"</a></li>
+                            <li><a href="#docker">Configure a Panorama instance running as Docker container</a></li>
+                            <li><a href="#customize_examples">Configuration examples</a></li>
                             <li><a href="#run demo">Run demo installation</a></li>
                         </ul>
                     </li>
@@ -125,7 +126,14 @@
 
                 <a name="how to run it"></a><h2>How to run it?</h2>
                 <a name="start running quickly"></a><h3>Start running quickly</h3>
-                Panorama supports two ways to run it: as Java application or as Docker container.
+                Panorama supports two ways to run it: as Java application or as Docker container.<br/>
+                Startup of the application may require some seconds up to a minute.
+                Your application is up and running if this lines appear in the console log:
+                <pre>
+* Listening on http://[::]:8080
+Use Ctrl-C to stop
+                </pre>
+
                 <h4>Run as Java application</h4>
                 <ul>
                     <li>Download the latest release of Panorama.jar from <a href="https://github.com/rammpeter/panorama/releases/latest" target="_blank">here</a></li>
@@ -136,44 +144,8 @@
                 <pre>docker run -p 8080:8080 -d rammpeter/panorama</pre>
                 This starts the application within one or two minutes. Now you can connect to Panorama's login screen in your browser via <pre style="display: inline;">http://&lt;your&nbsp;server&gt;:8080</pre>
 
-                <a name="jar"></a><h3>Customize a Panorama instance running by "java -jar Panorama.jar"</h3>
-                Command line options for <pre style="display: inline;">java -jar Panorama.jar &lt;options&gt;</pre> :
-                <ul>
-                    <li><pre style="display: inline;">-p or --port &lt;port&gt</pre>: Server listens on that port. Default port is 8080.</li>
-                    <li><pre style="display: inline;">-b or --bind &lt;IP address&gt</pre>: Bind server to a specific address. Default is 0.0.0.0. (all addresses)</li>
-                </ul>
-
-                <a name="docker"></a><h3>Customize a Panorama instance running as Docker container</h3>
-                You can customize your Docker container:
-                <ul>
-                    <li>Mount your host's tnsnames.ora at $TNS_ADMIN/tnsnames.ora into the container in a folder and tell it Panorama by setting $TNS_ADMIN in container so Panorama can refer to your config:  <pre style="display: inline;">-v $TNS_ADMIN/tnsnames.ora:/etc/tnsnames.ora -e TNS_ADMIN=/etc</pre><br/>
-                        Caution: with Docker in Windows sometimes you have to mount the file tnsnames.ora with <pre style="display: inline;">-v $TNS_ADMIN/tnsnames.ora:/etc</pre></li>
-                    <li>Mount directory for Panorama's config files (/var/opt/panorama) to a directory of your choice outside the container so the config persists even if container is rebuilded</li>
-                    <li>Set your timezone for Docker container (default is UTC): <pre style="display: inline;">-e TZ="Europe/Berlin"</pre></li>
-                    <li>Set additional customizing properties for Panorama application as Docker container environment variables</li>
-                </ul>
-                Example:
-                <pre>docker run --name panorama -p 8080:8080 \
-  -v $TNS_ADMIN/tnsnames.ora:/etc/tnsnames.ora \
-  -v /var/opt/my_panorama_config:/var/opt/panorama \
-  -e TNS_ADMIN=/etc -e TZ="Europe/Berlin" \
-  -e MAX_JAVA_HEAP_SPACE_MB=1024 \
-  -e SECRET_KEY_BASE=&lt;my secret server side key&gt;
-  -d rammpeter/panorama</pre>
-
-                Startup of application in docker container may require one or two minutes.
-                Your docker container is up and running if this two lines appear in Docker log:
-                <pre>
-> INFO:oejs.ServerConnector:main: Started ServerConnector@6a83bd10{HTTP/1.1}{0.0.0.0:8080}
-> INFO:oejs.Server:main: Started @137606ms
-                </pre>
-
-                <h4>Running docker-container with SSL encryption for https access</h4>
-                This <a href="https://rammpeter.blogspot.com/2019/03/panorama-configure-https-access-to.html" target="_blank">blog post</a> describes how to configure Panorama and Nginx with docker-compose for SSL-encryption.
-
-
-                <a name="customize"></a><h3>Options for customizing the Panorama application (Java + Docker)</h3>
-                You can customize Panorama by providing a config file in YAML format or setting environment variables.<br/>
+                <a name="customize"></a><h3>Configuration options for customizing the Panorama application (Java + Docker)</h3>
+                You can configure Panorama by providing a config file in YAML format or setting environment variables.<br/>
                 Using a config file is the preferred method to avoid the compromise of secrets in environemnt variables.<br/>
 
                 <br/>
@@ -194,7 +166,7 @@
                         <td><pre style="display: inline;">MAX_JAVA_HEAP_SPACE_MB</pre></td>
                         <td>Set maximum Java heap space memory usable for Panorama in megabytes (Default=1024).<br/>
                             The suggested value for multiuser production use is 4096.<br>
-                            This attribute works for Docker container only. If running as pure Java program (Panorama.jar) then use the Java parameter -Xmx4096m instead.
+                            This attribute works for Docker container only and must be set as environment variable. If running as pure Java program (Panorama.jar) then use the Java parameter -Xmx4096m instead.
                         </td>
                     </tr>
                     <tr>
@@ -220,7 +192,7 @@
                     </tr>
                     <tr>
                         <td><pre style="display: inline;">PANORAMA_MASTER_PASSWORD</pre></td>
-                        <td>Setting a master password in environment adds an additional menu item "Spec. additions"/"Admin login" in Panorama GUI.<br/>
+                        <td>Setting the master password as a config attribute adds an additional menu item "Spec. additions"/"Admin login" in Panorama GUI.<br/>
                             Applying this password at "Admin logon" adds additional control functions to the GUI menu, e.g. Panorama-Sampler configuration.
                         </td>
                     </tr>
@@ -234,8 +206,9 @@
                     <tr>
                         <td><pre style="display: inline;">PANORAMA_VAR_HOME</pre></td>
                         <td>Panorama stores encrypted session connect data and usage log in local filesystem.<br/>
-                            This setting controls the used directory inside the Docker container (Default: /var/opt/panorama).<br/>
-                            It is suggested to mount this directory to the local filesystem outside the Docker container.
+                            This setting controls the used directory.<br/>
+                            For the Panorama.jar the default is a subdir Panorama in a temporary folder.
+                            For the Docker container the default is /var/opt/panorama and it is suggested to mount this directory to the local filesystem outside the Docker container.
                         </td>
                     </tr>
                     <tr>
@@ -248,6 +221,53 @@
                     </tr>
                 </table>
 
+                <a name="jar"></a><h3>Configure a Panorama instance running by "java -jar Panorama.jar"</h3>
+                Command line options for <pre style="display: inline;">java -jar Panorama.jar &lt;options&gt;</pre> :
+                <ul>
+                    <li><pre style="display: inline;">-p or --port &lt;port&gt</pre>: Server listens on that port. Default port is 8080.</li>
+                    <li><pre style="display: inline;">-b or --bind &lt;IP address&gt</pre>: Bind server to a specific address. Default is 0.0.0.0. (all addresses)</li>
+                </ul>
+
+                <a name="docker"></a><h3>Configure a Panorama instance running as Docker container</h3>
+                You can configure your Docker container:
+                <ul>
+                    <li>Mount your host's tnsnames.ora at $TNS_ADMIN/tnsnames.ora into the container in a folder and tell it Panorama by setting $TNS_ADMIN in container so Panorama can refer to your config:  <pre style="display: inline;">-v $TNS_ADMIN/tnsnames.ora:/etc/tnsnames.ora -e TNS_ADMIN=/etc</pre><br/>
+                        Caution: with Docker in Windows sometimes you have to mount the file tnsnames.ora with <pre style="display: inline;">-v $TNS_ADMIN/tnsnames.ora:/etc</pre></li>
+                    <li>Mount directory for Panorama's config files (/var/opt/panorama) to a directory of your choice outside the container so the config persists even if container is rebuilded</li>
+                    <li>Set your timezone for Docker container (default is UTC): <pre style="display: inline;">-e TZ="Europe/Berlin"</pre></li>
+                    <li>Set additional customizing properties for Panorama application as in config file or as Docker container environment variables</li>
+                </ul>
+
+                <a name="customize_examples"></a><h3>Configuration examples</h3>
+                Create a config file <pre style="display: inline;">/var/opt/panorama/config.yml</pre> with your secure settings, use environment variables for some other:
+                <pre>
+# User-specific configuration file for Panorama
+PANORAMA_LOG_SQL:  true
+PANORAMA_VAR_HOME: /var/opt/panorama
+SECRET_KEY_BASE:   923863l82g2j4797h87g13451v4s589es27g...
+                </pre>
+                Call Panorama using this config file:
+                <ul>
+                    <li>
+                        Example for Panorama.jar:
+                        <pre>
+PANORAMA_CONFIG_FILE=/var/opt/panorama/config.yml java -jar Panorama.jar -p 8080
+                        </pre>
+                    </li>
+                    <li>
+                        Example for Docker:
+                        <pre>
+                            </pre>
+                        <pre>
+docker run --name panorama -p 8080:8080 \
+  -v $TNS_ADMIN/tnsnames.ora:/etc/tnsnames.ora \
+  -v /var/opt/panorama:/var/opt/panorama \
+  -e TNS_ADMIN=/etc -e TZ="Europe/Berlin" \
+  -e MAX_JAVA_HEAP_SPACE_MB=1024 \
+  -e PANORAMA_CONFIG_FILE=/var/opt/panorama/config.yml
+  -d rammpeter/panorama</pre>
+                    </li>
+                </ul>
                 <a name="run demo"></a><h3>Run demo installation</h3>
                 <ul>
                     <li>
@@ -259,16 +279,19 @@
 
                 <a name="security"></a><h2>What about security?</h2>
                 <ul>
-                    <li>For production purposes you should run Panorama with SSL-encrypted web traffic (https). Easiest way for SSL connections is to enclose Panorama behind a reverse proxy ( Nginx/Apache/Traefik).</li>
+                    <li>
+                        For production purposes you should run Panorama with SSL-encrypted web traffic (https). Easiest way for SSL connections is to enclose Panorama behind a reverse proxy ( Nginx/Apache/Traefik).<br/>
+                        This <a href="https://rammpeter.blogspot.com/2019/03/panorama-configure-https-access-to.html" target="_blank">blog post</a> describes how to configure Panorama and Nginx with docker-compose for SSL-encryption.
+                    </li>
                     <li>Even if SSL encryption (https) is not used, the user and password credentials are always asynchronously encrypted at network transfer from browser to the Panorama server by a public key where the private key for decryption is only known inside the Panorama server code.</li>
                     <li>Your Oracle DB connection's password is stored encrypted at server side and will be decrypted shortly in server memory only for the process of establishing connection to your target database.<br/>
                     The key used for this encryption consists of the server side key (<pre style="display: inline;">SECRET_KEY_BASE</pre>) which is salted with a unique client key specific to your browser instance (stored as browser cookie).<br/>
                     This way only requests from your browser are able to reuse the stored connect info for reestablishing the database connection.</li>
                     <li>If you retain your login info for further fast logins (checkbox 'Save logins' in statup dialog), this info is stored in local server file system at <pre style="display: inline;">PANORAMA_VAR_HOME</pre> completely encrypted the same way like passwords.</li>
-                    <li>You can customize the server side key used for encryption by one of the following:
+                    <li>You can provide your individual server side key used for encryption by one of the following:
                         <ul>
-                            <li>create a environment variable <pre style="display: inline;">SECRET_KEY_BASE</pre> with the key value.</li>
-                            <li>create a file with the key value and set the environment variable <pre style="display: inline;">SECRET_KEY_BASE_FILE</pre> to the location of this file.</li>
+                            <li>create a config attribute <pre style="display: inline;">SECRET_KEY_BASE</pre> with the key value.</li>
+                            <li>create a file with the key value and set the config attribute <pre style="display: inline;">SECRET_KEY_BASE_FILE</pre> to the location of this file.</li>
                         </ul>
                         The key can contain all printable characters and should be at least 128 characters long.<br/>
                         Every change of the given key at server side leads to invalidation of all stored connection info.<br/><br/>
@@ -304,7 +327,7 @@
                     <li>Panorama internally uses a connection pool, so client request may reuse existing free connections from pool if same credentials are used (TNS-data, user/password)</li>
                     <li>Inactive database connections in connection pool are terminated 10 minutes after last usage</li>
                     <li>Panorama renders one single web page via Ajax-calls. This way the back button of your browser is not supported to return to former page content.</li>
-                    <li>Panorama writes short usage information to local plain text file 'Usage.log' in the directory targeted by environment variable <pre style="display: inline;">PANORAMA_VAR_HOME</pre><br/>
+                    <li>Panorama writes short usage information to local plain text file 'Usage.log' in the directory targeted by the config attribute <pre style="display: inline;">PANORAMA_VAR_HOME</pre><br/>
                         This log records cointain the client IP address, DB name, time, called function and used TNS alias/URL</br>
                         Setting PANORAMA_USAGE_INFO_MAX_AGE = 0 disables this logging completely.<br/>
                         You can find a menu item "Usage history" to view this log info if logged in as admin (see PANORAMA_MASTER_PASSWORD)</pre>
