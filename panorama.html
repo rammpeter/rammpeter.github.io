@@ -173,7 +173,11 @@
 
 
                 <a name="customize"></a><h3>Options for customizing the Panorama application (Java + Docker)</h3>
-                Environment variables for customization:
+                You can customize Panorama by providing a config file in YAML format or setting environment variables.<br/>
+                Using a config file is the preferred method to avoid the compromise of secrets in environemnt variables.<br/>
+
+                <br/>
+                Attributes for customization as environment variable or config file entry are:
                 <table  class="border">
                     <tr>
                         <td><pre style="display: inline;">MAX_CONNECTION_POOL_SIZE</pre></td>
@@ -190,7 +194,28 @@
                         <td><pre style="display: inline;">MAX_JAVA_HEAP_SPACE_MB</pre></td>
                         <td>Set maximum Java heap space memory usable for Panorama in megabytes (Default=1024).<br/>
                             The suggested value for multiuser production use is 4096.<br>
-                            If running as pure Java program (Panorama.jar) then use the Java parameter -Xmx4096m instead.
+                            This attribute works for Docker container only. If running as pure Java program (Panorama.jar) then use the Java parameter -Xmx4096m instead.
+                        </td>
+                    </tr>
+                    <tr>
+                        <td><pre style="display: inline;">PANORAMA_CONFIG_FILE</pre></td>
+                        <td>
+                            Specify the location and file name of the config file in YAML format.<br/>
+                            This attribute works only if set as environment variable.
+                        </td>
+                    </tr>
+                    <tr>
+                        <td><pre style="display: inline;">PANORAMA_LOG_LEVEL=debug|info|warn|error</pre></td>
+                        <td>
+                            Set the level for log output in console.<br/>
+                            Default log level is "info".<br/>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td><pre style="display: inline;">PANORAMA_LOG_SQL=true</pre></td>
+                        <td>
+                            Force the output of executed SQL statements in console log.<br/>
+                            This helps to reproduce how Panorama gets information from database (without setting PANORAMA_LOG_LEVEL=debug which logs the same + much more).
                         </td>
                     </tr>
                     <tr>
@@ -211,20 +236,6 @@
                         <td>Panorama stores encrypted session connect data and usage log in local filesystem.<br/>
                             This setting controls the used directory inside the Docker container (Default: /var/opt/panorama).<br/>
                             It is suggested to mount this directory to the local filesystem outside the Docker container.
-                        </td>
-                    </tr>
-                    <tr>
-                        <td><pre style="display: inline;">PANORAMA_LOG_LEVEL=debug|info|warn|error</pre></td>
-                        <td>
-                            Set the level for output in Docker log.<br/>
-                            Default log level is "info".<br/>
-                        </td>
-                    </tr>
-                    <tr>
-                        <td><pre style="display: inline;">PANORAMA_LOG_SQL=true</pre></td>
-                        <td>
-                            Force the output of executed SQL statements in Docker log.<br/>
-                            This helps to reproduce how Panorama gets information from database (without setting PANORAMA_LOG_LEVEL=debug which logs the same + much more).
                         </td>
                     </tr>
                     <tr>
