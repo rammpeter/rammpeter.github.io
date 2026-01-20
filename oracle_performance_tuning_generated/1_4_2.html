@@ -1,6 +1,6 @@
 <h3>Excessive filtering after TABLE ACCESS BY ROWID due to weak index access criteria (AWR history)</h3>
 INDEX RANGE|SKIP SCAN with high number of rows returned and restrictive filter after TABLE ACCESS BY ROWID leads to unnecessary effort for table access before rejecting table records from result.<br/>
-You should consider to expand index by filter criterias of table access to reduce number of TABLE ACCESS BY ROWID.<br/>
+You should consider to expand index by filter criteria of table access to reduce number of TABLE ACCESS BY ROWID.<br/>
 This selection evaluates the AWR history.<br/>
 Result is sorted by time effort for operation TABLE ACCESS BY ROWID.<br/>
 <pre style='background-color: #FFFFCC;'> SELECT ta.DBID, ash.Instance_Number, ta.SQL_ID, ta.ID SQL_Plan_Line_ID,ir.Object_Owner||'.'||ir.Object_Name Index_Name,  ta.Object_Owner||'.'||ta.Object_Name Table_Name, ir.Cardinality Cardinality_Index, ta.Cardinality Cardinality_Table,
@@ -17,7 +17,7 @@ Result is sorted by time effort for operation TABLE ACCESS BY ROWID.<br/>
                               FROM   DBA_Hist_Active_Sess_History
                               WHERE  Sample_Time > SYSDATE - :P1
                               AND    SQL_Plan_Operation = 'TABLE ACCESS' AND SQL_Plan_Options LIKE 'BY%INDEX ROWID%'
-                              AND    DBID = &your_DBID  /* do not count multiple times for multipe different DBIDs/ConIDs */
+                              AND    DBID = &your_DBID  /* do not count multiple times for multiple different DBIDs/ConIDs */
                               GROUP BY DBID, Instance_Number, SQL_ID, SQL_Child_Number, SQL_Plan_Hash_Value, SQL_Plan_Line_ID
                               HAVING COUNT(*) > :P2
                              ) ash ON ash.DBID=ta.DBID AND ash.SQL_ID=ta.SQL_ID AND ash.SQL_Plan_Hash_Value=ta.Plan_Hash_Value AND ash.SQL_Plan_Line_ID=ta.ID

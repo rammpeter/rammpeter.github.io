@@ -34,7 +34,7 @@ FROM   (
         AND    SQL_Plan_Options = 'BUFFERED'
         AND    h.Sample_ID < m.Min_Sample_ID
         AND    h.Sample_Time > SYSDATE - :P1
-        AND    h.DBID = &your_DBID  /* do not count multiple times for multipe different DBIDs/ConIDs */
+        AND    h.DBID = &your_DBID  /* do not count multiple times for multiple different DBIDs/ConIDs */
         GROUP BY h.Instance_Number, h.SQL_ID, h.SQL_Plan_Hash_Value, h.SQL_Plan_Line_ID, h.User_ID
         UNION ALL
         SELECT h.Inst_ID, h.SQL_ID, h.SQL_Plan_Hash_Value, h.SQL_Plan_Line_ID,

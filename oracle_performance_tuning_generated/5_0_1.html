@@ -20,6 +20,7 @@ Selection is usable with Rel. 12.1 or greater<br/>
   Views AS (SELECT /*+ NO_MERGE MATERIALIZE */ Owner, View_Name
             FROM   DBA_Views
             WHERE  Owner NOT IN (SELECT /*+ NO_MERGE */ UserName FROM All_Users WHERE Oracle_Maintained = 'Y')
+            
            ),
   Dependencies AS (SELECT /*+ NO_MERGE MATERIALIZE */ Referenced_Owner, Referenced_Name, COUNT(*) References
                    FROM   DBA_Dependencies

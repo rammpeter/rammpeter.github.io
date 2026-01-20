@@ -35,7 +35,7 @@ Results are from DBA_Hist_SQL_Plan<pre style='background-color: #FFFFCC;'>WITH M
                                        CROSS JOIN min_Time
                                        WHERE  ss.Begin_Interval_Time > min_time.min_time
                                        AND    u.UserName NOT IN (SELECT /*+ NO_MERGE */ UserName FROM All_Users WHERE Oracle_Maintained = 'Y')
-                                       AND    h.DBID = &your_DBID  /* do not count multiple times for multipe different DBIDs/ConIDs */
+                                       AND    h.DBID = &your_DBID  /* do not count multiple times for multiple different DBIDs/ConIDs */
                                        GROUP BY h.Instance_Number, h.SQL_ID, h.SQL_Plan_Hash_Value, h.SQL_Plan_Line_ID
                                      ) h ON h.Instance_Number = ps.Instance_Number AND h.SQL_ID = ps.SQL_ID AND h.SQL_Plan_Hash_Value = ps.Plan_Hash_Value AND h.SQL_Plan_Line_ID = ps.Cartesian_Line_ID
 

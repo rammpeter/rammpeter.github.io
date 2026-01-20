@@ -1,6 +1,6 @@
 <h3>Recommendations for ADVANCED HIGH index compression</h3>
 Introduced with Oracle 12.2 the ADVANCED HIGH index compression as part of the Oracle Advanced Compression Option allows significant better compression than the other index key deduplication functions (COMPRESS, COMPRESS ADVANCED LOW).<br/>
-But the drawback is that index maintenence is more costly and index access costs more CPU effort and can become up to five times slower, especially for index scans with larger results.<br/>
+But the drawback is that index maintenance is more costly and index access costs more CPU effort and can become up to five times slower, especially for index scans with larger results.<br/>
 Therefore COMPRESS ADVANCED HIGH is especially suggested for less frequently used indexes on tables with less DML.<br/>
 This selection considers indexes with < x seconds in wait at SQLs accessing this index worth for possible COMPRESS ADVANCED HIGH.<br/>
 <pre style='background-color: #FFFFCC;'>WITH Days_Back AS (SELECT SYSDATE - :P1 Datum FROM DUAL),

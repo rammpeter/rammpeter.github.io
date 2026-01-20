@@ -231,7 +231,7 @@
   "state": { "opened": false }
 , "icon":"images/application-monitor.png"},{
   "id": "0_16",
-  "text": "17. Possibly compressable but currently uncompressed LOB-segments",
+  "text": "17. Possibly compressible but currently uncompressed LOB-segments",
   "state": { "opened": false }
 , "icon":"images/application-monitor.png"},{
   "id": "0_17",
@@ -531,7 +531,7 @@
   "state": { "opened": false }
 , "icon":"images/application-monitor.png"} ]},{
   "id": "5",
-  "text": "6. Conclusions on appliction behaviour",
+  "text": "6. Conclusions on application behaviour",
   "state": { "opened": false }
 , "children": [{
   "id": "5_0",
@@ -559,31 +559,43 @@
   "state": { "opened": false }
 , "icon":"images/application-monitor.png"} ]},{
   "id": "5_1",
-  "text": "2. Substantial larger runtime per module compared to average over longer time period",
+  "text": "2. SQL issues in application context",
+  "state": { "opened": false }
+, "children": [{
+  "id": "5_1_0",
+  "text": "1. Possibly unnecessary update of primary key columns",
   "state": { "opened": false }
 , "icon":"images/application-monitor.png"},{
+  "id": "5_1_1",
+  "text": "2. Possibly problematic NULL-handling in bind variables (:A1 IS NULL OR Column = :A1)",
+  "state": { "opened": false }
+, "icon":"images/application-monitor.png"},{
+  "id": "5_1_2",
+  "text": "3. Volatile columns in result due to 'SELECT * FROM table'",
+  "state": { "opened": false }
+, "icon":"images/application-monitor.png"} ]},{
   "id": "5_2",
-  "text": "3. Usage of multi-column primary keys as reference target (business keys instead of technical keys)",
+  "text": "3. Substantial larger runtime per module compared to average over longer time period",
   "state": { "opened": false }
 , "icon":"images/application-monitor.png"},{
   "id": "5_3",
-  "text": "4. Missing suggested AUDIT rules for standard auditing",
+  "text": "4. Usage of multi-column primary keys as reference target (business keys instead of technical keys)",
   "state": { "opened": false }
 , "icon":"images/application-monitor.png"},{
   "id": "5_4",
-  "text": "5. Missing suggested AUDIT rules for unified auditing",
+  "text": "5. Missing suggested AUDIT rules for standard auditing",
   "state": { "opened": false }
 , "icon":"images/application-monitor.png"},{
   "id": "5_5",
-  "text": "6. Long running transactions from SGA (gv$Active_Session_History)",
+  "text": "6. Missing suggested AUDIT rules for unified auditing",
   "state": { "opened": false }
 , "icon":"images/application-monitor.png"},{
   "id": "5_6",
-  "text": "7. Long running transactions from AWH-history (DBA_Hist_Active_Sess_History)",
+  "text": "7. Long running transactions from SGA (gv$Active_Session_History)",
   "state": { "opened": false }
 , "icon":"images/application-monitor.png"},{
   "id": "5_7",
-  "text": "8. Possibly unnecessary update of primary key columns",
+  "text": "8. Long running transactions from AWH-history (DBA_Hist_Active_Sess_History)",
   "state": { "opened": false }
 , "icon":"images/application-monitor.png"},{
   "id": "5_8",
@@ -603,11 +615,7 @@
   "state": { "opened": false }
 , "icon":"images/application-monitor.png"},{
   "id": "5_12",
-  "text": "13. Possibly probematic NULL-handling in bind variables (:A1 IS NULL OR Column = :A1)",
-  "state": { "opened": false }
-, "icon":"images/application-monitor.png"},{
-  "id": "5_13",
-  "text": "14. Volatile columns in result due to 'SELECT * FROM table'",
+  "text": "13. Estimate network latency between client and database by evaluation of Active Session History",
   "state": { "opened": false }
 , "icon":"images/application-monitor.png"} ]},{
   "id": "6",
@@ -628,6 +636,10 @@
 , "icon":"images/application-monitor.png"},{
   "id": "6_3",
   "text": "4. Candidates for DETERMINISTIC in user-defined PL/SQL functions",
+  "state": { "opened": false }
+, "icon":"images/application-monitor.png"},{
+  "id": "6_4",
+  "text": "5. Candidates for DETERMINISTIC in package and standalone PL/SQL functions",
   "state": { "opened": false }
 , "icon":"images/application-monitor.png"} ]},{
   "id": "7",

@@ -4,7 +4,7 @@ Especially with release 12.2 and above automatic list partitioning lets you easy
 Conditions for useful partitioning by these filters are:<br/>
 - The potential partition key should significantly reduce the result (e.g. to less than 3/4 if used as filter condition)<br/>
 - The resulting number of partitions should by manageable (Oracle's absolute maximum for partitions of a table is 1048575, but the optimal number is much smaller)<br/>
-- The number of records in a partition should be high enough (e.g. more than 10000 .. 100000), otherwhise it could be more sufficient to use an index<br/>
+- The number of records in a partition should be high enough (e.g. more than 10000 .. 100000), otherwise it could be more sufficient to use an index<br/>
 - The filter condition should by deterministic (able to be used as partition criteria)<br/>
 <br/>
 Unfortunately, only execution plans in SGA are considered because Oracle does not store access and filter predicates in AWR speichert (fixed with rel. 21.3).<br/>
@@ -35,7 +35,7 @@ FROM   (
                 FROM   DBA_Hist_Active_Sess_History
                 WHERE  Sample_Time > SYSDATE - :P1
                 AND    SQL_Plan_Line_ID IS NOT NULL
-                AND    DBID = &your_DBID  /* do not count multiple times for multipe different DBIDs/ConIDs */
+                AND    DBID = &your_DBID  /* do not count multiple times for multiple different DBIDs/ConIDs */
                 GROUP BY SQL_ID, SQL_Plan_Hash_Value, SQL_Plan_Line_ID
                 HAVING COUNT(*) * 10 > :P2  /* * 10 seconds */
                ) h ON h.SQL_ID = p.SQL_ID AND h.SQL_Plan_Hash_Value = p.Plan_Hash_Value AND h.SQL_Plan_Line_ID = p.ID

@@ -31,7 +31,7 @@ Auto list partitioning helps to:<br/>
                      FROM   DBA_Tab_Columns tc
                      LEFT OUTER JOIN DBA_Part_Key_Columns pc ON pc.Owner = tc.Owner AND pc.Name = tc.Table_Name AND pc.Column_Name = tc.Column_Name
                      WHERE  tc.Owner NOT IN (SELECT /*+ NO_MERGE */ UserName FROM All_Users WHERE Oracle_Maintained = 'Y')
-                     AND    pc.Column_Name IS NULL /* Don't show colums that are already used as partition key */
+                     AND    pc.Column_Name IS NULL /* Don't show columns that are already used as partition key */
                      AND    tc.Num_Distinct + tc.Num_Nulls > 1 /* There should be more than 1 partition in result */
                      AND    tc.Num_Distinct < :P1
                     ),

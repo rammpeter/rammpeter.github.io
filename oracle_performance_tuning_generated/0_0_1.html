@@ -1,5 +1,5 @@
 <h3>Recommendations for index-compression, test by selectivity</h3>
-Index-compression (COMPRESS) is usefull by reduction of physical footprint for OLTP-indexes with poor selectivity (column level).<br/>
+Index-compression (COMPRESS) is useful by reduction of physical footprint for OLTP-indexes with poor selectivity (column level).<br/>
   For poor selective indexes reduction of size by 1/4 to 1/3 is possible.<pre style='background-color: #FFFFCC;'>WITH Segments AS (SELECT /*+ NO_MERGE MATERIALIZE */ Owner, Segment_Name, ROUND(SUM(bytes)/(1024*1024),1) MBytes
                   FROM   DBA_Segments
                   WHERE Owner NOT IN (SELECT /*+ NO_MERGE */ UserName FROM All_Users WHERE Oracle_Maintained = 'Y')

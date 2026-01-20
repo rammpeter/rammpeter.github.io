@@ -1,8 +1,8 @@
 <h3>Problematic usage of parallel query for short running SQLs (by SQL Monitor)</h3>
-For short running SQL the effort for starting parallel query processes is often higher than for excuting the SQL iteself.<br/>
+For short running SQL the effort for starting parallel query processes is often higher than for executing the SQL itself.<br/>
 Additional problems may be caused by the limited amount of PQ-processes for frequently executed SQLs<br/>
 as well as by the basically recording of SQL Monitor reports for each PQ execution.<br/>
-Therfore for SQLs with runtime in seconds or less you should always avoid using parallel query.<br/>
+Therefore for SQLs with runtime in seconds or less you should always avoid using parallel query.<br/>
 This selection considers SQLs from SQL Monitor recordings in gv$SQL_Monitor and DBA_Hist_Reports<pre style='background-color: #FFFFCC;'>SELECT Inst_ID, SQL_ID, Source, Count(*) Reports,
        ROUND(AVG((Last_Refresh_Time-SQL_Exec_Start)*86400), 3) "Avg. duration Secs. per Exec.",
        ROUND(SUM(Elapsed_Time_Secs), 3)                         "Elapsed Secs Total",

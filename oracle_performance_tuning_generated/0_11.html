@@ -48,7 +48,7 @@ BEGIN
   DBMS_OUTPUT.PUT_LINE('===========================================');
   DBMS_OUTPUT.PUT_LINE('Detection of chained rows: connected as user='||SYS_CONTEXT ('USERENV', 'SESSION_USER'));
   DBMS_OUTPUT.PUT_LINE('Sample-size='||Sample_Size||' rows');
-  DBMS_OUTPUT.PUT_LINE('There might be incorrect results for partioned and/or compressed tables');
+  DBMS_OUTPUT.PUT_LINE('There might be incorrect results for partitioned and/or compressed tables');
   DBMS_OUTPUT.PUT_LINE('===========================================');
   SELECT Statistic# INTO StatNum FROM v$StatName WHERE Name='consistent gets';
   FOR Rec IN (SELECT Owner, Table_Name, Num_Rows

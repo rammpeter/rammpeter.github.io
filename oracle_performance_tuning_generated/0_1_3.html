@@ -146,7 +146,7 @@ If none of the four reasons really requires the existence, the index can be remo
                                      JOIN Ind_Columns ic ON ic.Table_Owner = cc.Owner AND ic.Table_Name = cc.Table_Name  AND ic.Column_Name = cc.Column_Name /* Position of column in index does not matter for constraint */
                                      GROUP BY ic.Index_Owner, ic.Index_Name, c.Constraint_Name
                                      HAVING COUNT(DISTINCT ic.Column_Name) = MAX(cc.Column_Count) /* All constraint columns are covered by index columns, index may have additional columns */
-                                     AND    MAX(ic.Column_Position) = MAX(cc.Column_Count)               /* All additional columns of index are right from contraint columns */
+                                     AND    MAX(ic.Column_Position) = MAX(cc.Column_Count)               /* All additional columns of index are right from constraint columns */
                                     ) uc ON uc.Index_Owner = u.Owner AND uc.Index_Name = u.Index_Name
                     JOIN (SELECT /*+ NO_MERGE */ Owner, Segment_Name, ROUND(SUM(bytes)/(1024*1024),1) MBytes,
                                  CASE WHEN COUNT(DISTINCT TableSpace_Name) > 1 THEN '< '||COUNT(DISTINCT TableSpace_Name)||' different >' ELSE MIN(TableSpace_Name) END TableSpace_Name

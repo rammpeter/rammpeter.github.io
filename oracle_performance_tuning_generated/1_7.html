@@ -1,5 +1,5 @@
 <h3>Iteration in nested-loop join against full scan operation (current SGA)</h3>
-Frequent execution of full scan operation by iteration in nested loop join may result in exorbitant number of block access massive contention of CPU and I/O-ressources.<br/>
+Frequent execution of full scan operation by iteration in nested loop join may result in exorbitant number of block access massive contention of CPU and I/O-resources.<br/>
 It may also activate cache buffers chains latch-waits.<br/>
 This access my be acceptable, if controlling result for nested loop has only one or less records.<br/>
 Statement executes only for current connected RAC-Instance (due to runtime problem otherwise), so it must be executed separately for every instance.<pre style='background-color: #FFFFCC;'>SELECT p.Inst_ID, p.SQL_ID, s.Executions, ROUND(s.Elapsed_Time/1000000, 1) Elapsed_time_Secs, p.Child_Number, p.Plan_Hash_Value,

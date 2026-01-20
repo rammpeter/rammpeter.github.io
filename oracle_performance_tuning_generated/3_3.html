@@ -1,7 +1,7 @@
 <h3>Identification of hot blocks in DB-cache: suboptimal indexes</h3>
 Indexes with high fluctuation of data and consecutive content are successive scanning more DB-blocks per access if rows have been deleted.<br/>
 Especially problematic is access to first records in index order of such moving windows.<br/>
-This indexes may need cyclic reorganisation e.g. by ALTER INDEX SHRINK SPACE COMPACT or ALTER INDEX COALESCE for running OLTP-systems or ALTER INDEX REBUILD in appliction downtimes.<br/>
+This indexes may need cyclic reorganisation e.g. by ALTER INDEX SHRINK SPACE COMPACT or ALTER INDEX COALESCE for running OLTP-systems or ALTER INDEX REBUILD in application downtimes.<br/>
 This selection scans for SQL statements in current SGA with access on indexes which possibly need reorganisation.<pre style='background-color: #FFFFCC;'>SELECT * FROM (
                       SELECT /*+ NO_MERGE MATERIALIZE */ p.Inst_ID "Inst", p.SQL_ID, p.Child_Number "Child Number", s.Executions "Executions",
                              ROUND(s.Elapsed_Time/1000000) "Elapsed Time (Secs)",

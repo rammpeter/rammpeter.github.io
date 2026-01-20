@@ -1,9 +1,9 @@
 <h3>Implicit conversion by TO_NUMBER or INTERNAL_FUNCTION (prevented usage of indexes)</h3>
-Implicit type conversions are some times accidentially due to wrong type of bind variable.<br/>
+Implicit type conversions are some times accidentally due to wrong type of bind variable.<br/>
 This conversion may lead to missing usage of existing indizes and cause unnecessary I/O and CPU load.<br/>
 Especially implicit conversion by TO_NUMBER while accessing VARCHAR2-columns with number bind type prevents usage of existing indizes.<br/>
 For this cases data type according to column type should be used for bind variable.<br/>
-Conversion by INTERNAL_FUNCTION may be suboptimal e.g. for IN-lists if efficient usage of existing index with inlist iteration is not choosen.<pre style='background-color: #FFFFCC;'>WITH Ind_Columns AS (SELECT /*+ NO_MERGE MATERIALIZE */ * FROM DBA_Ind_Columns)
+Conversion by INTERNAL_FUNCTION may be suboptimal e.g. for IN-lists if efficient usage of existing index with inlist iteration is not chosen.<pre style='background-color: #FFFFCC;'>WITH Ind_Columns AS (SELECT /*+ NO_MERGE MATERIALIZE */ * FROM DBA_Ind_Columns)
 SELECT p.Inst_ID, p.SQL_ID,
        p.Plan_Hash_Value             "Plan hash value",
        h.SQL_Plan_Line_ID            "Plan line ID",
@@ -47,7 +47,7 @@ JOIN   (SELECT h.*, SUM(Seconds) OVER (PARTITION BY SQL_ID, UserName, SQL_Plan_H
                 JOIN   All_Users u ON u.User_ID = h.User_ID
                 WHERE  ss.Begin_Interval_Time > SYSDATE - :P1
                 AND    u.UserName NOT IN (SELECT /*+ NO_MERGE */ UserName FROM All_Users WHERE Oracle_Maintained = 'Y')
-                AND    h.DBID = &your_DBID  /* do not count multiple times for multipe different DBIDs/ConIDs */
+                AND    h.DBID = &your_DBID  /* do not count multiple times for multiple different DBIDs/ConIDs */
                 GROUP BY h.SQL_ID, u.UserName, h.SQL_Plan_Hash_Value, h.SQL_Plan_Line_ID
                ) h
         WHERE  h.Seconds > :P2

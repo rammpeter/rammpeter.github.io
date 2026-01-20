@@ -1,6 +1,6 @@
 <h3>Detection of indexes with only one or little key values in index</h3>
 Indexes with only one or little key values may be unnecessary.<br/>
-                       Exception: Indexes with only one key value may be usefull for differentiation between NULL and NOT NULL.<br/>
+                       Exception: Indexes with only one key value may be useful for differentiation between NULL and NOT NULL.<br/>
                        Indexes with only one key value and no NULLs in indexed columns my be definitely removed.<br/>
                        If used for ensurance of foreign keys you can often relinquish on these index because resulting FullTableScan on referencing table<br/>
                        in case of delete on referenced table may be accepted.<pre style='background-color: #FFFFCC;'>SELECT /* DB-Tools Ramm Sinnlose Indizes */

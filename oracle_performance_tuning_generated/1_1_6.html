@@ -1,5 +1,5 @@
 <h3>Parallel Query: Degree of parallelism (number of attached PQ servers) higher than limit for single SQL execution</h3>
-Number of avilable PQ servers is a limited resource, so default degree of parallelism is often to high for production use, especially on multi-core machines.<br/>
+Number of available PQ servers is a limited resource, so default degree of parallelism is often to high for production use, especially on multi-core machines.<br/>
 Overallocation of PQ servers may result in serial processing og other SQLs estimated to process in parallel.<pre style='background-color: #FFFFCC;'>SELECT Instance_Number, SQL_ID, MIN(Sample_Time) First_Occurrence, MAX(Sample_Time) Last_Occurrence,
                              COUNT(DISTINCT QC_Session_ID)    Different_Coordinator_Sessions,
                              SUM(Executions)                  SQL_Executions,
@@ -15,7 +15,7 @@ Overallocation of PQ servers may result in serial processing og other SQLs estim
                               FROM dba_hist_active_sess_history
                               WHERE  QC_Session_ID IS NOT NULL
                               AND    Sample_Time > SYSDATE - :P1
-                              AND    DBID = &your_DBID  /* do not count multiple times for multipe different DBIDs/ConIDs */
+                              AND    DBID = &your_DBID  /* do not count multiple times for multiple different DBIDs/ConIDs */
                               GROUP BY Instance_Number, QC_Instance_ID, qc_session_id, QC_Session_Serial#, Sample_ID, SQL_ID
                               HAVING count(*) > :P2
                              ) g

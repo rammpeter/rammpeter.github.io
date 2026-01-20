@@ -47,7 +47,7 @@ FROM   (
                                   AND    h.SQL_Plan_Options LIKE '%FULL'  /* also include Exadata variants */
                                   AND    h.User_ID NOT IN (SELECT /*+ NO_MERGE */ User_ID FROM All_Users WHERE Oracle_Maintained = 'Y')
                                   AND    h.Current_Obj# != -1
-                                  AND    h.DBID = &your_DBID  /* do not count multiple times for multipe different DBIDs/ConIDs */
+                                  AND    h.DBID = &your_DBID  /* do not count multiple times for multiple different DBIDs/ConIDs */
                                   GROUP BY h.DBID, h.SQL_ID, h.Current_Obj#
                                  ) h
                           JOIN   DBA_Objects o ON o.Object_ID = h.Current_Obj#

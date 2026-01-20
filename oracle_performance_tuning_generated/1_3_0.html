@@ -1,7 +1,7 @@
 <h3>Excessive number of cache buffer accesses</h3>
 Access on DB-blocks in DB-cache(db-block-gets, consistent reads) may be critical by provoking "cache buffers chains"-latch waits if:<br/>
 - excessive access targets to one or less DB-blocks reading or writing (Hot blocks im buffer-cache)<br/>
-- excessive read access on many DB-blocks (may be critical even even if these blocks are widely spreaded in cache and are not hot blocks)<br/>
+- excessive read access on many DB-blocks (may be critical even even if these blocks are widely spread in cache and are not hot blocks)<br/>
 For both constellations problematic statements can be identified by number of block access between two AWR-snapshots.<br/>
 <pre style='background-color: #FFFFCC;'>WITH SQLText AS (SELECT /*+ NO_MERGE MATERIALIZE */ DBID, SQL_ID, SQL_Text FROM DBA_Hist_SQLText)
                     SELECT /* DB-Tools Ramm CacheBuffer */ * FROM (
