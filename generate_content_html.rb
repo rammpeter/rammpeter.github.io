@@ -83,6 +83,9 @@ class Generator
     def self.rac?
       true
     end
+    def self.system_parameter_table
+      'GV$Parameter'
+    end
   end
 
   def generate
