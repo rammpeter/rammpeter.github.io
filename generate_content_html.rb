@@ -79,6 +79,12 @@ class Generator
     end
   end
 
+  module MenuHelper::PanoramaConnection
+    def rac?
+      true
+    end
+  end
+
   def generate
     def print_menu_entry(menu_entry, level)
       ioutput = "<tr><td  style='white-space: nowrap;'><b>"
