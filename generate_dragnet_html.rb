@@ -54,6 +54,12 @@ module Panorama
   end
 end
 
+module PanoramaConnection
+  def self.system_parameter_table
+    'GV$Parameter'
+  end
+end
+
 class Generator
   include DragnetHelper
 
