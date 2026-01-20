@@ -58,7 +58,7 @@ module PanoramaConnection
   def self.system_parameter_table
     'GV$Parameter'
   end
-  def autonomous_database?
+  def self.autonomous_database?
     false
   end
 end
