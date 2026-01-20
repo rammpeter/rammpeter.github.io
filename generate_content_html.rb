@@ -80,7 +80,7 @@ class Generator
   end
 
   module MenuHelper::PanoramaConnection
-    def rac?
+    def self.rac?
       true
     end
   end
