@@ -1,6 +1,6 @@
 <h3>Multiple open cursor: SQLs opened multiple in session</h3>
 Normally there should be only one open cursor per SQL statement and session.<br/>
-SQLs with multiple open cursors withon one session my flood session cursor cache and PGA<br/>
+SQLs with multiple open cursors within one session my flood session cursor cache and PGA<br/>
 <pre style='background-color: #FFFFCC;'>SELECT /* SQLs mehrfach als Cursor geoeffnet je Session */
                              sq.*, cu.SID "Session-ID", s.UserName, cu.Anz_Open_Cursor "Number of open cursor", cu.Anz_Sql "Number of SQLs",
                              s.Client_Info, s.Machine, s.Program, s.Module, s.Action, cu.SQL_Text

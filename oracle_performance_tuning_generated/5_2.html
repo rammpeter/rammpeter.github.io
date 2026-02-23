@@ -1,23 +1,30 @@
-<h3>Usage of multi-column primary keys as reference target (business keys instead of technical keys)</h3>
-For ensurance of referential integrity should technical id's be used instead of business expressions.<br/>
-Often problematic usage of business keys can be detetcted by existence of references on multi-column primary keys<pre style='background-color: #FFFFCC;'>             WITH Constraints AS (SELECT /*+ NO_MERGE MATERIALIZE */ Owner, Constraint_Name, Table_Name, r_Owner, r_Constraint_Name, Constraint_Type
-                                  FROM   DBA_Constraints
-                                  WHERE  Owner NOT IN (SELECT /*+ NO_MERGE */ UserName FROM All_Users WHERE Oracle_Maintained = 'Y')
-                                 )
-             SELECT /* Panorama-Tool Ramm: Fachliche Schluessel*/ p.Owner||'.'||p.Table_Name "Referenced Table",
-                    MIN(pr.Num_Rows) "Rows in referenced table",
-                    p.Constraint_Name "Primary Key", r.Owner||'.'||r.Table_Name "Referencing Table",
-                    MIN(tr.Num_Rows) "Rows in referencing table",
-                    COUNT(*) "Number of PKey rows",
-                    MIN(c.Column_Name) "One PKey-Column",
-                    MAX(c.Column_Name) "Other PKey-Column"
-             FROM   Constraints r
-             JOIN   Constraints p  ON p.Owner = r.R_Owner AND p.Constraint_Name = r.r_Constraint_Name
-             JOIN   DBA_Cons_Columns c ON c.Owner = p.Owner   AND c.Constraint_Name = p.Constraint_Name
-             JOIN   DBA_All_Tables pr  ON pr.Owner = p.Owner AND pr.Table_Name = p.Table_Name
-             JOIN   DBA_All_Tables tr  ON tr.Owner = r.Owner AND tr.Table_Name = r.Table_Name
-             WHERE  r.Constraint_Type = 'R'
-             GROUP BY p.Owner, p.Table_Name, p.Constraint_Name, r.Owner, r.Table_Name, r.Constraint_Name
-             HAVING COUNT(*) > 1
-             ORDER BY MIN(tr.Num_Rows+pr.Num_Rows) * COUNT(*) DESC NULLS LAST
-           </pre>
+<h3>Substantial larger runtime per module compared to average over longer time period</h3>
+Based on active session history are shown outlier on database runtime per module je Module.<br/>
+Units for time consideration are defined by date format picture of TRUNC-function (DD=day, HH24=hour etc.)<pre style='background-color: #FFFFCC;'>WITH Modules AS (
+               SELECT /*+ PARALLEL(h,2) */
+                      TRUNC(Sample_Time, picture)  Time_Range_Start,
+                      Module,
+                      MIN(Sample_Time)          First_Occurrence,
+                      MAX(Sample_Time)          Last_Occurrence,
+                      COUNT(*) * 10             Secs_Waiting
+               FROM   DBA_Hist_Active_Sess_History h,
+                      (SELECT :P1 picture FROM DUAL)
+               WHERE  Sample_Time > SYSDATE-:P2
+               AND    Instance_Number = :P3
+               AND    NVL(Event, 'Hugo') NOT IN ('PX Deq Credit: send blkd')
+               AND    h.DBID = &your_DBID  /* do not count multiple times for multiple different DBIDs/ConIDs */
+               GROUP BY TRUNC(Sample_Time, picture), Module
+              )
+           SELECT Module,
+                  SUM(Secs_Waiting)        "Waiting secs. total",
+                  ROUND(AVG(Secs_Waiting)) "Waiting secs. avg",
+                  MIN(Secs_Waiting)        "Waiting secs. min",
+                  MIN(Time_Range_Start) KEEP (DENSE_RANK FIRST ORDER BY Secs_Waiting) "Time period start of min.",
+                  MAX(Secs_Waiting)        "Waiting secs. max.",
+                  MAX(Time_Range_Start) KEEP (DENSE_RANK LAST ORDER BY Secs_Waiting) "Time period start of max.",
+                  MIN(First_Occurrence)    "First occurrence",
+                  MAX(Last_Occurrence)     "Last occurrence"
+           FROM   Modules
+           GROUP BY Module
+           ORDER BY MAX(Secs_Waiting)-AVG(Secs_Waiting) DESC
+           </pre><div>Parameter :P1: Format-picture of TRUNC function (DD=day, HH24=hour etc.)</div><div>Parameter :P2: Number of days in history backward from now for consideration</div><div>Parameter :P3: RAC-Instance</div>

@@ -1,180 +1,37 @@
-<h3>Missing suggested AUDIT rules for unified auditing</h3>
+<h3>Missing suggested AUDIT rules for standard auditing</h3>
 You should have some minimal audit of logon and DDL operations for traceability of problematic DDL.<br/>
-Please remind also to establish housekeeping on audit data.<pre style='background-color: #FFFFCC;'>
-WITH Policies AS (SELECT /*+ NO_MERGE MATERIALIZE */ * FROM Audit_Unified_Policies),
-     Enabled_Policies AS (SELECT /*+ NO_MERGE MATERIALIZE */ * FROM Audit_Unified_Enabled_Policies),
-     Current_Options AS (SELECT x.*,
-                                CASE WHEN Enabled       = 'YES'        /* Policy should be enabled */
-                                AND  Enabled_Option     = 'BY USER'    /* Option should not be restricted */
-                                AND  Entity_Name        = 'ALL USERS'  /* global enabled should not be restricted */
-                                AND  Object_Schema      = 'NONE'       /* Should be enabled for all schemas */
-                                AND  Object_Name        = 'NONE'       /* should be enabled for all objects */
-                                AND  Audit_Condition    = 'NONE'       /* there should be no filter */
-                                AND  Condition_Eval_Opt = 'NONE'       /* there should be no filter */
-                                AND  Success            = 'YES'        /* should be logged for success */
-                                AND  Failure            = 'YES'        /* should be logged for failure */
-                                THEN 'YES' ELSE 'NO' END Accepted
-                         FROM   (
-                                 SELECT p.Audit_option, p.Policy_Name, 'YES' Enabled, ep.Enabled_Option, ep.Entity_Name,
-                                        p.Object_Schema, p.Object_Name, p.Audit_Condition, p.Condition_Eval_Opt,
-                                        ep.Success, ep.Failure
-                                 FROM   Policies p
-                                 JOIN   Enabled_Policies ep ON ep.Policy_Name = p.Policy_Name
-                                 UNION ALL
-                                 SELECT Audit_Option, p.Policy_Name, 'NO' Enabled, NULL Enabled_Option, NULL Entity_Name,
-                                        NULL Object_Schema, NULL Object_Name, NULL Audit_Condition, NULL Condition_Eval_Opt,
-                                        NULL Success, NULL Failure
-                                 FROM   Policies p
-                                 WHERE  p.Policy_Name NOT IN (SELECT Policy_Name FROM Enabled_Policies)
-                                ) x
-                        ),
-     Expected_Options AS (SELECT 'LOGON' Audit_Option FROM DUAL UNION ALL
-                          SELECT 'LOGOFF' FROM DUAL UNION ALL
-                          SELECT 'BECOME USER' FROM DUAL UNION ALL
-                          SELECT 'ADMINISTER KEY MANAGEMENT' FROM DUAL UNION ALL
-                          SELECT 'ALTER ANALYTIC VIEW' FROM DUAL UNION ALL
-                          SELECT 'ALTER AUDIT POLICY' FROM DUAL UNION ALL
-                          SELECT 'ALTER CLUSTER' FROM DUAL UNION ALL
-                          SELECT 'ALTER DATABASE' FROM DUAL UNION ALL
-                          SELECT 'ALTER DATABASE DICTIONARY' FROM DUAL UNION ALL
-                          SELECT 'ALTER DATABASE LINK' FROM DUAL UNION ALL
-                          SELECT 'ALTER DISK GROUP' FROM DUAL UNION ALL
-                          SELECT 'ALTER FLASHBACK ARCHIVE' FROM DUAL UNION ALL
-                          SELECT 'ALTER INDEX' FROM DUAL UNION ALL
-                          SELECT 'ALTER INDEXTYPE' FROM DUAL UNION ALL
-                          SELECT 'ALTER JAVA' FROM DUAL UNION ALL
-                          SELECT 'ALTER LIBRARY' FROM DUAL UNION ALL
-                          SELECT 'ALTER LOCKDOWN PROFILE' FROM DUAL UNION ALL
-                          SELECT 'ALTER MATERIALIZED VIEW' FROM DUAL UNION ALL
-                          SELECT 'ALTER MATERIALIZED VIEW LOG' FROM DUAL UNION ALL
-                          SELECT 'ALTER MATERIALIZED ZONEMAP' FROM DUAL UNION ALL
-                          SELECT 'ALTER OUTLINE' FROM DUAL UNION ALL
-                          SELECT 'ALTER PACKAGE' FROM DUAL UNION ALL
-                          SELECT 'ALTER PACKAGE BODY' FROM DUAL UNION ALL
-                          SELECT 'ALTER PLUGGABLE DATABASE' FROM DUAL UNION ALL
-                          SELECT 'ALTER PROCEDURE' FROM DUAL UNION ALL
-                          SELECT 'ALTER PROFILE' FROM DUAL UNION ALL
-                          SELECT 'ALTER ROLE' FROM DUAL UNION ALL
-                          SELECT 'ALTER ROLLBACK SEGMENT' FROM DUAL UNION ALL
-                          SELECT 'ALTER SEQUENCE' FROM DUAL UNION ALL
-                          SELECT 'ALTER SYNONYM' FROM DUAL UNION ALL
-                          SELECT 'ALTER SYSTEM' FROM DUAL UNION ALL
-                          SELECT 'ALTER TABLE' FROM DUAL UNION ALL
-                          SELECT 'ALTER TABLESPACE' FROM DUAL UNION ALL
-                          SELECT 'ALTER TRACING' FROM DUAL UNION ALL
-                          SELECT 'ALTER TRIGGER' FROM DUAL UNION ALL
-                          SELECT 'ALTER TYPE' FROM DUAL UNION ALL
-                          SELECT 'ALTER TYPE BODY' FROM DUAL UNION ALL
-                          SELECT 'ALTER USER' FROM DUAL UNION ALL
-                          SELECT 'ALTER VIEW' FROM DUAL UNION ALL
-                          SELECT 'ANALYZE CLUSTER' FROM DUAL UNION ALL
-                          SELECT 'ANALYZE INDEX' FROM DUAL UNION ALL
-                          SELECT 'ANALYZE TABLE' FROM DUAL UNION ALL
-                          SELECT 'AUDIT' FROM DUAL UNION ALL
-                          SELECT 'CHANGE PASSWORD' FROM DUAL UNION ALL
-                          SELECT 'CREATE ANALYTIC VIEW' FROM DUAL UNION ALL
-                          SELECT 'CREATE AUDIT POLICY' FROM DUAL UNION ALL
-                          SELECT 'CREATE CLUSTER' FROM DUAL UNION ALL
-                          SELECT 'CREATE CONTEXT' FROM DUAL UNION ALL
-                          SELECT 'CREATE DATABASE LINK' FROM DUAL UNION ALL
-                          SELECT 'CREATE DISK GROUP' FROM DUAL UNION ALL
-                          SELECT 'CREATE EDITION' FROM DUAL UNION ALL
-                          SELECT 'CREATE FLASHBACK ARCHIVE' FROM DUAL UNION ALL
-                          SELECT 'CREATE INDEX' FROM DUAL UNION ALL
-                          SELECT 'CREATE INDEXTYPE' FROM DUAL UNION ALL
-                          SELECT 'CREATE JAVA' FROM DUAL UNION ALL
-                          SELECT 'CREATE LIBRARY' FROM DUAL UNION ALL
-                          SELECT 'CREATE LOCKDOWN PROFILE' FROM DUAL UNION ALL
-                          SELECT 'CREATE MATERIALIZED VIEW' FROM DUAL UNION ALL
-                          SELECT 'CREATE MATERIALIZED VIEW LOG' FROM DUAL UNION ALL
-                          SELECT 'CREATE MATERIALIZED ZONEMAP' FROM DUAL UNION ALL
-                          SELECT 'CREATE OUTLINE' FROM DUAL UNION ALL
-                          SELECT 'CREATE PACKAGE' FROM DUAL UNION ALL
-                          SELECT 'CREATE PACKAGE BODY' FROM DUAL UNION ALL
-                          SELECT 'CREATE PFILE' FROM DUAL UNION ALL
-                          SELECT 'CREATE PLUGGABLE DATABASE' FROM DUAL UNION ALL
-                          SELECT 'CREATE PROCEDURE' FROM DUAL UNION ALL
-                          SELECT 'CREATE PROFILE' FROM DUAL UNION ALL
-                          SELECT 'CREATE RESTORE POINT' FROM DUAL UNION ALL
-                          SELECT 'CREATE ROLE' FROM DUAL UNION ALL
-                          SELECT 'CREATE ROLLBACK SEGMENT' FROM DUAL UNION ALL
-                          SELECT 'CREATE SCHEMA' FROM DUAL UNION ALL
-                          SELECT 'CREATE SCHEMA SYNONYM' FROM DUAL UNION ALL
-                          SELECT 'CREATE SEQUENCE' FROM DUAL UNION ALL
-                          SELECT 'CREATE SPFILE' FROM DUAL UNION ALL
-                          SELECT 'CREATE SYNONYM' FROM DUAL UNION ALL
-                          SELECT 'CREATE TABLE' FROM DUAL UNION ALL
-                          SELECT 'CREATE TABLESPACE' FROM DUAL UNION ALL
-                          SELECT 'CREATE TRIGGER' FROM DUAL UNION ALL
-                          SELECT 'CREATE TYPE' FROM DUAL UNION ALL
-                          SELECT 'CREATE TYPE BODY' FROM DUAL UNION ALL
-                          SELECT 'CREATE USER' FROM DUAL UNION ALL
-                          SELECT 'CREATE VIEW' FROM DUAL UNION ALL
-                          SELECT 'DEBUG CONNECT' FROM DUAL UNION ALL
-                          SELECT 'DROP ANALYTIC VIEW' FROM DUAL UNION ALL
-                          SELECT 'DROP AUDIT POLICY' FROM DUAL UNION ALL
-                          SELECT 'DROP CLUSTER' FROM DUAL UNION ALL
-                          SELECT 'DROP CONTEXT' FROM DUAL UNION ALL
-                          SELECT 'DROP DATABASE LINK' FROM DUAL UNION ALL
-                          SELECT 'DROP DISK GROUP' FROM DUAL UNION ALL
-                          SELECT 'DROP EDITION' FROM DUAL UNION ALL
-                          SELECT 'DROP FLASHBACK ARCHIVE' FROM DUAL UNION ALL
-                          SELECT 'DROP INDEX' FROM DUAL UNION ALL
-                          SELECT 'DROP INDEXTYPE' FROM DUAL UNION ALL
-                          SELECT 'DROP JAVA' FROM DUAL UNION ALL
-                          SELECT 'DROP LIBRARY' FROM DUAL UNION ALL
-                          SELECT 'DROP LOCKDOWN PROFILE' FROM DUAL UNION ALL
-                          SELECT 'DROP MATERIALIZED VIEW' FROM DUAL UNION ALL
-                          SELECT 'DROP MATERIALIZED VIEW LOG' FROM DUAL UNION ALL
-                          SELECT 'DROP MATERIALIZED ZONEMAP' FROM DUAL UNION ALL
-                          SELECT 'DROP OUTLINE' FROM DUAL UNION ALL
-                          SELECT 'DROP PACKAGE' FROM DUAL UNION ALL
-                          SELECT 'DROP PACKAGE BODY' FROM DUAL UNION ALL
-                          SELECT 'DROP PLUGGABLE DATABASE' FROM DUAL UNION ALL
-                          SELECT 'DROP PROCEDURE' FROM DUAL UNION ALL
-                          SELECT 'DROP PROFILE' FROM DUAL UNION ALL
-                          SELECT 'DROP RESTORE POINT' FROM DUAL UNION ALL
-                          SELECT 'DROP ROLE' FROM DUAL UNION ALL
-                          SELECT 'DROP ROLLBACK SEGMENT' FROM DUAL UNION ALL
-                          SELECT 'DROP SCHEMA SYNONYM' FROM DUAL UNION ALL
-                          SELECT 'DROP SEQUENCE' FROM DUAL UNION ALL
-                          SELECT 'DROP SYNONYM' FROM DUAL UNION ALL
-                          SELECT 'DROP TABLE' FROM DUAL UNION ALL
-                          SELECT 'DROP TABLESPACE' FROM DUAL UNION ALL
-                          SELECT 'DROP TRIGGER' FROM DUAL UNION ALL
-                          SELECT 'DROP TYPE' FROM DUAL UNION ALL
-                          SELECT 'DROP TYPE BODY' FROM DUAL UNION ALL
-                          SELECT 'DROP USER' FROM DUAL UNION ALL
-                          SELECT 'DROP VIEW' FROM DUAL UNION ALL
-                          SELECT 'FLASHBACK TABLE' FROM DUAL UNION ALL
-                          SELECT 'GRANT' FROM DUAL UNION ALL
-                          --SELECT 'LOCK TABLE' FROM DUAL UNION ALL
-                          SELECT 'NOAUDIT' FROM DUAL UNION ALL
-                          SELECT 'PURGE DBA_RECYCLEBIN' FROM DUAL UNION ALL
-                          SELECT 'PURGE INDEX' FROM DUAL UNION ALL
-                          SELECT 'PURGE RECYCLEBIN' FROM DUAL UNION ALL
-                          SELECT 'PURGE TABLE' FROM DUAL UNION ALL
-                          SELECT 'PURGE TABLESPACE' FROM DUAL UNION ALL
-                          SELECT 'RENAME' FROM DUAL UNION ALL
-                          SELECT 'REVOKE' FROM DUAL UNION ALL
-                          SELECT 'SET ROLE' FROM DUAL UNION ALL
-                          SELECT 'TRUNCATE CLUSTER' FROM DUAL UNION ALL
-                          SELECT 'TRUNCATE TABLE' FROM DUAL
-                         )
-SELECT eo.Audit_Option Suggested_Audit_Action,
-       CASE WHEN COUNT(DISTINCT co.Policy_Name)         > 1 THEN '< '||COUNT(DISTINCT co.Policy_Name)         ||' >' ELSE MIN(co.Policy_Name)         END Existing_Policy,
-       CASE WHEN COUNT(DISTINCT co.Enabled)             > 1 THEN '< '||COUNT(DISTINCT co.Enabled)             ||' >' ELSE MIN(co.Enabled)             END Policy_Enabled,
-       CASE WHEN COUNT(DISTINCT co.Enabled_Option)      > 1 THEN '< '||COUNT(DISTINCT co.Enabled_Option)      ||' >' ELSE MIN(co.Enabled_Option)      END Enabled_Option,
-       CASE WHEN COUNT(DISTINCT co.Entity_Name)         > 1 THEN '< '||COUNT(DISTINCT co.Entity_Name)         ||' >' ELSE MIN(co.Entity_Name)         END Entity_Name,
-       CASE WHEN COUNT(DISTINCT co.Object_Schema)       > 1 THEN '< '||COUNT(DISTINCT co.Object_Schema)       ||' >' ELSE MIN(co.Object_Schema)       END Object_Schema,
-       CASE WHEN COUNT(DISTINCT co.Object_Name)         > 1 THEN '< '||COUNT(DISTINCT co.Object_Name)         ||' >' ELSE MIN(co.Object_Name)         END Object_Name,
-       CASE WHEN COUNT(DISTINCT co.Audit_Condition)     > 1 THEN '< '||COUNT(DISTINCT co.Audit_Condition)     ||' >' ELSE MIN(co.Audit_Condition)     END Audit_Condition,
-       CASE WHEN COUNT(DISTINCT co.Condition_Eval_Opt)  > 1 THEN '< '||COUNT(DISTINCT co.Condition_Eval_Opt)  ||' >' ELSE MIN(co.Condition_Eval_Opt)  END Condition_Eval_Opt,
-       CASE WHEN COUNT(DISTINCT co.Success)             > 1 THEN '< '||COUNT(DISTINCT co.Success)             ||' >' ELSE MIN(co.Success)  END        Success,
-       CASE WHEN COUNT(DISTINCT co.Failure)             > 1 THEN '< '||COUNT(DISTINCT co.Failure)             ||' >' ELSE MIN(co.Failure)  END        Failure
-FROM   Expected_Options eo
-LEFT OUTER JOIN Current_Options co ON co.Audit_Option = eo.Audit_Option
-GROUP BY eo.Audit_Option
-HAVING SUM(CASE WHEN NVL(co.Accepted, 'NO') = 'YES' THEN 1 ELSE 0 END) = 0 /* No record with accepted = 'YES' among the results */
-ORDER BY eo.Audit_Option
+Please remind also to establish housekeeping on audit data e.g. table sys.AUD$.<pre style='background-color: #FFFFCC;'>
+              SELECT /* Panorama-Tool Ramm: Auditing */
+                     'AUDIT '||NVL(a.Message, a.Name)||';'  "Suggested audit rule"
+              FROM
+              (
+              SELECT 'CLUSTER'                Name, 'BY ACCESS' Success, 'BY ACCESS' Failure, NULL Message FROM DUAL UNION ALL
+              SELECT 'DATABASE LINK'          Name, 'BY ACCESS' Success, 'BY ACCESS' Failure, NULL Message FROM DUAL UNION ALL
+              SELECT 'DIRECTORY'              Name, 'BY ACCESS' Success, 'BY ACCESS' Failure, NULL Message FROM DUAL UNION ALL
+              SELECT 'INDEX'                  Name, 'BY ACCESS' Success, 'BY ACCESS' Failure, NULL Message FROM DUAL UNION ALL
+              SELECT 'MATERIALIZED VIEW'      Name, 'BY ACCESS' Success, 'BY ACCESS' Failure, NULL Message FROM DUAL UNION ALL
+              SELECT 'OUTLINE'                Name, 'BY ACCESS' Success, 'BY ACCESS' Failure, NULL Message FROM DUAL UNION ALL
+              SELECT 'PROCEDURE'              Name, 'BY ACCESS' Success, 'BY ACCESS' Failure, NULL Message FROM DUAL UNION ALL
+              SELECT 'PROFILE'                Name, 'BY ACCESS' Success, 'BY ACCESS' Failure, NULL Message FROM DUAL UNION ALL
+              SELECT 'PUBLIC DATABASE LINK'   Name, 'BY ACCESS' Success, 'BY ACCESS' Failure, NULL Message FROM DUAL UNION ALL
+              SELECT 'PUBLIC SYNONYM'         Name, 'BY ACCESS' Success, 'BY ACCESS' Failure, NULL Message FROM DUAL UNION ALL
+              SELECT 'ROLE'                   Name, 'BY ACCESS' Success, 'BY ACCESS' Failure, NULL Message FROM DUAL UNION ALL
+              SELECT 'ROLLBACK SEGMENT'       Name, 'BY ACCESS' Success, 'BY ACCESS' Failure, NULL Message FROM DUAL UNION ALL
+              SELECT 'SEQUENCE'               Name, 'BY ACCESS' Success, 'BY ACCESS' Failure, NULL Message FROM DUAL UNION ALL
+              SELECT 'CREATE SESSION'         Name, 'BY ACCESS' Success, 'BY ACCESS' Failure, NULL Message FROM DUAL UNION ALL
+              SELECT 'SYNONYM'                Name, 'BY ACCESS' Success, 'BY ACCESS' Failure, NULL Message FROM DUAL UNION ALL
+              SELECT 'SYSTEM AUDIT'           Name, 'BY ACCESS' Success, 'BY ACCESS' Failure, NULL Message FROM DUAL UNION ALL
+              SELECT 'SYSTEM GRANT'           Name, 'BY ACCESS' Success, 'BY ACCESS' Failure, NULL Message FROM DUAL UNION ALL
+              SELECT 'TABLE'                  Name, 'BY ACCESS' Success, 'BY ACCESS' Failure, NULL Message FROM DUAL UNION ALL
+              SELECT 'ALTER SYSTEM'           Name, 'BY ACCESS' Success, 'BY ACCESS' Failure, NULL Message FROM DUAL UNION ALL
+              SELECT 'TABLESPACE'             Name, 'BY ACCESS' Success, 'BY ACCESS' Failure, NULL Message FROM DUAL UNION ALL
+              SELECT 'TRIGGER'                Name, 'BY ACCESS' Success, 'BY ACCESS' Failure, NULL Message FROM DUAL UNION ALL
+              SELECT 'TYPE'                   Name, 'BY ACCESS' Success, 'BY ACCESS' Failure, NULL Message FROM DUAL UNION ALL
+              SELECT 'USER'                   Name, 'BY ACCESS' Success, 'BY ACCESS' Failure, NULL Message FROM DUAL UNION ALL
+              SELECT 'VIEW'                   Name, 'BY ACCESS' Success, 'BY ACCESS' Failure, NULL Message FROM DUAL
+              )a
+              LEFT OUTER JOIN DBA_Stmt_Audit_Opts d ON  d.Audit_Option = a.Name AND d.User_Name IS NULL AND d.Proxy_Name IS NULL
+                                                    AND (d.Success = a.Success OR a.Success = 'NOT SET')
+                                                    AND (d.Failure = a.Failure  OR a.Failure = 'NOT SET')
+              WHERE d.Audit_Option IS NULL
            </pre>

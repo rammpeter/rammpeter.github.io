@@ -1,37 +1,23 @@
-<h3>Missing suggested AUDIT rules for standard auditing</h3>
-You should have some minimal audit of logon and DDL operations for traceability of problematic DDL.<br/>
-Please remind also to establish housekeeping on audit data e.g. table sys.AUD$.<pre style='background-color: #FFFFCC;'>
-              SELECT /* Panorama-Tool Ramm: Auditing */
-                     'AUDIT '||NVL(a.Message, a.Name)||';'  "Suggested audit rule"
-              FROM
-              (
-              SELECT 'CLUSTER'                Name, 'BY ACCESS' Success, 'BY ACCESS' Failure, NULL Message FROM DUAL UNION ALL
-              SELECT 'DATABASE LINK'          Name, 'BY ACCESS' Success, 'BY ACCESS' Failure, NULL Message FROM DUAL UNION ALL
-              SELECT 'DIRECTORY'              Name, 'BY ACCESS' Success, 'BY ACCESS' Failure, NULL Message FROM DUAL UNION ALL
-              SELECT 'INDEX'                  Name, 'BY ACCESS' Success, 'BY ACCESS' Failure, NULL Message FROM DUAL UNION ALL
-              SELECT 'MATERIALIZED VIEW'      Name, 'BY ACCESS' Success, 'BY ACCESS' Failure, NULL Message FROM DUAL UNION ALL
-              SELECT 'OUTLINE'                Name, 'BY ACCESS' Success, 'BY ACCESS' Failure, NULL Message FROM DUAL UNION ALL
-              SELECT 'PROCEDURE'              Name, 'BY ACCESS' Success, 'BY ACCESS' Failure, NULL Message FROM DUAL UNION ALL
-              SELECT 'PROFILE'                Name, 'BY ACCESS' Success, 'BY ACCESS' Failure, NULL Message FROM DUAL UNION ALL
-              SELECT 'PUBLIC DATABASE LINK'   Name, 'BY ACCESS' Success, 'BY ACCESS' Failure, NULL Message FROM DUAL UNION ALL
-              SELECT 'PUBLIC SYNONYM'         Name, 'BY ACCESS' Success, 'BY ACCESS' Failure, NULL Message FROM DUAL UNION ALL
-              SELECT 'ROLE'                   Name, 'BY ACCESS' Success, 'BY ACCESS' Failure, NULL Message FROM DUAL UNION ALL
-              SELECT 'ROLLBACK SEGMENT'       Name, 'BY ACCESS' Success, 'BY ACCESS' Failure, NULL Message FROM DUAL UNION ALL
-              SELECT 'SEQUENCE'               Name, 'BY ACCESS' Success, 'BY ACCESS' Failure, NULL Message FROM DUAL UNION ALL
-              SELECT 'CREATE SESSION'         Name, 'BY ACCESS' Success, 'BY ACCESS' Failure, NULL Message FROM DUAL UNION ALL
-              SELECT 'SYNONYM'                Name, 'BY ACCESS' Success, 'BY ACCESS' Failure, NULL Message FROM DUAL UNION ALL
-              SELECT 'SYSTEM AUDIT'           Name, 'BY ACCESS' Success, 'BY ACCESS' Failure, NULL Message FROM DUAL UNION ALL
-              SELECT 'SYSTEM GRANT'           Name, 'BY ACCESS' Success, 'BY ACCESS' Failure, NULL Message FROM DUAL UNION ALL
-              SELECT 'TABLE'                  Name, 'BY ACCESS' Success, 'BY ACCESS' Failure, NULL Message FROM DUAL UNION ALL
-              SELECT 'ALTER SYSTEM'           Name, 'BY ACCESS' Success, 'BY ACCESS' Failure, NULL Message FROM DUAL UNION ALL
-              SELECT 'TABLESPACE'             Name, 'BY ACCESS' Success, 'BY ACCESS' Failure, NULL Message FROM DUAL UNION ALL
-              SELECT 'TRIGGER'                Name, 'BY ACCESS' Success, 'BY ACCESS' Failure, NULL Message FROM DUAL UNION ALL
-              SELECT 'TYPE'                   Name, 'BY ACCESS' Success, 'BY ACCESS' Failure, NULL Message FROM DUAL UNION ALL
-              SELECT 'USER'                   Name, 'BY ACCESS' Success, 'BY ACCESS' Failure, NULL Message FROM DUAL UNION ALL
-              SELECT 'VIEW'                   Name, 'BY ACCESS' Success, 'BY ACCESS' Failure, NULL Message FROM DUAL
-              )a
-              LEFT OUTER JOIN DBA_Stmt_Audit_Opts d ON  d.Audit_Option = a.Name AND d.User_Name IS NULL AND d.Proxy_Name IS NULL
-                                                    AND (d.Success = a.Success OR a.Success = 'NOT SET')
-                                                    AND (d.Failure = a.Failure  OR a.Failure = 'NOT SET')
-              WHERE d.Audit_Option IS NULL
+<h3>Usage of multi-column primary keys as reference target (business keys instead of technical keys)</h3>
+For ensurance of referential integrity should technical id's be used instead of business expressions.<br/>
+Often problematic usage of business keys can be detetcted by existence of references on multi-column primary keys<pre style='background-color: #FFFFCC;'>             WITH Constraints AS (SELECT /*+ NO_MERGE MATERIALIZE */ Owner, Constraint_Name, Table_Name, r_Owner, r_Constraint_Name, Constraint_Type
+                                  FROM   DBA_Constraints
+                                  WHERE  Owner NOT IN (SELECT /*+ NO_MERGE */ UserName FROM All_Users WHERE Oracle_Maintained = 'Y')
+                                 )
+             SELECT /* Panorama-Tool Ramm: Fachliche Schluessel*/ p.Owner||'.'||p.Table_Name "Referenced Table",
+                    MIN(pr.Num_Rows) "Rows in referenced table",
+                    p.Constraint_Name "Primary Key", r.Owner||'.'||r.Table_Name "Referencing Table",
+                    MIN(tr.Num_Rows) "Rows in referencing table",
+                    COUNT(*) "Number of PKey rows",
+                    MIN(c.Column_Name) "One PKey-Column",
+                    MAX(c.Column_Name) "Other PKey-Column"
+             FROM   Constraints r
+             JOIN   Constraints p  ON p.Owner = r.R_Owner AND p.Constraint_Name = r.r_Constraint_Name
+             JOIN   DBA_Cons_Columns c ON c.Owner = p.Owner   AND c.Constraint_Name = p.Constraint_Name
+             JOIN   DBA_All_Tables pr  ON pr.Owner = p.Owner AND pr.Table_Name = p.Table_Name
+             JOIN   DBA_All_Tables tr  ON tr.Owner = r.Owner AND tr.Table_Name = r.Table_Name
+             WHERE  r.Constraint_Type = 'R'
+             GROUP BY p.Owner, p.Table_Name, p.Constraint_Name, r.Owner, r.Table_Name, r.Constraint_Name
+             HAVING COUNT(*) > 1
+             ORDER BY MIN(tr.Num_Rows+pr.Num_Rows) * COUNT(*) DESC NULLS LAST
            </pre>

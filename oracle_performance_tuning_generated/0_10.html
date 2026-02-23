@@ -3,7 +3,7 @@ Chained rows causes additional reads of rows in separate DB-blocks while accessi
 There are two types:<br/>
 <br/>
 1. true chained rows:<br/>
-A record doesn't compeletely fit into one DB-block, the columns of the record are stored in several DB blocks.<br/>
+A record doesn't completely fit into one DB-block, the columns of the record are stored in several DB blocks.<br/>
 Both the Full Scan and Index RowID scans read further linked DB blocks when accessing paged out columns in the linked blocks (incrementing of 'table fetch continued rows').<br/>
 <br/>
 2. migrated rows:<br/>

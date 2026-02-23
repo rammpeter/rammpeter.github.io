@@ -1,5 +1,5 @@
 <h3>Avoid data redundancy in primary key index (move to index-organized tables)</h3>
-IOT-structure for tables is recommended if following criterias outbalance to positive side:<br/>
+IOT-structure for tables is recommended if following criteria outbalance to positive side:<br/>
   Positive: Saving of disk space and buffer cache space due to omission of table itself<br/>
   Positive: Omission of 'table-access by row-id' while accessing data by index, because PKey-index already contains all table data<br/>
   Negative: Enlargement of secondary indexes because of redundant saving of PKey-values in every secondary index<br/>

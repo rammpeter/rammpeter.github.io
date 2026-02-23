@@ -1,7 +1,7 @@
 <h3>Nested loop join on large tables with large result of SQL (consideration of current SGA)</h3>
 Frequently executed nested loop operations on large (not fitting into DB-cache) tables may cause large runtime of SQL.<br/>
 Listed statements should be checked for use of hash join instead.<br/>
-This statement executes only for current (login) RAC-instance. Please execute separate for every RAC-instance (due to extremly large runtimes accessing GV$-tables).<pre style='background-color: #FFFFCC;'>SELECT /* DB-Tools Ramm Nested Loop auf grossen Tabellen */ * FROM (
+This statement executes only for current (login) RAC-instance. Please execute separate for every RAC-instance (due to extremely large runtimes accessing GV$-tables).<pre style='background-color: #FFFFCC;'>SELECT /* DB-Tools Ramm Nested Loop auf grossen Tabellen */ * FROM (
                       SELECT /*+ PARALLEL(p,2) PARALLEL(s,2) */
                              p.Inst_ID, p.SQL_ID, p.Plan_Hash_Value, p.operation, p.Object_Type,  p.options, p.Object_Name,
                              ROUND(s.Elapsed_Time/1000000) Elapsed_Secs, s.Executions, s.Rows_Processed,
@@ -47,4 +47,4 @@ This statement executes only for current (login) RAC-instance. Please execute se
                                              AND s.SQL_ID             = p.SQL_ID
                                              AND s.Plan_Hash_Value    = p.Plan_Hash_Value
                       )
-                      ORDER BY Rows_Per_Execution*Num_Rows DESC NULLS LAST</pre><div>Parameter :P1: Minimum number of rows processed / execution as threshold for possible inefficieny of nested loop</div>
+                      ORDER BY Rows_Per_Execution*Num_Rows DESC NULLS LAST</pre><div>Parameter :P1: Minimum number of rows processed / execution as threshold for possible inefficiency of nested loop</div>

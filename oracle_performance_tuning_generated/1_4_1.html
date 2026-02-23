@@ -1,6 +1,6 @@
 <h3>Excessive filtering after TABLE ACCESS BY ROWID due to weak index access criteria (current SGA)</h3>
 INDEX RANGE|SKIP SCAN with high number of rows returned and restrictive filter after TABLE ACCESS BY ROWID leads to unnecessary effort for table access before rejecting table records from result.<br/>
-You should consider to expand index by filter criterias of table access to reduce number of TABLE ACCESS BY ROWID.<br/>
+You should consider to expand index by filter criteria of table access to reduce number of TABLE ACCESS BY ROWID.<br/>
 This selection evaluates the current content of SGA.<br/>
 Result is sorted by time effort for operation TABLE ACCESS BY ROWID.<br/>
 <pre style='background-color: #FFFFCC;'> SELECT /* Panorama: cardinality_ratio index/table, thanks to Leonid Nossov */

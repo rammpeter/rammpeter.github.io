@@ -20,4 +20,4 @@ If column order of the multi-column index can be changed then the additional sin
                     WHERE  i.num_rows/ic1.Num_Distinct > :P1
                     AND    i.num_rows/ic2.Num_Distinct < :P2
                     ORDER BY i.Num_Rows * ica.Avg_Col_Len DESC  /* Order by saving after removal of ica-index */
-            </pre><div>Parameter :P1: Minimun number of rows per key for first column of multi-column index</div><div>Parameter :P2: Maximun number of rows per key for second column of multi-column index</div>
+            </pre><div>Parameter :P1: Minimum number of rows per key for first column of multi-column index</div><div>Parameter :P2: Maximun number of rows per key for second column of multi-column index</div>
