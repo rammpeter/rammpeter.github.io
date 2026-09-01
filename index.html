@@ -1,6 +1,16 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
 <html><head>
     <meta http-equiv="content-type" content="text/html; charset=UTF-8" />
+    <meta http-equiv="Content-Security-Policy" content="
+        default-src 'self';
+        script-src  'self' 'unsafe-inline';
+        style-src   'self' 'unsafe-inline';
+        img-src     'self' data:;
+        font-src    'self';
+        object-src  'self';
+        connect-src 'self';
+        base-uri    'self';
+        form-action 'self'" />
     <meta http-equiv="Language" content="en" />
     <meta http-equiv="expires" content="3600">
     <meta name="author" content="Peter Ramm" />
@@ -37,6 +47,17 @@
     <script type="text/javascript">
         $.backstretch("images/Rotsidan.jpg");
 
+        // Zulaessige Ziele fuer menu_call, identisch mit den Eintraegen im Navigator
+        var ALLOWED_MENU_ENTRIES = [
+            'start',
+            'panorama',
+            'panorama_sampler',
+            'panorama_tutorials',
+            'oracle_performance_tuning',
+            'impressum',
+            'privacy'
+        ];
+
         function menu_call(menu_entry){
             if (!menu_entry){                                                   // kein Parameter  gesetzt
                 // Aufrufparameter der URL zerlegen
@@ -56,6 +77,11 @@
                     menu_entry = GET.target;                                 // Ziel aus URL entnehmen
                 else
                     menu_entry = 'start';                                       // Default
+            }
+
+            if ($.inArray(menu_entry, ALLOWED_MENU_ENTRIES) === -1){            // Ziel nicht in Allowlist
+                console.log('Unbekanntes Menu-Ziel: '+menu_entry);
+                menu_entry = 'start';                                           // Fallback auf Default
             }
 
             var complete_function
