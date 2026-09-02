@@ -90,6 +90,10 @@ class Generator
     def self.panorama_table_exists?(table_name)
       true
     end
+
+    def autonomous_database?
+      false
+    end
   end
 
   def generate
