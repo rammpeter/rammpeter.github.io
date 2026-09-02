@@ -1,5 +1,5 @@
 <h3>Full table scans  with less result records: possibly missing indexes </h3>
-Access by full table scan is critical if only small parts of table are relevant for selection, otherwise are adequate for processing of whole table data.<br/>
+Access by full table scan is often suboptimal if only a small part of a table is selected.<br/>
 They are out of place for OLTP-like access (small access time, many executions).<br/>
 Placing an index may reduce runtime significant.<br/>
 Calculated by high runtime and less result records.<br/>
