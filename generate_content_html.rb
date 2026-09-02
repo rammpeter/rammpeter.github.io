@@ -91,8 +91,18 @@ class Generator
       true
     end
 
-    def autonomous_database?
+    def self.autonomous_database?
       false
+    end
+
+    def self.panorama_object_sizes_exists?
+      true
+    end
+  end
+
+  module MenuHelper::PackLicense
+    def self.tuning_pack_licensed?
+      true
     end
   end
 
