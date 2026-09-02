@@ -86,6 +86,10 @@ class Generator
     def self.system_parameter_table
       'GV$Parameter'
     end
+
+    def self.panorama_table_exists?(table_name)
+      true
+    end
   end
 
   def generate
