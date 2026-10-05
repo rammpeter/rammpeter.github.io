@@ -6,14 +6,14 @@ Remind the diagram view via context menu 'Show column in diagram'.<pre style='ba
               FROM   (SELECT TRUNC(Sample_Time, :P1) Start_Time, SQL_ID
                       FROM   (
      WITH
-          ASH_Time AS (SELECT /*+ NO_MERGE MATERIALIZE */ i.Inst_ID, NVL(Min_Sample_Time, SYSTIMESTAMP) Min_Sample_Time
+          ASH_Time AS (SELECT /*+ MATERIALIZE */ i.Inst_ID, NVL(Min_Sample_Time, SYSTIMESTAMP) Min_Sample_Time
                        FROM   gv$Instance i
                        LEFT OUTER JOIN (SELECT Inst_ID, MIN(Sample_Time) Min_Sample_Time
                                         FROM gv$Active_Session_History
                                         GROUP BY Inst_ID
                                        ) ash ON ash.Inst_ID = i.Inst_ID
                       )
-     SELECT /*+ NO_MERGE   */ *
+     SELECT /*+ NO_MERGE  */ *
      FROM   (SELECT 10 Sample_Cycle, Instance_Number, Snap_ID, Sample_ID, Sample_Time, Session_id, Session_Type, Session_serial# Session_Serial_No, User_ID, SQL_Child_Number, SQL_Plan_Hash_Value, SQL_Opcode,
               Session_State, Blocking_Session, Blocking_session_Status, Blocking_Session_Serial# Blocking_session_Serial_No,
               Blocking_Hangchain_Info, NVL(Event, Session_State) Event, Event_ID, Seq# Sequence, P1Text, P1, P2Text, P2, P3Text, P3,
