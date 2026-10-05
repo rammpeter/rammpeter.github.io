@@ -3,9 +3,8 @@ name: Generate content
 
 on:
   push:
-  #schedule:
-    # * is a special character in YAML so you have to quote this string, runs on Sunday morning
-   # - cron: '0 0 * * 0'
+  schedule:
+    - cron: '0 0 * * *'
 
 jobs:
   setup:
