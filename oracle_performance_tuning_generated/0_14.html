@@ -1,5 +1,5 @@
 <h3>Possibly expensive TABLE ACCESS BY INDEX ROWID with additional filter predicates on table</h3>
-If in a SQL a table has additional filter conditions that are not covered by the used index you may consider to extend the index by these filter conditions.<br/>
+If in a SQL a table has additional filter conditions that are not covered by the used index you may consider extending the index by these filter conditions.<br/>
 This would ensure that you do the more expensive TABLE ACCESS BY ROWID only if that table row matches all your access conditions checked by the index.<br/>
 This selection considers current SGA<pre style='background-color: #FFFFCC;'>
               WITH ash_all AS (SELECT /*+ NO_MERGE MATERIALIZE */ inst_ID, SQL_ID, SQL_Plan_Hash_Value, SQL_Child_Number, SQL_Plan_Line_ID, COUNT(*) Ash_Seconds

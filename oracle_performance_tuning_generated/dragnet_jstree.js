@@ -373,6 +373,14 @@
   "id": "1_4_2",
   "text": "3. Excessive filtering after TABLE ACCESS BY ROWID due to weak index access criteria (AWR history)",
   "state": { "opened": false }
+, "icon":"images/application-monitor.png"},{
+  "id": "1_4_3",
+  "text": "4. Find problematic iteration at skipped columns for INDEX RANGE SCAN with multi-column indexes (SGA)",
+  "state": { "opened": false }
+, "icon":"images/application-monitor.png"},{
+  "id": "1_4_4",
+  "text": "5. Find problematic iteration at skipped columns for INDEX RANGE SCAN with multi-column indexes (AWR history)",
+  "state": { "opened": false }
 , "icon":"images/application-monitor.png"} ]},{
   "id": "1_5",
   "text": "6. Identification of statements with alternating execution plans in history",
@@ -529,6 +537,14 @@
   "id": "4_3",
   "text": "4. Adjustment of recovery behaviour",
   "state": { "opened": false }
+, "icon":"images/application-monitor.png"},{
+  "id": "4_4",
+  "text": "5. Current transaction rate by sessions",
+  "state": { "opened": false }
+, "icon":"images/application-monitor.png"},{
+  "id": "4_5",
+  "text": "6. Current transaction rate by user/program/machine",
+  "state": { "opened": false }
 , "icon":"images/application-monitor.png"} ]},{
   "id": "5",
   "text": "6. Conclusions on application behaviour",
@@ -539,19 +555,19 @@
   "state": { "opened": false }
 , "children": [{
   "id": "5_0_0",
-  "text": "1. Views with cascading dependiencies (multiple hierarchy)",
+  "text": "1. Views with nested dependiencies (multiple hierarchy)",
   "state": { "opened": false }
 , "children": [{
   "id": "5_0_0_0",
-  "text": "1. Cascading views (views with dependency from other views)",
+  "text": "1. Nested views (views with dependency on other views)",
   "state": { "opened": false }
 , "icon":"images/application-monitor.png"},{
   "id": "5_0_0_1",
-  "text": "2. SQLs using Cascading views (views with dependency from other views), evaluation of current SGA",
+  "text": "2. SQLs using nested views (views with dependency on other views), evaluation of current SGA",
   "state": { "opened": false }
 , "icon":"images/application-monitor.png"},{
   "id": "5_0_0_2",
-  "text": "3. SQLs using Cascading views (views with dependency from other views), evaluation of AWH History",
+  "text": "3. SQLs using nested views (views with dependency on other views), evaluation of AWH History",
   "state": { "opened": false }
 , "icon":"images/application-monitor.png"} ]},{
   "id": "5_0_1",
@@ -572,6 +588,10 @@
 , "icon":"images/application-monitor.png"},{
   "id": "5_1_2",
   "text": "3. Volatile columns in result due to 'SELECT * FROM table'",
+  "state": { "opened": false }
+, "icon":"images/application-monitor.png"},{
+  "id": "5_1_3",
+  "text": "4. Missing module/action identifier in DB sessions and SQLs",
   "state": { "opened": false }
 , "icon":"images/application-monitor.png"} ]},{
   "id": "5_2",
@@ -675,7 +695,11 @@
   "state": { "opened": false }
 , "icon":"images/application-monitor.png"},{
   "id": "7_5",
-  "text": "6. TNS service usage by sessions",
+  "text": "6. Inconsistencies in object statistics",
+  "state": { "opened": false }
+, "icon":"images/application-monitor.png"},{
+  "id": "7_6",
+  "text": "7. TNS service usage by sessions",
   "state": { "opened": false }
 , "icon":"images/application-monitor.png"} ]} ]
           }

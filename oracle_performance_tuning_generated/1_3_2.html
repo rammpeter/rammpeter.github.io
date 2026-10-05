@@ -1,6 +1,7 @@
 <h3>Unnecessary high fetch count because of missing usage of array-fetch: evaluation of SGA</h3>
-For larger results per execution it is worth to access multiple records per fetch with bulk operation instead of single fetches.<br/>
-This earns little reduction of CPU-contention and runtime.<br/>
+For larger results per execution it is worth accessing multiple records per fetch with bulk operation instead of single fetches.<br/>
+This results in only a slight reduction in CPU usage and SQL runtime.<br/>
+But for remote clients it reduces the number of network roundtrips which may last longer than the fetch operation at DB itself.<br/>
 <pre style='background-color: #FFFFCC;'>SELECT * FROM (
                               SELECT Inst_ID, Parsing_Schema_Name "Parsing schema name",
                                      Module,
