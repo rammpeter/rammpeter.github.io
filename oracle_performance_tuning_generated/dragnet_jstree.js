@@ -265,6 +265,10 @@
   "id": "1_0_4",
   "text": "5. Long running full table scans caused by IS NULL selection",
   "state": { "opened": false }
+, "icon":"images/application-monitor.png"},{
+  "id": "1_0_5",
+  "text": "6. Full table scans with less records selected in plan line: possibly missing indexes ",
+  "state": { "opened": false }
 , "icon":"images/application-monitor.png"} ]},{
   "id": "1_1",
   "text": "2. Potential for improvement in the use of Parallel Query",
