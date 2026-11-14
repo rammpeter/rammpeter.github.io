@@ -1,5 +1,5 @@
 <h3>Statements with parallel query and serial processing of process parts</h3>
-Parts of parallel processed statements my be executed serially and results of these subprocesses are parallelized by broadcast.<br/>
+Parts of parallel processed statements may be executed serially and results of these subprocesses are parallelized by broadcast.<br/>
 For small data structures it is often wanted, for large data structures it may be due to missing PARALLEL-hints.<br/>
 This Selection lists all statements with 'PARALLEL_FROM_SERIAL'-processing after full-scan on objects as candidates for forgotten parallelising.<pre style='background-color: #FFFFCC;'>WITH SQL_Plan AS (SELECT /*+ NO_MERGE MATERIALIZE */ DBID, SQL_ID, Operation, Options, Object_Owner, Object_Name, Plan_Hash_Value, Other_Tag, Timestamp, ID, Parent_ID FROM DBA_Hist_SQL_PLan)
                      SELECT /* DB-Tools Ramm PARALLEL_FROM_SERIAL in PQ */ * FROM (
